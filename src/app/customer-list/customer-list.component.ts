@@ -1,0 +1,103 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CustomerService } from '../services/customer.service';
+import { CustomerTrn } from '../models/customer.model';
+
+declare var bootstrap: any;
+
+@Component({
+  selector: 'app-customer-list',
+  templateUrl: './customer-list.component.html',
+  styleUrls: ['./customer-list.component.css']
+})
+export class CustomerListComponent implements OnInit {
+
+  batches: any[] = [];
+  batchTransactions: CustomerTrn[] = [];
+  selectedBatchNo?: number;
+
+  isLoading = false;
+  errorMessage = '';
+  isBatchApproving: boolean = false;
+  isBatchApproved: boolean = false;
+
+  constructor(
+    private customerService: CustomerService,
+    private router: Router
+  ) { }
+
+  ngOnInit(): void {
+    this.loadBatches();
+  }
+
+  loadBatches(): void {
+    this.isLoading = true;
+
+    this.customerService.getAllBatches().subscribe({
+      next: (data) => {
+        // Sort DESC by bactno (latest first)
+        this.batches = data.sort((a, b) => b.bactno - a.bactno);
+        this.isLoading = false;
+      },
+      error: () => {
+        this.errorMessage = 'Failed to load batches.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  openBatchModal(bactno: number): void {
+    this.selectedBatchNo = bactno;
+
+    this.customerService.getCustomersByBatch(bactno).subscribe({
+      next: (data) => {
+        this.batchTransactions = data;
+
+        const modalElement = document.getElementById('batchModal');
+        if (modalElement) {
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
+        }
+      },
+      error: () => {
+        alert('Failed to load batch transactions');
+      }
+    });
+  }
+
+  addCustomer(): void {
+    this.router.navigate(['/customers/add']);
+  }
+
+  approveTransaction(t: CustomerTrn): void {
+    this.customerService.approveCustomer(t.id!).subscribe({
+      next: (updated) => {
+        t.status = updated.status;
+      },
+      error: (err) => {
+        console.error('Approval error:', err);
+        alert('Approval failed!');
+      }
+    });
+  }
+
+  approveBatch(bactno: number): void {
+    this.isBatchApproving = true;
+
+    this.customerService.approveBatch(bactno).subscribe({
+      next: (updatedBatch) => {
+        this.isBatchApproving = false;
+        this.isBatchApproved = true;   // Disable button immediately
+        alert('Batch approved successfully!');
+
+        this.loadBatches();
+      },
+      error: (err) => {
+        this.isBatchApproving = false;
+        console.error('Batch approval error:', err);
+        alert('Batch approval failed!');
+      }
+    });
+  }
+
+}
