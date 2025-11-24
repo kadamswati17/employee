@@ -152,6 +152,7 @@
 .btn-secondary {
     background-color: #6b7280;
     color: #ffffff;
+    margin-right: 20px;
 }
 
 .btn-secondary:hover:not(:disabled) {
@@ -200,9 +201,14 @@
     color: #f9fafb;
 }
 
-.cart-table th,
+.cart-table th {
+    padding: 16px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
 .cart-table td {
-    padding: 10px 12px;
+    padding: 0px 12px;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
 }
@@ -263,4 +269,10 @@
     .form-card {
         padding: 20px 16px;
     }
+}
+
+.table-row th {
+    padding: 2px 6px !important;
+    line-height: 12px !important;
+    height: 16px !important;
 }

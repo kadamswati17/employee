@@ -15,7 +15,9 @@ export class CustomerListComponent implements OnInit {
   batches: any[] = [];
   batchTransactions: CustomerTrn[] = [];
   selectedBatchNo?: number;
-
+  currentPage = 1;
+  // items per page
+  itemsPerPage = 7;
   isLoading = false;
   errorMessage = '';
   isBatchApproving: boolean = false;
@@ -99,5 +101,26 @@ export class CustomerListComponent implements OnInit {
       }
     });
   }
+
+
+
+  // Computed list for current page
+  get paginatedBatches() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.batches.slice(start, end);
+  }
+
+  // Total pages
+  get totalPages() {
+    return Math.ceil(this.batches.length / this.itemsPerPage);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
 
 }

@@ -1,12 +1,12 @@
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-brand">
-      <a routerLink="/employees">Employee Management</a>
+      <a routerLink="/employees">Employee Management &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a>
     </div>
     <div class="navbar-menu" *ngIf="isLoggedIn">
       <a routerLink="/employees" routerLinkActive="active">Employees</a>
       <a routerLink="/employees/add" routerLinkActive="active">Add Employee</a>
-      <a routerLink="/customers/add" routerLinkActive="active">Transaction</a>
+      <!-- <a routerLink="/customers/add" routerLinkActive="active">Transaction</a> -->
       <a routerLink="/customers" routerLinkActive="active">Batch</a>
       <div class="user-info">
         <span class="username">{{ currentUser?.username }}</span>

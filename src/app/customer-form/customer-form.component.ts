@@ -31,8 +31,8 @@ export class CustomerFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // ✅ Get username from storage (replace with API if you want)
-    // this.currentUserName = localStorage.getItem('username') || 'SYSTEM';
+    // const today = new Date().toISOString().substring(0, 10);
+    const today = new Date().toLocaleDateString('en-CA');
     this.authService.getCurrentUserFromAPI().subscribe({
       next: (res) => {
         this.currentUserName = res.username; // from /api/auth/me
@@ -46,7 +46,8 @@ export class CustomerFormComponent implements OnInit {
 
     this.customerForm = this.fb.group({
       // header / hidden fields
-      trndate: ['', Validators.required],
+      // trndate: ['', Validators.required],
+      trndate: [today, Validators.required],
       createdby: [this.currentUserName],      // no validators, set programmatically
       aproval1: [''],
       aproval2: [''],
