@@ -102,6 +102,9 @@
                         <th>Work Order</th>
                         <th>Asset No</th>
                         <th>Status</th>
+                        <th>Update</th>
+
+
                         <th>Remove</th>
                     </tr>
                 </thead>
@@ -116,20 +119,29 @@
                         <td>{{ c.descriptionoftooling }}</td>
                         <td>{{ c.cmworkorderno }}</td>
                         <td>{{ c.toolingassetno }}</td>
+
                         <td>
                             <span class="status-pill" [ngClass]="{
-                  'status-approved': c.status === 'APPROVED',
-                  'status-pending': c.status !== 'APPROVED'
-                }">
+            'status-approved': c.status === 'APPROVED',
+            'status-pending': c.status !== 'APPROVED'
+        }">
                                 {{ c.status || 'PENDING' }}
                             </span>
                         </td>
+
                         <td>
-                            <button type="button" class="btn btn-delete btn-sm" (click)="removeFromCart(i)">
+                            <button type="button" class="btn btn-warning btn-sm" (click)="editCartItem(i)">
+                                ✎
+                            </button>
+                        </td>
+
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm" (click)="removeFromCart(i)">
                                 ✕
                             </button>
                         </td>
                     </tr>
+
                 </tbody>
             </table>
 

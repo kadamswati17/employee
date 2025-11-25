@@ -16,10 +16,9 @@ export class CustomerFormComponent implements OnInit {
   customerForm!: FormGroup;
   isSaving = false;
   errorMessage = '';
-
   cartItems: CustomerTrn[] = [];
 
-  // logged-in user (for createdby)
+  editingIndex: number | null = null;   // <-- NEW (Track which item is being edited)
   currentUserName: string = '';
 
   constructor(
@@ -31,30 +30,16 @@ export class CustomerFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // const today = new Date().toISOString().substring(0, 10);
     const today = new Date().toLocaleDateString('en-CA');
-    this.authService.getCurrentUserFromAPI().subscribe({
-      next: (res) => {
-        this.currentUserName = res.username; // from /api/auth/me
-        this.customerForm.patchValue({ createdby: this.currentUserName });
-      },
-      error: () => {
-        this.currentUserName = 'SYSTEM';
-        this.customerForm.patchValue({ createdby: 'SYSTEM' });
-      }
-    });
 
     this.customerForm = this.fb.group({
-      // header / hidden fields
-      // trndate: ['', Validators.required],
       trndate: [today, Validators.required],
-      createdby: [this.currentUserName],      // no validators, set programmatically
+      createdby: [''],
       aproval1: [''],
       aproval2: [''],
       aproval3: [''],
       aproval4: [''],
 
-      // transaction fields
       customerName: ['', [Validators.required, Validators.minLength(2)]],
       toolingdrawingpartno: ['', Validators.required],
       partdrawingname: ['', Validators.required],
@@ -64,11 +49,21 @@ export class CustomerFormComponent implements OnInit {
       toolingassetno: ['', Validators.required]
     });
 
-    // ensure createdby control is in sync
-    this.customerForm.patchValue({ createdby: this.currentUserName });
+    this.authService.getCurrentUserFromAPI().subscribe({
+      next: (res) => {
+        this.currentUserName = res.username;
+        this.customerForm.patchValue({ createdby: this.currentUserName });
+      },
+      error: () => {
+        this.currentUserName = 'SYSTEM';
+        this.customerForm.patchValue({ createdby: 'SYSTEM' });
+      }
+    });
   }
 
-  // Add one transaction to cart
+  // ------------------------------------------
+  // ADD OR UPDATE CART ITEM
+  // ------------------------------------------
   addToCart(): void {
     if (this.customerForm.invalid) {
       this.customerForm.markAllAsTouched();
@@ -92,9 +87,53 @@ export class CustomerFormComponent implements OnInit {
       status: 'PENDING'
     };
 
-    this.cartItems.push(item);
+    // IF EDITING → UPDATE EXISTING
+    if (this.editingIndex !== null) {
+      this.cartItems[this.editingIndex] = item;
+      this.editingIndex = null;
+    } else {
+      // ADD NEW ITEM
+      this.cartItems.push(item);
+    }
 
-    // clear only transaction fields
+    this.resetTransactionFields();
+  }
+
+  // ------------------------------------------
+  // LOAD ITEM INTO FORM FOR EDITING
+  // ------------------------------------------
+  editCartItem(index: number): void {
+    const item = this.cartItems[index];
+    this.editingIndex = index;
+
+    this.customerForm.patchValue({
+      customerName: item.customerName,
+      toolingdrawingpartno: item.toolingdrawingpartno,
+      partdrawingname: item.partdrawingname,
+      partdrawingno: item.partdrawingno,
+      descriptionoftooling: item.descriptionoftooling,
+      cmworkorderno: item.cmworkorderno,
+      toolingassetno: item.toolingassetno
+    });
+  }
+
+  // ------------------------------------------
+  // REMOVE ITEM
+  // ------------------------------------------
+  removeFromCart(index: number): void {
+    this.cartItems.splice(index, 1);
+
+    // If deleting the one being edited
+    if (this.editingIndex === index) {
+      this.editingIndex = null;
+      this.resetTransactionFields();
+    }
+  }
+
+  // ------------------------------------------
+  // RESET ONLY TRANSACTION FIELDS
+  // ------------------------------------------
+  resetTransactionFields() {
     this.customerForm.patchValue({
       customerName: '',
       toolingdrawingpartno: '',
@@ -114,17 +153,14 @@ export class CustomerFormComponent implements OnInit {
       'cmworkorderno',
       'toolingassetno'
     ].forEach(ctrl => {
-      const c = this.customerForm.get(ctrl);
-      c?.markAsPristine();
-      c?.markAsUntouched();
+      this.customerForm.get(ctrl)?.markAsPristine();
+      this.customerForm.get(ctrl)?.markAsUntouched();
     });
   }
 
-  removeFromCart(index: number): void {
-    this.cartItems.splice(index, 1);
-  }
-
-  // Save batch + all transactions
+  // ------------------------------------------
+  // SAVE BATCH + ITEMS
+  // ------------------------------------------
   saveTransactions(): void {
     if (this.cartItems.length === 0) {
       alert('Cart is empty. Add at least one transaction.');
@@ -153,12 +189,11 @@ export class CustomerFormComponent implements OnInit {
       aproval4: v.aproval4
     };
 
-    // 1) create batch
+    // 1) Create batch
     this.customerService.createBatch(header).subscribe({
-      next: (batch: any) => {
+      next: (batch) => {
         const bactno = batch.bactno;
 
-        // 2) for each cart item, create transaction
         const calls = this.cartItems.map(c => {
           const payload: CustomerTrn = {
             ...c,
@@ -176,49 +211,27 @@ export class CustomerFormComponent implements OnInit {
             alert('Batch and transactions saved successfully!');
             this.cartItems = [];
             this.customerForm.reset();
-            // set createdby again after reset
             this.customerForm.patchValue({ createdby: createdBy });
             this.router.navigate(['/customers']);
           },
-          error: (err) => {
-            console.error('Error saving transactions:', err);
+          error: () => {
             this.isSaving = false;
             this.errorMessage = 'Failed to save transactions.';
           }
         });
       },
-      error: (err) => {
-        console.error('Error creating batch:', err);
+      error: () => {
         this.isSaving = false;
         this.errorMessage = 'Failed to create batch.';
       }
     });
   }
 
-  // Cancel: clear form + clear cart
   cancel(): void {
     this.errorMessage = '';
     this.isSaving = false;
     this.cartItems = [];
     this.customerForm.reset();
-    // keep createdby filled with current user
-    this.customerForm.patchValue({
-      createdby: this.currentUserName
-    });
+    this.customerForm.patchValue({ createdby: this.currentUserName });
   }
-
-  getFieldError(fieldName: string): string {
-    const field = this.customerForm.get(fieldName);
-    if (!field) return '';
-    if (field.hasError('required')) {
-      return `${fieldName} is required`;
-    }
-    if (field.hasError('minlength')) {
-      return `${fieldName} must be at least ${field.errors?.['minlength'].requiredLength} characters`;
-    }
-    return '';
-  }
-
-
 }
-
