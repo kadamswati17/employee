@@ -1,8 +1,8 @@
 <div class="login-container">
   <div class="login-card">
     <div class="login-header">
-      <h2>Employee Management System</h2>
-      <p>Sign in to your account</p>
+      <h2>Digital Data System</h2>
+      <!-- <p>Sign in to your account</p> -->
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
@@ -12,14 +12,9 @@
 
       <div class="form-group">
         <label for="username">Username</label>
-        <input
-          type="text"
-          id="username"
-          formControlName="username"
-          class="form-control"
+        <input type="text" id="username" formControlName="username" class="form-control"
           [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-          placeholder="Enter username"
-        />
+          placeholder="Enter username" />
         <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="invalid-feedback">
           Username is required
         </div>
@@ -27,24 +22,15 @@
 
       <div class="form-group">
         <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          class="form-control"
+        <input type="password" id="password" formControlName="password" class="form-control"
           [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-          placeholder="Enter password"
-        />
+          placeholder="Enter password" />
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="invalid-feedback">
           Password is required (min 6 characters)
         </div>
       </div>
 
-      <button
-        type="submit"
-        class="btn btn-primary btn-block"
-        [disabled]="loginForm.invalid || isLoading"
-      >
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="loginForm.invalid || isLoading">
         <span *ngIf="!isLoading">Sign In</span>
         <span *ngIf="isLoading">Signing in...</span>
       </button>
@@ -55,4 +41,3 @@
     </form>
   </div>
 </div>
-

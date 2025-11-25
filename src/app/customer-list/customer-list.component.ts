@@ -51,6 +51,12 @@ export class CustomerListComponent implements OnInit {
   openBatchModal(bactno: number): void {
     this.selectedBatchNo = bactno;
 
+    // get selected batch from list
+    const selected = this.batches.find(x => x.bactno === bactno);
+
+    // set UI state from backend
+    this.isBatchApproved = selected?.approved || false;
+
     this.customerService.getCustomersByBatch(bactno).subscribe({
       next: (data) => {
         this.batchTransactions = data;
@@ -60,12 +66,10 @@ export class CustomerListComponent implements OnInit {
           const modal = new bootstrap.Modal(modalElement);
           modal.show();
         }
-      },
-      error: () => {
-        alert('Failed to load batch transactions');
       }
     });
   }
+
 
   addCustomer(): void {
     this.router.navigate(['/customers/add']);
@@ -87,20 +91,15 @@ export class CustomerListComponent implements OnInit {
     this.isBatchApproving = true;
 
     this.customerService.approveBatch(bactno).subscribe({
-      next: (updatedBatch) => {
+      next: () => {
         this.isBatchApproving = false;
-        this.isBatchApproved = true;   // Disable button immediately
-        alert('Batch approved successfully!');
+        this.isBatchApproved = true;
 
-        this.loadBatches();
-      },
-      error: (err) => {
-        this.isBatchApproving = false;
-        console.error('Batch approval error:', err);
-        alert('Batch approval failed!');
+        this.loadBatches(); // refresh statuses
       }
     });
   }
+
 
 
 
@@ -120,6 +119,26 @@ export class CustomerListComponent implements OnInit {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
     }
+  }
+
+  downloadBatch(bactno: number) {
+    this.customerService.downloadBatch(bactno).subscribe({
+      next: (file: Blob) => {
+
+        const url = window.URL.createObjectURL(file);
+        const a = document.createElement('a');
+
+        a.href = url;
+        a.download = `Batch-${bactno}.pdf`;  // or .xlsx or .csv
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error("Download error:", err);
+        alert("Failed to download file");
+      }
+    });
   }
 
 

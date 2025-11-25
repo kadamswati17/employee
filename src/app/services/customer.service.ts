@@ -58,4 +58,11 @@ export class CustomerService {
     approveBatch(bactno: number): Observable<any> {
         return this.http.post<any>(`${BATCH_API_URL}/${bactno}/approve`, {});
     }
+
+    downloadBatch(bactno: number) {
+        return this.http.get(`${BATCH_API_URL}/${bactno}/download`, {
+            responseType: 'blob'
+        });
+    }
+
 }
