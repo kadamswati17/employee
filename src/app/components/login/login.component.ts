@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
   loginForm!: FormGroup;
   isLoggedIn = false;
   isLoginFailed = false;
@@ -19,46 +20,45 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    // Already logged in? redirect
     if (this.authService.isAuthenticated()) {
-      this.isLoggedIn = true;
       this.router.navigate(['/employees']);
+      return;
     }
 
+    // Login form using email + password
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.isLoginFailed = false;
+    if (!this.loginForm.valid) return;
 
-      const credentials = {
-        username: this.loginForm.value.username,
-        password: this.loginForm.value.password
-      };
+    this.isLoading = true;
+    this.isLoginFailed = false;
 
-      this.authService.login(credentials).subscribe({
-        next: () => {
-          this.isLoggedIn = true;
-          this.isLoginFailed = false;
-          this.router.navigate(['/employees']);
-        },
-        error: (err) => {
-          this.isLoginFailed = true;
-          this.errorMessage = err.error?.message || 'Login failed. Please check your credentials.';
-          this.isLoading = false;
-        },
-        complete: () => {
-          this.isLoading = false;
-        }
-      });
-    }
+    const credentials = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
+    };
+
+    this.authService.login(credentials).subscribe({
+      next: () => {
+        this.router.navigate(['/employees']);
+      },
+      error: (err) => {
+        this.isLoginFailed = true;
+        this.errorMessage = err.error?.message || 'Invalid login credentials';
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 }
-

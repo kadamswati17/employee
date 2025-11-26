@@ -9,23 +9,27 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+
   registerForm!: FormGroup;
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
   isLoading = false;
 
+  roles = ["ADMIN", "L1", "L2", "L3", "L4", "L5", "USER"];
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      role: ['', Validators.required]   // ⭐ ROLE FIELD ADDED
     });
   }
 
@@ -38,7 +42,8 @@ export class RegisterComponent implements OnInit {
       const userData = {
         username: this.registerForm.value.username,
         email: this.registerForm.value.email,
-        password: this.registerForm.value.password
+        password: this.registerForm.value.password,
+        role: this.registerForm.value.role    // ⭐ SEND ROLE TO BACKEND
       };
 
       this.authService.register(userData).subscribe({
@@ -47,7 +52,7 @@ export class RegisterComponent implements OnInit {
           this.isSignUpFailed = false;
           setTimeout(() => {
             this.router.navigate(['/login']);
-          }, 2000);
+          }, 1500);
         },
         error: (err) => {
           this.isSignUpFailed = true;
@@ -65,4 +70,3 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 }
-

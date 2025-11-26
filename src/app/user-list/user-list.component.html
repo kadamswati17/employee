@@ -1,0 +1,42 @@
+<div class="user-container">
+
+    <div class="header-section">
+        <h2 class="title">User Management</h2>
+
+        <!-- ADD NEW USER BUTTON -->
+        <button class="btn-add" (click)="addUser()">+ Add User</button>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="excel-table" *ngIf="users.length > 0">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th style="width: 200px;">USERNAME</th>
+                    <th style="width: 260px;">EMAIL</th>
+                    <th style="width: 150px;">ROLE</th>
+                    <th style="width: 160px;">ACTIONS</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of users">
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+
+                    <td>
+                        <span class="role-badge" [ngClass]="u.role">{{ u.role }}</span>
+                    </td>
+
+                    <td class="actions">
+                        <button class="btn btn-edit" (click)="editUser(u.id)">Edit</button>
+                        <button class="btn btn-delete" (click)="deleteUser(u.id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p *ngIf="users.length === 0" class="no-data">No users found.</p>
+    </div>
+</div>

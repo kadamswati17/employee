@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { LoginRequest, AuthResponse } from '../models/auth.model';
+import { LoginRequest } from '../models/auth.model';
 import { TokenStorageService } from './token-storage.service';
 
 const AUTH_API = 'http://localhost:8080/api/auth';
@@ -11,38 +11,52 @@ const API_URL = 'http://localhost:8080/api';
   providedIn: 'root'
 })
 export class AuthService {
+
   constructor(
     private http: HttpClient,
     private tokenStorage: TokenStorageService
   ) { }
 
   // =======================================
-  // 🔐 AUTHENTICATION
+  // 🔐 LOGIN
   // =======================================
-
-  login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${AUTH_API}/signin`, credentials).pipe(
+  login(credentials: LoginRequest): Observable<any> {
+    return this.http.post<any>(`${AUTH_API}/signin`, credentials).pipe(
       tap(response => {
         if (response.token) {
+
+          // Save token
           this.tokenStorage.saveToken(response.token);
+
+          // Save user with correct structure from backend
           this.tokenStorage.saveUser({
+            id: response.id,
             username: response.username,
             email: response.email,
-            roles: response.roles
+            role: response.role   // 🔥 FIXED (Used to be roles)
           });
         }
       })
     );
   }
 
-  register(user: { username: string; email: string; password: string }): Observable<any> {
+  // =======================================
+  // 🆕 REGISTER USER (ADMIN ONLY)
+  // =======================================
+  register(user: { username: string; email: string; password: string; role: string }): Observable<any> {
     return this.http.post(`${AUTH_API}/signup`, user);
   }
 
+  // =======================================
+  // 🚪 LOGOUT
+  // =======================================
   logout(): void {
     this.tokenStorage.signOut();
   }
 
+  // =======================================
+  // ⭐ CHECK AUTHENTICATION
+  // =======================================
   isAuthenticated(): boolean {
     return this.tokenStorage.isLoggedIn();
   }
@@ -51,17 +65,13 @@ export class AuthService {
     return this.tokenStorage.getUser();
   }
 
-
   // =======================================
-  // 📌 NEW API CALLS FOR BATCH + CUSTOMER
+  // OTHER APIS (BATCH + CUSTOMER)
   // =======================================
-
-  // Save Batch (tbl1)
   createBatch(batch: any): Observable<any> {
     return this.http.post(`${API_URL}/batch`, batch);
   }
 
-  // Save Customer Transaction (tbl2)
   createCustomerTransaction(bactno: number, customer: any): Observable<any> {
     return this.http.post(`${API_URL}/customer-trn/${bactno}`, customer);
   }
@@ -69,5 +79,4 @@ export class AuthService {
   getCurrentUserFromAPI(): Observable<any> {
     return this.http.get(`${AUTH_API}/me`);
   }
-
 }

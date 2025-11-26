@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +14,10 @@ import { EmployeeFormComponent } from './components/employee-form/employee-form.
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { CustomerListComponent } from './customer-list/customer-list.component';
+import { UserFormComponent } from './user-form/user-form.component';
+import { UserListComponent } from './user-list/user-list.component';
+import { CreateUserComponent } from './admin/create-user/create-user.component';
+
 
 @NgModule({
   declarations: [
@@ -24,14 +28,18 @@ import { CustomerListComponent } from './customer-list/customer-list.component';
     EmployeeListComponent,
     EmployeeFormComponent,
     CustomerFormComponent,
-    CustomerListComponent
+    CustomerListComponent,
+    UserListComponent,
+    UserFormComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    FormsModule,
   ],
   providers: [
     {

@@ -1,12 +1,12 @@
 <div class="register-container">
   <div class="register-card">
     <div class="register-header">
-      <h2>Create Account</h2>
-      <p>Sign up for Employee Management System</p>
+      <h2>Create User</h2>
+      <p>Create a new user for Employee Management System</p>
     </div>
 
     <div *ngIf="isSuccessful" class="alert alert-success">
-      Registration successful! Redirecting to login...
+      User created successfully! Redirecting...
     </div>
 
     <div *ngIf="isSignUpFailed" class="alert alert-danger">
@@ -14,46 +14,63 @@
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
+      <!-- Username -->
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" id="username" formControlName="username" class="form-control"
-          [class.is-invalid]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
-          placeholder="Enter username" />
+        <input type="text" id="username" formControlName="username" class="form-control" placeholder="Enter username"
+          [class.is-invalid]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" />
         <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
           class="invalid-feedback">
           Username is required (min 3 characters)
         </div>
       </div>
 
+      <!-- Email -->
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" formControlName="email" class="form-control"
-          [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
-          placeholder="Enter email" />
+        <input type="email" id="email" formControlName="email" class="form-control" placeholder="Enter email"
+          [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" />
         <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="invalid-feedback">
           Valid email is required
         </div>
       </div>
 
+      <!-- Password -->
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" formControlName="password" class="form-control"
-          [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
-          placeholder="Enter password (min 6 characters)" />
+          placeholder="Enter password (min 6 characters)"
+          [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" />
         <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
           class="invalid-feedback">
           Password is required (min 6 characters)
         </div>
       </div>
 
+      <!-- ⭐ ROLE DROPDOWN ADDED HERE -->
+      <div class="form-group">
+        <label for="role">Select Role</label>
+        <select id="role" formControlName="role" class="form-control"
+          [class.is-invalid]="registerForm.get('role')?.invalid && registerForm.get('role')?.touched">
+          <option value="">Choose Role</option>
+          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+        </select>
+        <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="invalid-feedback">
+          Role is required
+        </div>
+      </div>
+
+      <!-- Submit Button -->
       <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid || isLoading">
-        <span *ngIf="!isLoading">Sign Up</span>
-        <span *ngIf="isLoading">Creating account...</span>
+        <span *ngIf="!isLoading">Create User</span>
+        <span *ngIf="isLoading">Creating...</span>
       </button>
 
       <div class="login-link">
-        <p>Already have an account? <a (click)="goToLogin()">Sign in</a></p>
+        <p>Back to dashboard? <a routerLink="/employees">Go Home</a></p>
       </div>
+
     </form>
   </div>
 </div>

@@ -2,17 +2,31 @@
   <div class="navbar-container">
     <div class="navbar-brand">
       <a routerLink="/employees">
-        Digital Data System &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a>
+        Digital Data System &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </a>
     </div>
+
     <div class="navbar-menu" *ngIf="isLoggedIn">
+
       <a routerLink="/employees" routerLinkActive="active">Employees</a>
-      <a routerLink="/employees/add" routerLinkActive="active">Add Employee</a>
-      <!-- <a routerLink="/customers/add" routerLinkActive="active">Transaction</a> -->
+      <!-- <a routerLink="/employees/add" routerLinkActive="active">Add Employee</a> -->
       <a routerLink="/customers" routerLinkActive="active">Batch</a>
+
+      <!-- SHOW ONLY FOR ADMIN -->
+      <!-- <a *ngIf="currentUser?.role === 'ROLE_ADMIN'" routerLink="/admin/create-user" routerLinkActive="active">
+        Create User
+      </a> -->
+
+      <a *ngIf="currentUser?.role === 'ROLE_ADMIN'" routerLink="/users" routerLinkActive="active">
+        Users
+      </a>
+
+
       <div class="user-info">
         <span class="username">{{ currentUser?.username }}</span>
         <button class="btn-logout" (click)="logout()">Logout</button>
       </div>
+
     </div>
   </div>
 </nav>

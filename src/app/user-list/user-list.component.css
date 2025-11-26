@@ -1,0 +1,151 @@
+/* Container */
+.user-container {
+    width: 95%;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* Add Button */
+.btn-add {
+    background: #8e2bf1;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-add:hover {
+    background: #218838;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+    background: #fff;
+    border-radius: 10px;
+    padding: 0;
+    border: 1px solid #d0d0d0;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Excel Style Table */
+.excel-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.excel-table th {
+    background: #8216ee;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #b3c5ff;
+    font-weight: bold;
+    font-size: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.excel-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 14px;
+}
+
+.excel-table tr:hover {
+    background-color: #f5faff;
+}
+
+/* Role Badge */
+.role-badge {
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.ROLE_ADMIN {
+    background: #d9534f;
+}
+
+.ROLE_L1 {
+    background: #0275d8;
+}
+
+.ROLE_L2 {
+    background: #5bc0de;
+}
+
+.ROLE_L3 {
+    background: #5cb85c;
+}
+
+.ROLE_L4 {
+    background: #f0ad4e;
+}
+
+.ROLE_L5 {
+    background: #6f42c1;
+}
+
+.ROLE_USER {
+    background: #777;
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 6px 14px;
+    font-size: 13px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-edit {
+    background: green;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #025aa5;
+}
+
+.btn-delete {
+    background: #d9534f;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #b52b27;
+}
+
+/* No Data Message */
+.no-data {
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+}
