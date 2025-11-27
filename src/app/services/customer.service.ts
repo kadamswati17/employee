@@ -13,7 +13,6 @@ export class CustomerService {
 
     constructor(private http: HttpClient) { }
 
-    // existing
     getAllCustomers(): Observable<CustomerTrn[]> {
         return this.http.get<CustomerTrn[]>(API_URL);
     }
@@ -34,27 +33,26 @@ export class CustomerService {
         return this.http.delete<void>(`${API_URL}/${id}`);
     }
 
-    // 🔹 NEW: create batch
     createBatch(batch: any): Observable<any> {
         return this.http.post<any>(BATCH_API_URL, batch);
     }
 
-    // 🔹 NEW: create transaction with batch id in URL
     createTransactionWithBatch(bactno: number, customer: CustomerTrn): Observable<CustomerTrn> {
         return this.http.post<CustomerTrn>(`${API_URL}/${bactno}`, customer);
     }
 
-    // (You already use these in list)
-    getCustomersByBatch(trbactno: number): Observable<CustomerTrn[]> {
-        return this.http.get<CustomerTrn[]>(`${API_URL}/batch/${trbactno}`);
+    getCustomersByBatch(bactno: number): Observable<CustomerTrn[]> {
+        return this.http.get<CustomerTrn[]>(`${API_URL}/batch/${bactno}`);
     }
 
     approveCustomer(id: number): Observable<CustomerTrn> {
         return this.http.post<CustomerTrn>(`${API_URL}/${id}/approve`, {});
     }
+
     getAllBatches(): Observable<any[]> {
         return this.http.get<any[]>(BATCH_API_URL);
     }
+
     approveBatch(bactno: number): Observable<any> {
         return this.http.post<any>(`${BATCH_API_URL}/${bactno}/approve`, {});
     }
@@ -64,5 +62,4 @@ export class CustomerService {
             responseType: 'blob'
         });
     }
-
 }

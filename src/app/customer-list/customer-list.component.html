@@ -4,7 +4,6 @@
         <button class="btn btn-primary" (click)="addCustomer()">+ Add Transaction</button>
     </div>
 
-
     <div *ngIf="isLoading">Loading...</div>
     <div *ngIf="errorMessage">{{ errorMessage }}</div>
 
@@ -21,7 +20,6 @@
 
             <tbody>
                 <tr *ngFor="let b of paginatedBatches">
-                    <!-- CLICK → SHOW MODAL WITH ALL TRANSACTIONS -->
                     <td class="clickable" (click)="openBatchModal(b.bactno)">
                         {{ b.bactno }}
                     </td>
@@ -32,84 +30,58 @@
             </tbody>
         </table>
     </div>
+
     <div class="pagination-container" *ngIf="totalPages > 1">
-
-        <button class="page-btn" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
-            Prev
-        </button>
-
+        <button class="page-btn" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
         <button class="page-btn" *ngFor="let p of [].constructor(totalPages); let i = index"
             [class.active]="currentPage === i + 1" (click)="changePage(i + 1)">
             {{ i + 1 }}
         </button>
-
-        <button class="page-btn" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
-            Next
-        </button>
-
+        <button class="page-btn" (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === totalPages">Next</button>
     </div>
-
-
 </div>
 
-<!-- MODAL -->
 <!-- MODAL -->
 <div class="modal fade" id="batchModal" tabindex="-1">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
-
             <div class="modal-header d-flex justify-content-between align-items-center">
 
-                <!-- LEFT SECTION: Batch Details + Transaction Date -->
                 <div class="d-flex flex-column">
                     <h5 class="modal-title mb-1">Batch No. - {{ selectedBatchNo }}</h5>
 
                     <div>
                         <strong>Transaction Date:</strong>
-                        {{ batchTransactions[0]?.trndate | date: 'longDate' }}
+                        {{ batchTransactions.length > 0 ? (batchTransactions[0].trndate | date:'longDate') : '' }}
                     </div>
                 </div>
 
-                <!-- CENTERED COMPANY NAME -->
                 <div class="flex-grow-1 text-center">
                     <h5 class="modal-title mb-0 fw-bold">Demo Auto Limited</h5>
                 </div>
 
-                <!-- RIGHT SECTION: Buttons -->
-                <!-- <div class="d-flex align-items-center">
-                    <button type="button" class="btn btn-success btn-sm me-2"
-                        [disabled]="isBatchApproving || isBatchApproved" (click)="approveBatch(selectedBatchNo!)">
-                        {{ isBatchApproved ? '✔ Approved' : 'Approve Batch' }}
-                    </button>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div> -->
                 <div class="d-flex gap-2">
                     <button type="button" class="btn btn-info btn-sm" (click)="downloadBatch(selectedBatchNo!)">
                         Download
                     </button>
 
-                    <button type="button" class="btn btn-success btn-sm"
-                        [disabled]="isBatchApproving || isBatchApproved" (click)="approveBatch(selectedBatchNo!)">
-                        {{ isBatchApproved ? '✔ Approved' : 'Approve Batch' }}
+                    <button type="button" class="btn btn-success btn-sm" *ngIf="canApprove() && !isL1AlreadyApproved()"
+                        [disabled]="isBatchApproving" (click)="approveBatch(selectedBatchNo!)">
+                        Approve Batch
                     </button>
+
+
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
-
-                <!-- ✅ Batch level Approve button -->
-                <!-- <button type="button" class="btn btn-success btn-sm" [disabled]="isBatchApproving || isBatchApproved"
-                    (click)="approveBatch(selectedBatchNo!)">
-                    {{ isBatchApproved ? '✔ Approved' : 'Approve Batch' }}
-                </button>
-
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button> -->
             </div>
 
             <div class="modal-body">
                 <div *ngIf="batchTransactions.length > 0; else noData">
+
+                    <!-- TRANSACTION TABLE -->
                     <table class="employee-table">
                         <thead>
                             <tr>
@@ -121,10 +93,8 @@
                                 <th>Description of Tooling</th>
                                 <th>Work Order No</th>
                                 <th>Tooling Asset No</th>
-                                <!-- <th>Status</th> -->
                             </tr>
                         </thead>
-
                         <tbody>
                             <tr *ngFor="let t of batchTransactions">
                                 <td>{{ t.id }}</td>
@@ -135,28 +105,29 @@
                                 <td>{{ t.descriptionoftooling }}</td>
                                 <td>{{ t.cmworkorderno }}</td>
                                 <td>{{ t.toolingassetno }}</td>
-                                <!-- <td>{{ t.status }}</td> -->
                             </tr>
                         </tbody>
                     </table>
-                    <div>
-                        <table class="employee-table">
-                            <thead style="margin-left: 40px;">
-                                <tr style="margin-left: 40px;">
-                                    <th>Checked by</th>
-                                    <th>Reviewed by</th>
-                                    <th>Approved by</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="align-items: end;">
-                                    <th>L1</th>
-                                    <th>L2</th>
-                                    <th>L3</th>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
+                    <!-- APPROVAL FOOTER -->
+                    <table class="employee-table mt-4">
+                        <thead>
+                            <tr>
+                                <th>Checked By</th>
+                                <th>Reviewed By</th>
+                                <th>Approved By</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngIf="selectedBatch">
+                                <td>{{ getApprovalLevels(selectedBatch).checkedBy }}</td>
+                                <td>{{ getApprovalLevels(selectedBatch).reviewedBy }}</td>
+                                <td>{{ getApprovalLevels(selectedBatch).approvedBy }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
 
                 <ng-template #noData>
