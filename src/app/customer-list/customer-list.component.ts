@@ -24,9 +24,8 @@ export class CustomerListComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   isBatchApproving = false;
-  isBatchApproved = false;
 
-  currentUserRole = '';   // ROLE_L1 / ROLE_L2 / ROLE_L3
+  currentUserRole = '';   // ROLE_L1 / ROLE_L2 / ROLE_L3 / ROLE_ADMIN
 
   constructor(
     private customerService: CustomerService,
@@ -35,7 +34,8 @@ export class CustomerListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.currentUserRole = this.authService.getCurrentUser().role;
+    const current = this.authService.getCurrentUser();
+    this.currentUserRole = current ? current.role : '';
     this.loadBatches();
   }
 
@@ -43,7 +43,7 @@ export class CustomerListComponent implements OnInit {
     this.isLoading = true;
     this.customerService.getAllBatches().subscribe({
       next: (data) => {
-        this.batches = data.sort((a, b) => b.bactno - a.bactno);
+        this.batches = (data || []).sort((a: any, b: any) => b.bactno - a.bactno);
         this.isLoading = false;
       },
       error: () => {
@@ -57,17 +57,17 @@ export class CustomerListComponent implements OnInit {
     this.selectedBatchNo = bactno;
     this.selectedBatch = this.batches.find(b => b.bactno === bactno) || null;
 
-    this.isBatchApproved = this.selectedBatch?.approved || false;
-
     this.customerService.getCustomersByBatch(bactno).subscribe({
       next: (data) => {
-        this.batchTransactions = data;
+        this.batchTransactions = data || [];
 
         const modalElement = document.getElementById('batchModal');
         if (modalElement) {
-          new bootstrap.Modal(modalElement).show();
+          const modal = new bootstrap.Modal(modalElement);
+          modal.show();
         }
-      }
+      },
+      error: () => alert('Failed to load batch transactions')
     });
   }
 
@@ -75,57 +75,137 @@ export class CustomerListComponent implements OnInit {
     this.router.navigate(['/customers/add']);
   }
 
-  approveTransaction(t: CustomerTrn): void {
-    this.customerService.approveCustomer(t.id!).subscribe({
-      next: (updated) => {
-        t.status = updated.status;
-      },
-      error: () => alert('Approval failed!')
-    });
-  }
-
-  // 🔥 L1 → L2 → L3 approval rules
   canApprove(): boolean {
     const batch = this.selectedBatch;
     if (!batch) return false;
 
-    const stage = batch.approvalStage || "NONE";
+    const stage = batch.approvalStage || 'NONE';
 
     return (
-      (this.currentUserRole === "ROLE_L1" && stage === "NONE") ||
-      (this.currentUserRole === "ROLE_L2" && stage === "L1") ||
-      (this.currentUserRole === "ROLE_L3" && stage === "L2")
+      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
     );
   }
 
-  // 🔥 FIXED: Immediately disable button after approval
   approveBatch(bactno: number): void {
-    this.isBatchApproving = true;
+    if (!confirm('Are you sure you want to approve this batch?')) return;
 
+    this.isBatchApproving = true;
     this.customerService.approveBatch(bactno).subscribe({
       next: (updatedBatch) => {
         this.isBatchApproving = false;
 
-        // 🔥 Update selectedBatch instantly (so UI updates immediately)
-        this.selectedBatch.approvalStage = updatedBatch.approvalStage;
-
-        // 🔥 Update batch list also (keeps footer correct)
-        const index = this.batches.findIndex(b => b.bactno === bactno);
-        if (index !== -1) {
-          this.batches[index].approvalStage = updatedBatch.approvalStage;
+        if (updatedBatch) {
+          this.selectedBatch = updatedBatch;
+          const idx = this.batches.findIndex(b => b.bactno === bactno);
+          if (idx !== -1) this.batches[idx] = updatedBatch;
         }
 
-        // Re-evaluate approval
-        this.isBatchApproved = true;
-
-        // L1 will no longer see this batch after refresh
         this.loadBatches();
       },
       error: () => {
         this.isBatchApproving = false;
-        alert("Approval failed");
+        alert('Approval failed');
       }
     });
+  }
+
+  rejectBatch(): void {
+    if (!this.selectedBatchNo) return;
+
+    const reason = prompt('Enter rejection reason:', '');
+    if (reason === null) return;
+
+    this.customerService.rejectBatch(this.selectedBatchNo, reason || undefined).subscribe({
+      next: (updated) => {
+        alert('Batch rejected successfully');
+        this.selectedBatch = updated;
+
+        const idx = this.batches.findIndex(b => b.bactno === this.selectedBatchNo);
+        if (idx !== -1) this.batches[idx] = updated;
+
+        this.loadBatches();
+      },
+      error: () => alert('Reject failed')
+    });
+  }
+
+  editBatch(): void {
+    if (!this.selectedBatchNo || !this.selectedBatch) return;
+    if (!this.canEditDelete()) { alert('No permission'); return; }
+
+    const newCreatedBy = prompt('Created by:', this.selectedBatch.createdby || '');
+    if (newCreatedBy === null) return;
+
+    const newDate = prompt('Transaction Date (YYYY-MM-DD):', this.formatDateForInput(this.selectedBatch.trndate));
+    if (newDate === null) return;
+
+    const payload = { createdby: newCreatedBy, trndate: newDate };
+
+    this.customerService.updateBatch(this.selectedBatchNo, payload).subscribe({
+      next: (updated) => {
+        alert('Batch updated');
+        this.selectedBatch = updated;
+
+        const idx = this.batches.findIndex(b => b.bactno === this.selectedBatchNo);
+        if (idx !== -1) this.batches[idx] = updated;
+
+        this.loadBatches();
+      },
+      error: () => alert('Update failed')
+    });
+  }
+
+  deleteBatch(): void {
+    if (!this.selectedBatchNo) return;
+    if (!this.canEditDelete()) { alert('No permission'); return; }
+
+    if (!confirm('Delete this batch and all transactions?')) return;
+
+    this.customerService.deleteBatch(this.selectedBatchNo).subscribe({
+      next: () => {
+        alert('Batch deleted');
+
+        this.batches = this.batches.filter(b => b.bactno !== this.selectedBatchNo);
+        this.selectedBatch = null;
+
+        const modalElement = document.getElementById('batchModal');
+        if (modalElement) {
+          const modal = bootstrap.Modal.getInstance(modalElement);
+          if (modal) modal.hide();
+        }
+      },
+      error: () => alert('Delete failed')
+    });
+  }
+
+  downloadBatch(bactno: number): void {
+    this.customerService.downloadBatch(bactno).subscribe({
+      next: (file) => {
+        const url = window.URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Batch-${bactno}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: () => alert('Download failed')
+    });
+  }
+
+  getApprovalLevels(batch: any) {
+    if (!batch) return { checkedBy: '', reviewedBy: '', approvedBy: '' };
+
+    return {
+      checkedBy: batch.aproval1Name || '',
+      reviewedBy: batch.aproval2Name || '',
+      approvedBy: batch.aproval3Name || ''
+    };
+  }
+
+  canEditDelete(): boolean {
+    return this.currentUserRole === 'ROLE_ADMIN' || this.currentUserRole === 'ROLE_L1';
   }
 
   get paginatedBatches() {
@@ -138,49 +218,21 @@ export class CustomerListComponent implements OnInit {
   }
 
   changePage(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-    }
+    if (page >= 1 && page <= this.totalPages) this.currentPage = page;
   }
 
-  downloadBatch(bactno: number): void {
-    this.customerService.downloadBatch(bactno).subscribe({
-      next: (file: Blob) => {
-        const url = window.URL.createObjectURL(file);
-        const a = document.createElement('a');
-
-        a.href = url;
-        a.download = `Batch-${bactno}.pdf`;
-        a.click();
-
-        window.URL.revokeObjectURL(url);
-      },
-      error: () => alert("Download failed")
-    });
+  private formatDateForInput(date: any): string {
+    if (!date) return '';
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    return `${d.getFullYear()}-${('0' + (d.getMonth() + 1)).slice(-2)}-${('0' + d.getDate()).slice(-2)}`;
   }
 
-  // 🔥 Footer values
-  getApprovalLevels(batch: any) {
-    if (!batch) return { checkedBy: "", reviewedBy: "", approvedBy: "" };
-
-    const stage = batch.approvalStage;
-
-    let checkedBy = "";
-    let reviewedBy = "";
-    let approvedBy = "";
-
-    if (stage === "L1") checkedBy = "L1";
-    if (stage === "L2") { checkedBy = "L1"; reviewedBy = "L2"; }
-    if (stage === "L3") { checkedBy = "L1"; reviewedBy = "L2"; approvedBy = "L3"; }
-
-    return { checkedBy, reviewedBy, approvedBy };
-  }
-
-  // 🔥 Disable approve button for L1 after approving
   isL1AlreadyApproved(): boolean {
-    if (!this.selectedBatch) return false;
-    return this.currentUserRole === "ROLE_L1" &&
-      this.selectedBatch.approvalStage !== "NONE";
+    return (
+      this.currentUserRole === 'ROLE_L1' &&
+      this.selectedBatch &&
+      this.selectedBatch.approvalStage !== 'NONE'
+    );
   }
-
 }
