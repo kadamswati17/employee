@@ -55,19 +55,34 @@ export class CustomerListComponent implements OnInit {
 
   openBatchModal(bactno: number): void {
     this.selectedBatchNo = bactno;
+
+    // Try to get batch header from local list first
     this.selectedBatch = this.batches.find(b => b.bactno === bactno) || null;
 
     this.customerService.getCustomersByBatch(bactno).subscribe({
-      next: (data) => {
+      next: (data: any[]) => {
+        // data is transaction array — backend returns nested batchDetails inside first transaction sometimes
         this.batchTransactions = data || [];
 
+        // If API returned batchDetails inside the transactions array, use it (preferred)
+        if (Array.isArray(data) && data.length > 0 && data[0].batchDetails) {
+          // set selectedBatch from batchDetails to ensure createdBy and approver fields are present
+          this.selectedBatch = data[0].batchDetails;
+
+          // if backend included approver names, keep them. Otherwise frontend may use separate fields
+          // Example: selectedBatch.approval1Name, selectedBatch.createdByRole etc.
+        }
+
+        // Show modal after data is ready
         const modalElement = document.getElementById('batchModal');
         if (modalElement) {
           const modal = new bootstrap.Modal(modalElement);
           modal.show();
         }
       },
-      error: () => alert('Failed to load batch transactions')
+      error: () => {
+        alert('Failed to load batch transactions');
+      }
     });
   }
 
@@ -78,9 +93,7 @@ export class CustomerListComponent implements OnInit {
   canApprove(): boolean {
     const batch = this.selectedBatch;
     if (!batch) return false;
-
     const stage = batch.approvalStage || 'NONE';
-
     return (
       (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
       (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
@@ -90,18 +103,16 @@ export class CustomerListComponent implements OnInit {
 
   approveBatch(bactno: number): void {
     if (!confirm('Are you sure you want to approve this batch?')) return;
-
     this.isBatchApproving = true;
     this.customerService.approveBatch(bactno).subscribe({
       next: (updatedBatch) => {
         this.isBatchApproving = false;
-
         if (updatedBatch) {
+          // updatedBatch should be the whole BatchDetails (server must return it)
           this.selectedBatch = updatedBatch;
           const idx = this.batches.findIndex(b => b.bactno === bactno);
           if (idx !== -1) this.batches[idx] = updatedBatch;
         }
-
         this.loadBatches();
       },
       error: () => {
@@ -113,18 +124,14 @@ export class CustomerListComponent implements OnInit {
 
   rejectBatch(): void {
     if (!this.selectedBatchNo) return;
-
     const reason = prompt('Enter rejection reason:', '');
     if (reason === null) return;
-
     this.customerService.rejectBatch(this.selectedBatchNo, reason || undefined).subscribe({
       next: (updated) => {
         alert('Batch rejected successfully');
         this.selectedBatch = updated;
-
         const idx = this.batches.findIndex(b => b.bactno === this.selectedBatchNo);
         if (idx !== -1) this.batches[idx] = updated;
-
         this.loadBatches();
       },
       error: () => alert('Reject failed')
@@ -137,20 +144,16 @@ export class CustomerListComponent implements OnInit {
 
     const newCreatedBy = prompt('Created by:', this.selectedBatch.createdby || '');
     if (newCreatedBy === null) return;
-
     const newDate = prompt('Transaction Date (YYYY-MM-DD):', this.formatDateForInput(this.selectedBatch.trndate));
     if (newDate === null) return;
 
     const payload = { createdby: newCreatedBy, trndate: newDate };
-
     this.customerService.updateBatch(this.selectedBatchNo, payload).subscribe({
       next: (updated) => {
         alert('Batch updated');
         this.selectedBatch = updated;
-
         const idx = this.batches.findIndex(b => b.bactno === this.selectedBatchNo);
         if (idx !== -1) this.batches[idx] = updated;
-
         this.loadBatches();
       },
       error: () => alert('Update failed')
@@ -160,16 +163,13 @@ export class CustomerListComponent implements OnInit {
   deleteBatch(): void {
     if (!this.selectedBatchNo) return;
     if (!this.canEditDelete()) { alert('No permission'); return; }
-
     if (!confirm('Delete this batch and all transactions?')) return;
 
     this.customerService.deleteBatch(this.selectedBatchNo).subscribe({
       next: () => {
         alert('Batch deleted');
-
         this.batches = this.batches.filter(b => b.bactno !== this.selectedBatchNo);
         this.selectedBatch = null;
-
         const modalElement = document.getElementById('batchModal');
         if (modalElement) {
           const modal = bootstrap.Modal.getInstance(modalElement);
@@ -194,15 +194,39 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
-  getApprovalLevels(batch: any) {
-    if (!batch) return { checkedBy: '', reviewedBy: '', approvedBy: '' };
+  // getApprovalLevels(batch: any) {
+  //   if (!batch) return { checkedBy: '', reviewedBy: '', approvedBy: '' };
 
+  //   // Backend may supply approval1Name/2Name/3Name or we can fall back to IDs (aproval1 etc.)
+  //   const checkedBy = batch.aproval1Name || '';
+  //   const approvalStage = batch.approvalStage;
+  //   const reviewedBy = batch.approval2Name || batch.approval2UserName || batch.approval2 || '';
+  //   const approvedBy = batch.approval3Name || batch.approval3UserName || batch.approval3 || '';
+
+  //   return {
+  //     checkedBy,
+  //     reviewedBy,
+  //     approvedBy
+  //   };
+  // }
+
+  getApprovalLevels(batch: any) {
     return {
-      checkedBy: batch.aproval1Name || '',
-      reviewedBy: batch.aproval2Name || '',
-      approvedBy: batch.aproval3Name || ''
+      checkedBy: {
+        name: batch.aproval1Name || '',
+        level: batch.aproval1Name ? 'L1' : ''
+      },
+      reviewedBy: {
+        name: batch.aproval2Name || '',
+        level: batch.aproval2Name ? 'L2' : ''
+      },
+      approvedBy: {
+        name: batch.aproval3Name || '',
+        level: batch.aproval3Name ? 'L3' : ''
+      }
     };
   }
+
 
   canEditDelete(): boolean {
     return this.currentUserRole === 'ROLE_ADMIN' || this.currentUserRole === 'ROLE_L1';

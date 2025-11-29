@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginRequest } from '../models/auth.model';
 import { TokenStorageService } from './token-storage.service';
 
@@ -11,6 +11,9 @@ const API_URL = 'http://localhost:8080/api';
   providedIn: 'root'
 })
 export class AuthService {
+
+  private loginStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
+  loginStatus$ = this.loginStatus.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -28,13 +31,14 @@ export class AuthService {
           // Save token
           this.tokenStorage.saveToken(response.token);
 
-          // Save user with correct structure from backend
+          // Save user
           this.tokenStorage.saveUser({
             id: response.id,
             username: response.username,
             email: response.email,
-            role: response.role   // 🔥 FIXED (Used to be roles)
+            role: response.role  // role is string from backend
           });
+          this.loginStatus.next(true);
         }
       })
     );
@@ -52,6 +56,7 @@ export class AuthService {
   // =======================================
   logout(): void {
     this.tokenStorage.signOut();
+    this.loginStatus.next(false);
   }
 
   // =======================================
