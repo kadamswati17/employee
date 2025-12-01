@@ -15,6 +15,7 @@
                     <th>Transaction Date</th>
                     <th>Created By</th>
                     <th>Total Transactions</th>
+                    <th>Dowmload</th>
                 </tr>
             </thead>
 
@@ -24,6 +25,8 @@
                     <td>{{ b.trndate | date:'shortDate' }}</td>
                     <td>{{ b.createdby }}</td>
                     <td>{{ b.totalTransactions }}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" (click)="downloadBatch(b.bactno)">Download</button>
                 </tr>
             </tbody>
         </table>
@@ -57,7 +60,6 @@
                         }}
                     </div>
 
-                    <!-- CREATED BY block (name + role under it) -->
                     <div style="margin-top:8px;">
                         <strong>Created By:</strong>
                         <div *ngIf="selectedBatch">
@@ -72,28 +74,15 @@
                 <div class="flex-grow-1 text-center">
                     <h5 class="modal-title fw-bold">Demo Auto Limited</h5>
                 </div>
+
                 <div class="flex-grow-1 text-center">
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <!-- 
-                <div class="d-flex gap-2">
-                    <button class="btn btn-info btn-sm" (click)="downloadBatch(selectedBatchNo!)">Download</button>
-                    <button class="btn btn-success btn-sm" *ngIf="canApprove() && !isL1AlreadyApproved()"
-                        [disabled]="isBatchApproving" (click)="approveBatch(selectedBatchNo!)">Approve Batch</button>
-                    <button class="btn btn-warning btn-sm"
-                        *ngIf="currentUserRole === 'ROLE_L1' || currentUserRole === 'ROLE_L2' || currentUserRole === 'ROLE_L3'"
-                        (click)="rejectBatch()">Reject</button>
-                    <button class="btn btn-secondary btn-sm" *ngIf="canEditDelete()" (click)="editBatch()">Edit</button>
-                    <button class="btn btn-danger btn-sm" *ngIf="canEditDelete()"
-                        (click)="deleteBatch()">Delete</button>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div> -->
             </div>
 
             <div class="modal-body">
                 <div *ngIf="batchTransactions.length > 0; else noData">
 
-                    <!-- TRANSACTION TABLE -->
                     <table class="employee-table">
                         <thead>
                             <tr>
@@ -105,23 +94,120 @@
                                 <th>Description of Tooling</th>
                                 <th>Work Order No</th>
                                 <th>Tooling Asset No</th>
+                                <th>Edit</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <tr *ngFor="let t of batchTransactions">
+                            <tr *ngFor="let t of batchTransactions; let i = index">
+
                                 <td>{{ t.id }}</td>
-                                <td>{{ t.customerName }}</td>
-                                <td>{{ t.toolingdrawingpartno }}</td>
-                                <td>{{ t.partdrawingname }}</td>
-                                <td>{{ t.partdrawingno }}</td>
-                                <td>{{ t.descriptionoftooling }}</td>
-                                <td>{{ t.cmworkorderno }}</td>
-                                <td>{{ t.toolingassetno }}</td>
+
+                                <!-- Customer Name -->
+                                <td>
+                                    <ng-container *ngIf="editingIndex !== i; else editCustomerName">
+                                        {{ t.customerName }}
+                                    </ng-container>
+                                    <ng-template #editCustomerName>
+                                        <input type="text" [(ngModel)]="editModel.customerName"
+                                            class="form-control form-control-sm">
+                                    </ng-template>
+                                </td>
+
+                                <!-- Part No -->
+                                <td>
+                                    <ng-container *ngIf="editingIndex !== i; else editPartNo">
+                                        {{ t.toolingdrawingpartno }}
+                                    </ng-container>
+                                    <ng-template #editPartNo>
+                                        <input type="text" [(ngModel)]="editModel.toolingdrawingpartno"
+                                            class="form-control form-control-sm">
+                                    </ng-template>
+                                </td>
+
+                                <!-- Part Name -->
+                                <td>
+                                    <ng-container *ngIf="editingIndex !== i; else editPartName">
+                                        {{ t.partdrawingname }}
+                                    </ng-container>
+                                    <ng-template #editPartName>
+                                        <input type="text" [(ngModel)]="editModel.partdrawingname"
+                                            class="form-control form-control-sm">
+                                    </ng-template>
+                                </td>
+
+                                <!-- Part Drawing No -->
+                                <td>
+                                    <ng-container *ngIf="editingIndex !== i; else editPartDrawingNo">
+                                        {{ t.partdrawingno }}
+                                    </ng-container>
+                                    <ng-template #editPartDrawingNo>
+                                        <input type="text" [(ngModel)]="editModel.partdrawingno"
+                                            class="form-control form-control-sm">
+                                    </ng-template>
+                                </td>
+
+                                <!-- Description -->
+                                <td>
+                                    <ng-container *ngIf="editingIndex !== i; else editDescription">
+                                        {{ t.descriptionoftooling }}
+                                    </ng-container>
+                                    <ng-template #editDescription>
+                                        <input type="text" [(ngModel)]="editModel.descriptionoftooling"
+                                            class="form-control form-control-sm">
+                                    </ng-template>
+                                </td>
+
+                                <!-- Work Order -->
+                                <td>
+                                    <ng-container *ngIf="editingIndex !== i; else editWorkOrder">
+                                        {{ t.cmworkorderno }}
+                                    </ng-container>
+                                    <ng-template #editWorkOrder>
+                                        <input type="text" [(ngModel)]="editModel.cmworkorderno"
+                                            class="form-control form-control-sm">
+                                    </ng-template>
+                                </td>
+
+                                <!-- Asset -->
+                                <td>
+                                    <ng-container *ngIf="editingIndex !== i; else editAsset">
+                                        {{ t.toolingassetno }}
+                                    </ng-container>
+                                    <ng-template #editAsset>
+                                        <input type="text" [(ngModel)]="editModel.toolingassetno"
+                                            class="form-control form-control-sm">
+                                    </ng-template>
+                                </td>
+
+                                <!-- ACTION BUTTONS -->
+                                <td class="action-buttons">
+
+                                    <!-- EDIT BUTTON -->
+                                    <button *ngIf="editingIndex !== i"
+                                        class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="startEdit(i)">
+                                        ✎ Edit
+                                    </button>
+
+                                    <!-- SAVE + CANCEL BUTTONS -->
+                                    <div *ngIf="editingIndex === i" class="d-flex gap-2">
+                                        <button class="btn btn-success btn-sm rounded-pill px-3"
+                                            (click)="saveEdit(t.id)">
+                                            💾 Save
+                                        </button>
+
+                                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                            (click)="cancelEdit()">
+                                            ✕ Cancel
+                                        </button>
+                                    </div>
+
+                                </td>
+
                             </tr>
                         </tbody>
                     </table>
 
-                    <!-- APPROVAL FOOTER -->
                     <table class="employee-table mt-4">
                         <thead>
                             <tr>
@@ -135,28 +221,25 @@
                                 <td>
                                     <div>{{ getApprovalLevels(selectedBatch).checkedBy.name || '—' }}</div>
                                     <div *ngIf="getApprovalLevels(selectedBatch).checkedBy.level"
-                                        style="font-size: 0.9em; color: #666;">
+                                        style="font-size:0.9em; color:#666;">
                                         {{ getApprovalLevels(selectedBatch).checkedBy.level }}
                                     </div>
                                 </td>
-
                                 <td>
                                     <div>{{ getApprovalLevels(selectedBatch).reviewedBy.name || '—' }}</div>
                                     <div *ngIf="getApprovalLevels(selectedBatch).reviewedBy.level"
-                                        style="font-size: 0.9em; color: #666;">
+                                        style="font-size:0.9em; color:#666;">
                                         {{ getApprovalLevels(selectedBatch).reviewedBy.level }}
                                     </div>
                                 </td>
-
                                 <td>
                                     <div>{{ getApprovalLevels(selectedBatch).approvedBy.name || '—' }}</div>
                                     <div *ngIf="getApprovalLevels(selectedBatch).approvedBy.level"
-                                        style="font-size: 0.9em; color: #666;">
+                                        style="font-size:0.9em; color:#666;">
                                         {{ getApprovalLevels(selectedBatch).approvedBy.level }}
                                     </div>
                                 </td>
                             </tr>
-
                         </tbody>
                     </table>
 
@@ -168,20 +251,28 @@
             </div>
 
             <div class="modal-footer">
-
                 <div class="d-flex ">
                     <button class="btn btn-info btn-sm" (click)="downloadBatch(selectedBatchNo!)">Download</button>
+
                     <button class="btn btn-success btn-sm" *ngIf="canApprove() && !isL1AlreadyApproved()"
-                        [disabled]="isBatchApproving" (click)="approveBatch(selectedBatchNo!)">Approve Batch</button>
+                        [disabled]="isBatchApproving" (click)="approveBatch(selectedBatchNo!)">
+                        Approve Batch
+                    </button>
+
                     <button class="btn btn-warning btn-sm"
                         *ngIf="currentUserRole === 'ROLE_L1' || currentUserRole === 'ROLE_L2' || currentUserRole === 'ROLE_L3'"
-                        (click)="rejectBatch()">Reject</button>
-                    <button class="btn btn-secondary btn-sm" *ngIf="canEditDelete()" (click)="editBatch()">Edit</button>
-                    <button class="btn btn-danger btn-sm" *ngIf="canEditDelete()"
-                        (click)="deleteBatch()">Delete</button>
+                        (click)="rejectBatch()">
+                        Reject
+                    </button>
 
+                    <!-- OLD EDIT BUTTON REMOVED -->
+
+                    <button class="btn btn-danger btn-sm" *ngIf="canEditDelete()" (click)="deleteBatch()">
+                        Delete
+                    </button>
                 </div>
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Submit</button>
+
+                <!-- <button class="btn btn-secondary" data-bs-dismiss="modal">Submit</button> -->
             </div>
 
         </div>

@@ -31,8 +31,18 @@
 
                     <td class="actions">
                         <button class="btn btn-edit" (click)="editUser(u.id)">Edit</button>
+
+                        <button *ngIf="u.active" class="btn btn-warning" (click)="deactivate(u.id)">
+                            Deactivate
+                        </button>
+
+                        <button *ngIf="!u.active" class="btn btn-success" (click)="activate(u.id)">
+                            Activate
+                        </button>
+
                         <button class="btn btn-delete" (click)="deleteUser(u.id)">Delete</button>
                     </td>
+
                 </tr>
             </tbody>
         </table>

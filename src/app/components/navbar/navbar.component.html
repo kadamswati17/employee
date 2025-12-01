@@ -1,32 +1,26 @@
 <nav class="navbar">
   <div class="navbar-container">
+
+    <!-- Brand -->
     <div class="navbar-brand">
-      <a routerLink="/employees">
-        Digital Data System &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      </a>
+      <a routerLink="/employees">Digital Data System</a>
     </div>
 
-    <div class="navbar-menu" *ngIf="isLoggedIn">
+    <!-- SIMPLE SELECT DROPDOWN -->
+    <select class="nav-select" (change)="navigate($event)">
+      <option value="" selected disabled>Menu</option>
+      <option value="/employees">Employees</option>
+      <option value="/customers">Batch</option>
 
-      <a routerLink="/employees" routerLinkActive="active">Employees</a>
-      <!-- <a routerLink="/employees/add" routerLinkActive="active">Add Employee</a> -->
-      <a routerLink="/customers" routerLinkActive="active">Batch</a>
+      <option *ngIf="currentUser?.role === 'ROLE_ADMIN'" value="/km-list">KM List</option>
+      <option *ngIf="currentUser?.role === 'ROLE_ADMIN'" value="/users">Users</option>
+    </select>
 
-      <!-- SHOW ONLY FOR ADMIN -->
-      <!-- <a *ngIf="currentUser?.role === 'ROLE_ADMIN'" routerLink="/admin/create-user" routerLinkActive="active">
-        Create User
-      </a> -->
-
-      <a *ngIf="currentUser?.role === 'ROLE_ADMIN'" routerLink="/users" routerLinkActive="active">
-        Users
-      </a>
-
-
-      <div class="user-info">
-        <span class="username">{{ currentUser?.username }}</span>
-        <button class="btn-logout" (click)="logout()">Logout</button>
-      </div>
-
+    <!-- USER INFO + LOGOUT -->
+    <div class="user-info" *ngIf="isLoggedIn">
+      <span class="username">{{ currentUser?.username }}</span>
+      <button class="btn-logout" (click)="logout()">Logout</button>
     </div>
+
   </div>
 </nav>

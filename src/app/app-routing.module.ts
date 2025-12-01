@@ -11,6 +11,8 @@ import { CustomerListComponent } from './customer-list/customer-list.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { CreateUserComponent } from './admin/create-user/create-user.component';
+import { KmFormComponent } from './components/km-form/km-form.component';
+import { KmListComponent } from './components/km-list/km-list.component';
 
 
 const routes: Routes = [
@@ -27,18 +29,20 @@ const routes: Routes = [
   { path: 'customers/add', component: CustomerFormComponent, canActivate: [AuthGuard] },
   { path: 'customers/edit/:id', component: CustomerFormComponent, canActivate: [AuthGuard] },
 
-  // 🔥 NEW USER MANAGEMENT ROUTES
   { path: 'users', component: UserListComponent, canActivate: [AuthGuard] },
   { path: 'users/add', component: UserFormComponent, canActivate: [AuthGuard] },
   { path: 'users/edit/:id', component: UserFormComponent, canActivate: [AuthGuard] },
-  {
-    path: 'admin/create-user',
-    component: CreateUserComponent
-  }
-  ,
 
+  { path: 'admin/create-user', component: CreateUserComponent, canActivate: [AuthGuard] },
+
+  // ⭐ KM MODULE (MUST BE BEFORE **)
+  { path: 'km-form', component: KmFormComponent, canActivate: [AuthGuard] },
+  { path: 'km-list', component: KmListComponent, canActivate: [AuthGuard] },
+
+  // WILDCARD MUST BE LAST
   { path: '**', redirectTo: '/login' }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

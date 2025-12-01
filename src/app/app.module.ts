@@ -17,6 +17,8 @@ import { CustomerListComponent } from './customer-list/customer-list.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { CreateUserComponent } from './admin/create-user/create-user.component';
+import { KmFormComponent } from './components/km-form/km-form.component';
+import { KmListComponent } from './components/km-list/km-list.component';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { CreateUserComponent } from './admin/create-user/create-user.component';
     CustomerListComponent,
     UserListComponent,
     UserFormComponent,
-    CreateUserComponent
+    CreateUserComponent,
+    KmFormComponent,
+    KmListComponent
   ],
   imports: [
     BrowserModule,

@@ -46,4 +46,23 @@ export class UserListComponent implements OnInit {
       });
     }
   }
+
+  activate(id: number) {
+    if (confirm("Activate this user?")) {
+      this.userService.activateUser(id).subscribe(() => {
+        alert("User activated!");
+        this.loadUsers();
+      });
+    }
+  }
+
+  deactivate(id: number) {
+    if (confirm("Deactivate this user?")) {
+      this.userService.deactivateUser(id).subscribe(() => {
+        alert("User deactivated!");
+        this.loadUsers();
+      });
+    }
+  }
+
 }

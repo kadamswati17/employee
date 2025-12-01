@@ -1,75 +1,101 @@
+/* ============================
+   NAVBAR WRAPPER
+============================ */
 .navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 15px 20px;
   color: white;
-  padding: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
+/* ============================
+   CONTAINER
+============================ */
 .navbar-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
 }
 
+/* ============================
+   BRAND
+============================ */
 .navbar-brand a {
   color: white;
-  text-decoration: none;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
-}
-
-.navbar-menu {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.navbar-menu a {
-  color: white;
   text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-  font-size: 16px;
+  letter-spacing: 0.5px;
+  padding-right: 600px;
 }
 
-.navbar-menu a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+/* ============================
+   DROPDOWN SELECT
+============================ */
+.nav-select {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  font-size: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: 0.2s ease-in-out;
 }
 
-.navbar-menu a.active {
-  background-color: rgba(255, 255, 255, 0.2);
+/* Dropdown Options (white background + black text) */
+.nav-select option {
+  background: white;
+  color: #222;
+  padding: 10px;
 }
 
+
+/* 
+.nav-select:hover {
+  background: #f2f2f2;
+} */
+
+/* ============================
+   USER INFO (USERNAME + LOGOUT)
+============================ */
 .user-info {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-left: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
   padding-left: 20px;
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .username {
+  color: white;
   font-size: 14px;
-  opacity: 0.9;
+  font-weight: 500;
 }
 
+/* ============================
+   LOGOUT BUTTON
+============================ */
 .btn-logout {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 6px;
   font-size: 14px;
-  transition: all 0.3s;
+  color: white;
+  cursor: pointer;
+  transition: 0.25s ease-in-out;
+  backdrop-filter: blur(3px);
 }
 
 .btn-logout:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.5);
 }
-

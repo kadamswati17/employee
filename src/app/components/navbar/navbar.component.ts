@@ -47,5 +47,14 @@ export class NavbarComponent implements OnInit {
     console.log('Navbar - User logged out', this.isLoggedIn);
 
   }
+  navigate(event: any) {
+    const page = event.target.value;
+    if (page) {
+      this.router.navigate([page]);
+    }
+  }
+
+
+
 }
 

@@ -1,0 +1,48 @@
+<div class="km-list-container">
+
+    <h2>KM Records</h2>
+
+    <!-- Add KM Button -->
+    <div class="top-bar">
+        <button class="btn-add" routerLink="/km-form">+ Add KM Entry</button>
+    </div>
+
+    <!-- KM TABLE -->
+    <table *ngIf="pagedKm.length > 0" class="km-table full-width">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Salesperson</th>
+                <th>Start KM</th>
+                <th>End KM</th>
+                <th>Visited Place</th>
+                <th>Batch No</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let km of pagedKm; let i = index">
+                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                <td>{{ km.salesperson }}</td>
+                <td>{{ km.startKm }}</td>
+                <td>{{ km.endKm }}</td>
+                <td>{{ km.visitedPlace }}</td>
+                <td>{{ km.batchNo }}</td>
+                <td>{{ km.trnDate }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p *ngIf="pagedKm.length === 0">No KM records found.</p>
+
+    <!-- PAGINATION -->
+    <div class="pagination" *ngIf="totalPages > 1">
+        <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+
+        <span>Page {{ currentPage }} / {{ totalPages }}</span>
+
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+
+</div>

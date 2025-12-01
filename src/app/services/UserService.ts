@@ -30,4 +30,12 @@ export class UserService {
     deleteUser(id: number): Observable<any> {
         return this.http.delete(`${API_URL}/${id}`);
     }
+    activateUser(id: number) {
+        return this.http.put(`${API_URL}/${id}/activate`, {});
+    }
+
+    deactivateUser(id: number) {
+        return this.http.put(`${API_URL}/${id}/deactivate`, {});
+    }
+
 }
