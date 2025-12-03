@@ -1,5 +1,32 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { KmService } from 'src/app/services/KmService';
+
+declare var bootstrap: any;
+
+interface KmBatch {
+  kmBatchNo?: number;
+  trndate?: string | Date;
+  createdby?: string;
+  totalEntries?: number;
+  approvalStage?: string;
+  approval1Name?: string;
+  approval2Name?: string;
+  approval3Name?: string;
+}
+
+interface KmEntry {
+  id?: number;
+  salesperson?: string | null;
+  startKm: number | null;
+  endKm: number | null;
+  visitedPlace?: string | null;
+  trnDate?: string | Date | null;
+  filePath?: string | null;
+  trbactno?: number | null;
+  status?: string | null;
+}
 
 @Component({
   selector: 'app-km-list',
@@ -8,52 +35,316 @@ import { KmService } from 'src/app/services/KmService';
 })
 export class KmListComponent implements OnInit {
 
-  kmList: any[] = [];
-  pagedKm: any[] = [];
+  batches: KmBatch[] = [];
+  filteredBatches: KmBatch[] = [];
+  entries: KmEntry[] = [];
 
-  pageSize = 7;   // 🔥 Show 7 records per page
+  activeFilter = 'ALL';
+  isLoading = false;
+  currentUserRole = '';
+
+  itemsPerPage = 7;
   currentPage = 1;
-  totalPages = 1;
 
-  constructor(private kmService: KmService) { }
+  selectedBatchNo?: number;
+  selectedBatch?: KmBatch | null;
 
-  ngOnInit() {
-    this.loadAllKm();
+  editingIndex: number | null = null;
+  editModel: any = {};
+  // router: any;
+
+  constructor(private kmService: KmService, private authService: AuthService, private router: Router) { }
+
+  ngOnInit(): void {
+    const current = this.authService.getCurrentUser();
+    this.currentUserRole = current ? current.role : '';
+    this.load();
   }
 
-  loadAllKm() {
-    this.kmService.getAllKm().subscribe({
-      next: (data) => {
-
-        // 🔥 Sort by date descending (latest first)
-        this.kmList = data.sort(
-          (a, b) => new Date(b.trnDate).getTime() - new Date(a.trnDate).getTime()
-        );
-
-        this.totalPages = Math.ceil(this.kmList.length / this.pageSize);
-        this.updatePage();
+  load() {
+    this.isLoading = true;
+    this.kmService.getAllBatches().subscribe({
+      next: (res: any[]) => {
+        this.batches = (res || []).sort((a, b) => (b.kmBatchNo || 0) - (a.kmBatchNo || 0));
+        this.applyFilter();
+        this.isLoading = false;
       },
-      error: (err) => console.error(err)
+      error: () => { this.isLoading = false; }
     });
   }
 
-  updatePage() {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.pagedKm = this.kmList.slice(start, end);
+  setFilter(f: string) {
+    this.activeFilter = f;
+    this.currentPage = 1;
+    this.applyFilter();
   }
 
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.updatePage();
+  // applyFilter() {
+  //   if (this.activeFilter === 'ALL') {
+  //     this.filteredBatches = this.batches;
+  //     return;
+  //   }
+
+  //   let pending = '';
+  //   if (this.currentUserRole === 'ROLE_L1') pending = 'NONE';
+  //   if (this.currentUserRole === 'ROLE_L2') pending = 'L1';
+  //   if (this.currentUserRole === 'ROLE_L3') pending = 'L2';
+
+  //   if (this.activeFilter === 'PENDING') {
+  //     this.filteredBatches = this.batches.filter(b => (b.approvalStage || 'NONE') === pending);
+  //     return;
+  //   }
+  // }
+  applyFilter() {
+
+    // ⭐ ALL — show everything
+    if (this.activeFilter === 'ALL') {
+      this.filteredBatches = this.batches;
+      return;
+    }
+
+    let stagePending = '';
+    let stageApproved = '';
+
+    // ⭐ Stage mapping same as customer list
+    if (this.currentUserRole === 'ROLE_L1') {
+      stagePending = 'NONE';
+      stageApproved = 'L1';
+    }
+
+    if (this.currentUserRole === 'ROLE_L2') {
+      stagePending = 'L1';
+      stageApproved = 'L2';
+    }
+
+    if (this.currentUserRole === 'ROLE_L3') {
+      stagePending = 'L2';
+      stageApproved = 'L3';
+    }
+
+    // ⭐ PENDING
+    if (this.activeFilter === 'PENDING') {
+      this.filteredBatches = this.batches.filter(
+        b => b.approvalStage === stagePending
+      );
+      return;
+    }
+
+    // ⭐ APPROVED
+    if (this.activeFilter === 'APPROVED') {
+      this.filteredBatches = this.batches.filter(
+        b => b.approvalStage === stageApproved
+      );
+      return;
+    }
+
+    // ⭐ REJECTED (L1 / L2 / L3 logic same as customer)
+    if (this.activeFilter === 'REJECTED') {
+
+      if (this.currentUserRole === 'ROLE_L1') {
+        this.filteredBatches = this.batches.filter(b =>
+          b.approvalStage === 'L1_REJECTED' ||
+          b.approvalStage === 'L2_REJECTED'
+        );
+      }
+
+      if (this.currentUserRole === 'ROLE_L2') {
+        this.filteredBatches = this.batches.filter(b =>
+          b.approvalStage === 'L2_REJECTED' ||
+          b.approvalStage === 'L3_REJECTED'
+        );
+      }
+
+      if (this.currentUserRole === 'ROLE_L3') {
+        this.filteredBatches = this.batches.filter(b =>
+          b.approvalStage === 'L3_REJECTED'
+        );
+      }
+
+      return;
+    }
+
+  }
+
+
+  get paginatedBatches() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredBatches.slice(start, start + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredBatches.length / this.itemsPerPage);
+  }
+
+  changePage(p: number) {
+    if (p >= 1 && p <= this.totalPages) this.currentPage = p;
+  }
+
+  openBatchModal(batchNo?: number) {
+    if (!batchNo) return;
+
+    this.selectedBatchNo = batchNo;
+
+    this.kmService.getEntriesByBatch(batchNo).subscribe({
+      next: (res: KmEntry[]) => {
+        this.entries = res || [];
+        this.selectedBatch = this.batches.find(b => b.kmBatchNo === batchNo) || null;
+
+        const el = document.getElementById('kmBatchModal');
+        if (el) {
+          const modal = new bootstrap.Modal(el);
+          modal.show();
+        }
+      }
+    });
+  }
+
+  startEdit(i: number) {
+    this.editingIndex = i;
+    this.editModel = { ...this.entries[i] };
+  }
+
+  cancelEdit() {
+    this.editingIndex = null;
+    this.editModel = {};
+  }
+
+  saveEdit(id?: number) {
+    if (!id) return;
+
+    this.kmService.updateEntry(id, this.editModel).subscribe({
+      next: () => {
+        Object.assign(this.entries[this.editingIndex!], this.editModel);
+        this.cancelEdit();
+        alert('Entry updated');
+      }
+    });
+  }
+
+  // canEditDelete() {
+  //   return this.currentUserRole === 'ROLE_ADMIN' || this.currentUserRole === 'ROLE_L1';
+  // }
+
+  isAnyApprover() {
+    return ['ROLE_L1', 'ROLE_L2', 'ROLE_L3'].includes(this.currentUserRole);
+  }
+
+  canApprove() {
+    const stage = this.selectedBatch?.approvalStage || 'NONE';
+    return (
+      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+    );
+  }
+
+  canAddBatch(): boolean {
+    return this.currentUserRole === 'ROLE_ADMIN' || this.currentUserRole === 'ROLE_L1';
+  }
+
+
+  approve(batchNo?: number) {
+    if (!batchNo) return;
+
+    this.kmService.approveBatch(batchNo).subscribe({
+      next: () => {
+        alert('KM approved');
+        this.router.navigate(['/km-list']);
+        // this.selectedBatch = null;
+        this.closeModal();
+        this.load();
+      }
+    });
+  }
+
+  closeModal() {
+    const modalElement = document.getElementById('kmBatchModal');
+    if (modalElement) {
+      const instance = bootstrap.Modal.getInstance(modalElement);
+      if (instance) instance.hide();
     }
   }
 
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.updatePage();
-    }
+  reject(batchNo?: number) {
+    if (!batchNo) return;
+
+    const reason = prompt('Enter rejection reason:') || '';
+    this.kmService.rejectBatch(batchNo, reason).subscribe({
+      next: () => {
+        alert('KM rejected');
+        this.router.navigate(['/km-list']);
+        // this.selectedBatch = null;
+        this.closeModal();
+        this.load();
+      }
+    });
   }
+
+  deleteBatch(batchNo?: number) {
+    if (!batchNo) return;
+
+    if (!confirm('Delete this batch?')) return;
+
+    this.kmService.deleteBatch(batchNo).subscribe({
+      next: () => {
+        alert('Batch deleted');
+        this.router.navigate(['/km-list']);
+        // this.selectedBatch = null;
+        this.closeModal();
+        this.load();
+      }
+    });
+  }
+
+  download(batchNo?: number) {
+    if (!batchNo) return;
+
+    this.kmService.downloadBatch(batchNo).subscribe(file => {
+      const url = window.URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `KM-Batch-${batchNo}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+  canEditDelete(): boolean {
+    return (
+      this.currentUserRole === 'ROLE_ADMIN' ||
+      this.currentUserRole === 'ROLE_L1'
+    );
+  }
+
+  isL1AlreadyApproved(): boolean {
+    if (!this.selectedBatch) return false;
+
+    return (
+      this.currentUserRole === 'ROLE_L1' &&
+      (this.selectedBatch.approvalStage || 'NONE') !== 'NONE'
+    );
+  }
+
+  getApprovalLevels(batch: any) {
+    return {
+      checkedBy: {
+        name: batch.approval1Name || '',
+        level: batch.approval1Name ? 'L1' : ''
+      },
+      reviewedBy: {
+        name: batch.approval2Name || '',
+        level: batch.approval2Name ? 'L2' : ''
+      },
+      approvedBy: {
+        name: batch.approval3Name || '',
+        level: batch.approval3Name ? 'L3' : ''
+      }
+    };
+  }
+
+  canSeeRejectedFilter(): boolean {
+    return this.currentUserRole === 'ROLE_ADMIN' || this.currentUserRole === 'ROLE_L1';
+  }
+
+
+
 }

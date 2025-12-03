@@ -1,6 +1,6 @@
 /* ============================
    NAVBAR WRAPPER
-============================ */
+============================= */
 .navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 15px 20px;
@@ -13,7 +13,7 @@
 
 /* ============================
    CONTAINER
-============================ */
+============================= */
 .navbar-container {
   max-width: 1200px;
   margin: auto;
@@ -22,9 +22,14 @@
   align-items: center;
 }
 
+/* Add spacing between dropdowns */
+.nav-select:not(:first-child) {
+  margin-left: 20px;
+}
+
 /* ============================
    BRAND
-============================ */
+============================= */
 .navbar-brand a {
   color: white;
   font-size: 22px;
@@ -35,8 +40,8 @@
 }
 
 /* ============================
-   DROPDOWN SELECT
-============================ */
+   DROPDOWN FIX — CLEAN UI
+============================= */
 .nav-select {
   padding: 8px 14px;
   border-radius: 6px;
@@ -48,24 +53,22 @@
   outline: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: 0.2s ease-in-out;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-/* Dropdown Options (white background + black text) */
+/* Proper white dropdown menu */
 .nav-select option {
-  background: white;
-  color: #222;
+  background: white !important;
+  color: #222 !important;
   padding: 10px;
 }
 
-
-/* 
-.nav-select:hover {
-  background: #f2f2f2;
-} */
-
 /* ============================
-   USER INFO (USERNAME + LOGOUT)
-============================ */
+   USER INFO
+============================= */
 .user-info {
   display: flex;
   align-items: center;
@@ -82,7 +85,7 @@
 
 /* ============================
    LOGOUT BUTTON
-============================ */
+============================= */
 .btn-logout {
   background: rgba(255, 255, 255, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.35);

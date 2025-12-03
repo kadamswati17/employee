@@ -7,14 +7,24 @@
     </div>
 
     <!-- SIMPLE SELECT DROPDOWN -->
-    <select class="nav-select" (change)="navigate($event)">
-      <option value="" selected disabled>Menu</option>
-      <option value="/employees">Employees</option>
-      <option value="/customers">Batch</option>
+    <!-- MASTER DROPDOWN → Only for ADMIN -->
+    <select class="nav-select" (change)="navigate($event)" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
 
-      <option *ngIf="currentUser?.role === 'ROLE_ADMIN'" value="/km-list">KM List</option>
-      <option *ngIf="currentUser?.role === 'ROLE_ADMIN'" value="/users">Users</option>
+      <option value="" disabled selected hidden>Master</option>
+      <option value="/employees">Employees</option>
+      <option value="/users">Users</option>
     </select>
+
+
+    <!-- TRANSACTION DETAILS → Visible to ALL ROLES -->
+    <select class="nav-select" (change)="navigate($event)">
+      <option value="" disabled selected hidden>Transaction details</option>
+      <option value="/km-list">KM List</option>
+      <option value="/customers">Batch</option>
+    </select>
+
+
+
 
     <!-- USER INFO + LOGOUT -->
     <div class="user-info" *ngIf="isLoggedIn">

@@ -10,9 +10,15 @@ export class AppComponent implements OnInit {
   title = 'EmployeeManagementSystem';
   isLoggedIn = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    // 🔥 Listen to every login/logout update
+    this.authService.loginStatus$.subscribe(isLogged => {
+      this.isLoggedIn = isLogged;
+    });
+
+    // Set initial value
     this.isLoggedIn = this.authService.isAuthenticated();
   }
 }

@@ -10,6 +10,8 @@ import { AuthService } from '../../services/auth.service';
 export class NavbarComponent implements OnInit {
   isLoggedIn = false;
   currentUser: any = null;
+  selectedMaster: string = "";
+  selectedTransaction: string = "";
 
   constructor(
     private authService: AuthService,
@@ -47,12 +49,29 @@ export class NavbarComponent implements OnInit {
     console.log('Navbar - User logged out', this.isLoggedIn);
 
   }
+
+  // navigate(event: any) {
+  //   const page = event.target.value;
+  //   if (page) {
+  //     this.router.navigate([page]).then(() => {
+  //       // reset both selects after navigation
+  //       this.selectedMaster = "";
+  //       this.selectedTransaction = "";
+  //     });
+  //   }
+  // }
+
   navigate(event: any) {
     const page = event.target.value;
+
     if (page) {
-      this.router.navigate([page]);
+      this.router.navigate([page]).then(() => {
+        // reset dropdown so title always shows
+        event.target.selectedIndex = 0;
+      });
     }
   }
+
 
 
 

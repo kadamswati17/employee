@@ -135,3 +135,53 @@
   color: #764ba2;
 }
 
+/* Floating Wrapper */
+.form-group.floating {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+/* Input */
+.form-group.floating .form-control {
+  padding: 16px 12px 8px 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  background: white;
+  transition: 0.25s;
+}
+
+/* Label */
+.form-group.floating label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #666;
+  pointer-events: none;
+  transition: 0.25s ease;
+}
+
+/* Floating animation when typed or focused */
+.form-group.floating .form-control:focus+label,
+.form-group.floating .form-control:not(:placeholder-shown)+label {
+  top: 6px;
+  font-size: 18px;
+  color: #667eea;
+}
+
+/* Focus Effect */
+.form-group.floating .form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* Invalid red border */
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+/* Fix layout for password dots */
+.form-control[type="password"] {
+  letter-spacing: 0.03em;
+}
