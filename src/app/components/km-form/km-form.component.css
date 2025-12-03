@@ -1,19 +1,19 @@
-/* Outer container */
+/* MAIN CONTAINER */
 .employee-form-container {
     max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
 }
 
-/* Card */
+/* CARD */
 .form-card {
     background: #fff;
     padding: 35px;
-    border-radius: 20px;
-    box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 18px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Header */
+/* HEADER */
 .form-header h2 {
     font-size: 32px;
     font-weight: 600;
@@ -21,7 +21,7 @@
     color: #222;
 }
 
-/* ROW – 3 columns like screenshot */
+/* GRID — 3 columns */
 .form-row-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -29,32 +29,81 @@
     margin-bottom: 28px;
 }
 
-/* Label */
-.form-group label {
-    font-size: 14px;
-    color: #444;
-    margin-bottom: 8px;
+/* ---------------------------- */
+/* FLOATING LABEL INPUT GROUP  */
+/* ---------------------------- */
+
+.form-group.floating {
+    position: relative;
+    width: 100%;
 }
 
-/* Big rounded inputs like screenshot */
-.big-input {
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 14px;
-    font-size: 15px;
-    transition: 0.3s;
-}
-
-.big-input:focus {
-    border-color: #6a5acd;
-    box-shadow: 0px 0px 8px rgba(106, 90, 205, 0.3);
+/* INPUT */
+.form-group.floating .big-input {
+    width: 100%;
+    padding: 18px 14px 8px;
+    font-size: 16px;
+    border: 2px solid #d4d4d4;
+    border-radius: 14px;
+    background: white;
+    transition: 0.25s ease;
     outline: none;
 }
 
-/* Right side Save button */
+/* FOCUS EFFECT */
+.form-group.floating .big-input:focus {
+    border-color: #8a5cff;
+    box-shadow: 0px 0px 8px rgba(138, 92, 255, 0.35);
+}
+
+/* LABEL DEFAULT POSITION */
+.form-group.floating label {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    background: #ffffff;
+    padding: 0px 6px;
+    font-size: 16px;
+    color: #777;
+    transition: 0.25s ease;
+    pointer-events: none;
+}
+
+/* FLOATING STATE */
+.form-group.floating .big-input:focus+label,
+.form-group.floating .big-input:not(:placeholder-shown)+label {
+    top: -10px;
+    left: 14px;
+    font-size: 20px;
+    color: #8a5cff;
+}
+
+/* Special fix for date input (force placeholder behavior) */
+input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
+    color: transparent;
+}
+
+/* FILE INPUT FIX */
+.file-input {
+    padding: 20px 14px 6px;
+}
+
+.file-input::-webkit-file-upload-button {
+    margin-top: -3px;
+}
+
+.form-group.floating .file-input:not(:focus)+label {
+    top: -10px !important;
+    font-size: 13px !important;
+    color: #777 !important;
+}
+
+/* ---------------------------- */
+/* BUTTONS */
+/* ---------------------------- */
+
 .action-right {
     text-align: right;
-    margin-top: 10px;
     margin-bottom: 35px;
 }
 
@@ -65,14 +114,15 @@
     border-radius: 25px;
     font-size: 16px;
     border: none;
-    transition: 0.2s;
+    cursor: pointer;
+    transition: 0.25s ease;
 }
 
 .save-btn:hover {
     transform: translateY(-2px);
 }
 
-/* Details section title */
+/* DETAILS TITLE */
 .details-title {
     margin-top: 30px;
     font-size: 22px;
@@ -80,38 +130,7 @@
     color: #222;
 }
 
-/* Empty box */
-.empty-box {
-    background: #f8f9fc;
-    padding: 20px;
-    border-radius: 12px;
-    color: #777;
-    font-size: 15px;
-}
-
-/* Footer buttons */
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 25px;
-    gap: 15px;
-}
-
-.cancel-btn {
-    background: #5a6268;
-    padding: 10px 26px;
-    color: #fff;
-    border-radius: 25px;
-}
-
-.submit-btn {
-    background: linear-gradient(135deg, #8e98ff, #b08cff);
-    padding: 10px 26px;
-    border-radius: 25px;
-    color: #fff;
-}
-
-/* Table */
+/* TABLE */
 .employee-table {
     width: 100%;
     border-collapse: collapse;
@@ -129,61 +148,46 @@
     border: 1px solid #eee;
 }
 
-/* Hover effect */
 .employee-table tbody tr:hover {
     background: #f4f6ff;
 }
 
-/* Mobile responsive */
+/* EMPTY BOX */
+.empty-box {
+    background: #f8f9fc;
+    padding: 20px;
+    border-radius: 12px;
+    color: #777;
+    font-size: 15px;
+}
+
+/* FOOTER BUTTONS */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.cancel-btn {
+    background: #6c757d;
+    padding: 10px 26px;
+    border-radius: 25px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #8e98ff, #b08cff);
+    padding: 10px 26px;
+    border-radius: 25px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
     .form-row-3 {
         grid-template-columns: 1fr;
     }
-}
-
-/* Floating label wrapper */
-.form-group.floating {
-    position: relative;
-}
-
-/* Floating input */
-.form-group.floating .big-input {
-    width: 100%;
-    padding: 18px 14px 10px 14px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 16px;
-    background: white;
-    transition: 0.25s;
-}
-
-/* Floating label */
-.form-group.floating label {
-    position: absolute;
-    top: 50%;
-    left: 14px;
-    transform: translateY(-50%);
-    font-size: 15px;
-    color: #777;
-    pointer-events: none;
-    transition: 0.25s;
-}
-
-/* When typing or focused */
-.form-group.floating input:focus+label,
-.form-group.floating input:not(:placeholder-shown)+label {
-    top: 5px;
-    font-size: 12px;
-    color: #6a5acd;
-}
-
-/* Focus effect */
-.form-group.floating .big-input:focus {
-    border-color: #6a5acd;
-    box-shadow: 0px 0px 8px rgba(106, 90, 205, 0.35);
-}
-
-/* File input needs small fix */
-.file-input {
-    padding-top: 20px;
 }

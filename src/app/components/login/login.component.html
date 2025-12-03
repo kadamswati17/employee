@@ -1,5 +1,6 @@
 <div class="login-container">
   <div class="login-card">
+
     <div class="login-header">
       <h2>Digital Data System</h2>
     </div>
@@ -11,8 +12,8 @@
       </div>
 
       <!-- Floating Email -->
-      <div class="form-group floating">
-        <input type="email" id="email" formControlName="email" placeholder=" " class="form-control"
+      <div class="floating-group">
+        <input type="email" id="email" formControlName="email" placeholder=" " required
           [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
         <label for="email">Email</label>
 
@@ -22,8 +23,8 @@
       </div>
 
       <!-- Floating Password -->
-      <div class="form-group floating">
-        <input type="password" id="password" formControlName="password" placeholder=" " class="form-control"
+      <div class="floating-group">
+        <input type="password" id="password" formControlName="password" placeholder=" " required
           [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
         <label for="password">Password</label>
 
@@ -32,7 +33,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block" [disabled]="loginForm.invalid || isLoading">
+      <button type="submit" class="btn-login" [disabled]="loginForm.invalid || isLoading">
         <span *ngIf="!isLoading">Sign In</span>
         <span *ngIf="isLoading">Signing in...</span>
       </button>
@@ -42,6 +43,7 @@
           Don't have an account? <a routerLink="/register">Sign up</a>
         </p>
       </div>
+
     </form>
   </div>
 </div>

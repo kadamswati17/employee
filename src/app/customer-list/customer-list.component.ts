@@ -194,13 +194,19 @@ export class CustomerListComponent implements OnInit {
     );
   }
 
-  canReject(): boolean {
+  canReject() {
+    // After L2 approval, only L3 can reject
+    if (this.selectedBatch?.approvalStage === 'L2' && this.currentUserRole !== 'ROLE_L3') {
+      return false;
+    }
+
     return (
       this.currentUserRole === 'ROLE_L1' ||
       this.currentUserRole === 'ROLE_L2' ||
       this.currentUserRole === 'ROLE_L3'
     );
   }
+
 
   canDownload(): boolean {
     return (
@@ -266,9 +272,19 @@ export class CustomerListComponent implements OnInit {
         this.closeModal();
         this.loadBatches();
       },
-      error: () => alert('Reject failed')
+      error: (err) => {
+        if (err.error?.message === "NO_AUTH") {
+          alert("❌ You don’t have authority to reject this batch.");
+        } else {
+          alert("Reject failed.");
+
+        }
+        this.closeModal();
+        this.loadBatches();
+      }
     });
   }
+
 
   // ============================================================
   // DELETE
@@ -386,5 +402,9 @@ export class CustomerListComponent implements OnInit {
   canSeeRejectedFilter(): boolean {
     return this.currentUserRole === 'ROLE_ADMIN' || this.currentUserRole === 'ROLE_L1';
   }
+  isAdmin(): boolean {
+    return this.currentUserRole === 'ROLE_ADMIN';
+  }
+
 
 }

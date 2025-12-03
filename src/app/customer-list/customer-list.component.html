@@ -8,22 +8,27 @@
 
     </div>
 
-    <!-- 🔥 FILTER BUTTONS -->
     <div class="filter-buttons">
-        <button class="filter-btn" [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">All</button>
 
-        <button class="filter-btn" [class.active]="activeFilter === 'PENDING'"
-            (click)="setFilter('PENDING')">Pending</button>
+        <!-- ALWAYS visible -->
+        <button class="filter-btn" [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">
+            All
+        </button>
 
-        <button class="filter-btn" [class.active]="activeFilter === 'APPROVED'"
-            (click)="setFilter('APPROVED')">Approved</button>
+        <!-- ONLY L1/L2/L3 -->
+        <button class="filter-btn" *ngIf="!isAdmin()" [class.active]="activeFilter === 'PENDING'"
+            (click)="setFilter('PENDING')">
+            Pending
+        </button>
 
-        <button class="filter-btn" *ngIf="canSeeRejectedFilter()" [class.active]="activeFilter === 'REJECTED'"
-            (click)="setFilter('REJECTED')">
-            Rejected
+        <!-- ONLY L1/L2/L3 -->
+        <button class="filter-btn" *ngIf="!isAdmin()" [class.active]="activeFilter === 'APPROVED'"
+            (click)="setFilter('APPROVED')">
+            Approved
         </button>
 
     </div>
+
 
     <div *ngIf="isLoading">Loading...</div>
     <div *ngIf="errorMessage">{{ errorMessage }}</div>

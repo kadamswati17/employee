@@ -21,74 +21,90 @@
     color: #333;
 }
 
-.form-group {
-    margin-bottom: 18px;
+/* Floating Group */
+.floating-group {
+    position: relative;
+    margin-bottom: 25px;
 }
 
-label {
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: block;
-    color: #444;
-}
-
-label span {
-    color: red;
-}
-
-.form-input,
-.form-select {
+/* Inputs + Select */
+.floating-group input,
+.floating-group select {
     width: 100%;
-    padding: 12px 14px;
-    border-radius: 6px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    background: #f9f9f9;
-    transition: 0.3s ease;
-}
-
-.form-input:focus,
-.form-select:focus {
-    border-color: #007bff;
+    padding: 16px 14px 12px;
+    border-radius: 10px;
+    border: 1px solid #d0d0d0;
     background: #fff;
+    font-size: 15px;
+    transition: 0.25s ease;
     outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    appearance: none;
 }
 
+/* Purple focus border */
+.floating-group input:focus,
+.floating-group select:focus {
+    border-color: #8a5cff;
+    box-shadow: 0 0 5px rgba(138, 92, 255, 0.35);
+}
+
+/* Floating Label */
+.floating-group label {
+    position: absolute;
+    left: 14px;
+    top: 16px;
+    font-size: 15px;
+    color: #666;
+    background: #fff;
+    padding: 0 5px;
+    pointer-events: none;
+    transition: 0.2s ease;
+}
+
+/* Float on focus OR has value */
+.floating-group input:focus+label,
+.floating-group input:not(:placeholder-shown)+label,
+.floating-group select:focus+label,
+.floating-group select:not([value=""])+label {
+    top: -8px;
+    left: 10px;
+    font-size: 20px;
+    color: #8a5cff;
+}
+
+/* Buttons */
 .button-row {
-    margin-top: 25px;
     display: flex;
     justify-content: space-between;
+    margin-top: 25px;
 }
 
 .btn-submit {
-    background: #007bff;
-    color: #fff;
-    padding: 12px 22px;
-    font-size: 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
     width: 48%;
+    background: #8a5cff;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
     transition: 0.3s ease;
 }
 
 .btn-submit:hover {
-    background: #0062cc;
+    background: #7647d8;
 }
 
 .btn-cancel {
+    width: 48%;
     background: #ccc;
     color: #333;
-    padding: 12px 22px;
-    font-size: 15px;
-    border: none;
+    padding: 12px 20px;
     border-radius: 6px;
+    border: none;
     cursor: pointer;
-    width: 48%;
     transition: 0.3s ease;
 }
 
 .btn-cancel:hover {
-    background: #b1b1b1;
+    background: #b5b5b5;
 }

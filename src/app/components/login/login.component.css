@@ -1,3 +1,6 @@
+/* ---------------------- */
+/* MAIN LAYOUT */
+/* ---------------------- */
 .login-container {
   display: flex;
   justify-content: center;
@@ -9,13 +12,16 @@
 
 .login-card {
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  padding: 40px;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  padding: 40px 35px;
+  border-radius: 15px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
 }
 
+/* ---------------------- */
+/* HEADER */
+/* ---------------------- */
 .login-header {
   text-align: center;
   margin-bottom: 30px;
@@ -23,97 +29,101 @@
 
 .login-header h2 {
   color: #333;
-  margin-bottom: 10px;
   font-size: 28px;
+  font-weight: 700;
 }
 
-.login-header p {
-  color: #666;
-  font-size: 14px;
+/* ---------------------- */
+/* FLOATING INPUT GROUP */
+/* ---------------------- */
+.floating-group {
+  position: relative;
+  margin-bottom: 28px;
 }
 
-.login-form {
+.floating-group input {
   width: 100%;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #333;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.form-control {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  transition: border-color 0.3s;
-  box-sizing: border-box;
-}
-
-.form-control:focus {
+  padding: 18px 14px 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #d0d0d0;
+  font-size: 16px;
+  background: white;
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transition: 0.25s ease;
 }
 
-.form-control.is-invalid {
-  border-color: #dc3545;
+/* Purple focus */
+.floating-group input:focus {
+  border-color: #7a5ff0;
+  box-shadow: 0 0 6px rgba(122, 95, 240, 0.35);
+}
+
+/* Label floating */
+.floating-group label {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 16px;
+  background: #fff;
+  padding: 0 4px;
+  pointer-events: none;
+  transition: 0.25s ease;
+}
+
+/* Move label up when filled or focused */
+.floating-group input:focus+label,
+.floating-group input:not(:placeholder-shown)+label {
+  top: -8px;
+  left: 10px;
+  font-size: 20px;
+  color: #7a5ff0;
+}
+
+/* ---------------------- */
+/* ERROR STYLING */
+/* ---------------------- */
+.is-invalid {
+  border-color: #dc3545 !important;
 }
 
 .invalid-feedback {
-  display: block;
   color: #dc3545;
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 5px;
 }
 
-.btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s;
+/* ---------------------- */
+/* LOGIN BUTTON */
+/* ---------------------- */
+.btn-login {
   width: 100%;
-}
-
-.btn-primary {
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  transition: 0.25s;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-login:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 18px rgba(102, 126, 234, 0.45);
 }
 
-.btn-primary:disabled {
+.btn-login:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.alert {
-  padding: 12px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.alert-danger {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
+/* ---------------------- */
+/* REGISTER LINK */
+/* ---------------------- */
 .register-link {
   text-align: center;
   margin-top: 20px;
@@ -126,62 +136,11 @@
 
 .register-link a {
   color: #667eea;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
-  font-weight: 500;
 }
 
 .register-link a:hover {
   color: #764ba2;
-}
-
-/* Floating Wrapper */
-.form-group.floating {
-  position: relative;
-  margin-bottom: 25px;
-}
-
-/* Input */
-.form-group.floating .form-control {
-  padding: 16px 12px 8px 12px;
-  font-size: 15px;
-  border-radius: 8px;
-  background: white;
-  transition: 0.25s;
-}
-
-/* Label */
-.form-group.floating label {
-  position: absolute;
-  top: 50%;
-  left: 12px;
-  transform: translateY(-50%);
-  font-size: 18px;
-  color: #666;
-  pointer-events: none;
-  transition: 0.25s ease;
-}
-
-/* Floating animation when typed or focused */
-.form-group.floating .form-control:focus+label,
-.form-group.floating .form-control:not(:placeholder-shown)+label {
-  top: 6px;
-  font-size: 18px;
-  color: #667eea;
-}
-
-/* Focus Effect */
-.form-group.floating .form-control:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-}
-
-/* Invalid red border */
-.form-control.is-invalid {
-  border-color: #dc3545 !important;
-}
-
-/* Fix layout for password dots */
-.form-control[type="password"] {
-  letter-spacing: 0.03em;
 }

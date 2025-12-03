@@ -1,3 +1,7 @@
+/* -------------------------------------------------- */
+/* MAIN LAYOUT */
+/* -------------------------------------------------- */
+
 .employee-form-container {
     max-width: 1100px;
     margin: 0 auto;
@@ -6,166 +10,145 @@
 
 .form-card {
     background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-    padding: 32px 28px;
+    border-radius: 14px;
+    padding: 35px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
+/* -------------------------------------------------- */
+/* HEADER */
+/* -------------------------------------------------- */
 .form-header {
     margin-bottom: 24px;
 }
 
 .form-header h2 {
-    color: #111827;
-    font-size: 24px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f1f1f;
     margin: 0;
-    font-weight: 600;
 }
 
+/* -------------------------------------------------- */
+/* ALERT */
+/* -------------------------------------------------- */
 .alert {
     padding: 12px 16px;
+    font-size: 14px;
     border-radius: 8px;
     margin-bottom: 16px;
-    font-size: 14px;
 }
 
 .alert-danger {
-    background-color: #fef2f2;
+    background: #fde2e2;
+    border: 1px solid #f5b5b5;
     color: #b91c1c;
-    border: 1px solid #fecaca;
 }
 
-.employee-form {
+/* -------------------------------------------------- */
+/* FORM GRID — 4 FIELDS PER ROW */
+/* -------------------------------------------------- */
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+/* -------------------------------------------------- */
+/* FLOATING LABEL INPUT GROUP */
+/* -------------------------------------------------- */
+
+.form-group {
+    position: relative;
     width: 100%;
 }
 
-/* 2 rows, 4 fields each */
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-    margin-bottom: 20px;
+/* INPUT */
+.form-group.floating .form-control {
+    width: 100%;
+    padding: 17px 14px 7px;
+    font-size: 16px;
+    border: 2px solid #dddddd;
+    border-radius: 14px;
+    background: #ffffff;
+    transition: 0.25s ease;
+    outline: none;
 }
 
-/* Floating label group */
-.form-group {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+/* ON FOCUS */
+.form-group.floating .form-control:focus {
+    border-color: #7c5cff;
+    box-shadow: 0 0 8px rgba(124, 92, 255, 0.35);
 }
 
-/* hide normal label layout, use floating */
-/* .form-group.floating label {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: #ffffff;
-    padding: 0 6px;
-    font-size: 13px;
-    color: #6b7280;
-    pointer-events: none;
-    transition: all 0.18s ease-out;
-} */
+/* LABEL */
 .form-group.floating label {
     position: absolute;
-    top: 12px;
+    top: 14px;
     left: 14px;
-    color: #6b7280;
-    font-size: 14px;
+    padding: 0px 5px;
     background: #ffffff;
-    padding: 0 4px;
-    transition: 0.2s ease;
+    font-size: 15px;
+    color: #777;
     pointer-events: none;
+    transition: 0.22s ease;
 }
 
-
-/* base input */
-.form-control {
-    padding: 13px 8px 8px 15px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    font-family: inherit;
-    background-color: #ffffff;
-}
-
-/* when focused */
-.form-control:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
-}
-
-/* FLOAT UP on focus or when has-value class */
+/* FLOAT UP (focus OR has value) */
 .form-group.floating .form-control:focus+label,
 .form-group.floating.has-value label {
-    top: -8px;
+    top: -9px;
     left: 10px;
-    font-size: 11px;
-    background: #ffffff;
-    color: #4f46e5;
+    font-size: 20px;
+    color: #7c5cff;
 }
 
-/* error state (if you use it later) */
-.form-control.is-invalid {
-    border-color: #dc2626;
+/* FIX for date input — keeps placeholder hidden */
+input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
+    color: transparent;
 }
 
-.invalid-feedback {
-    display: block;
-    color: #dc2626;
-    font-size: 12px;
-    margin-top: 4px;
-}
+/* -------------------------------------------------- */
+/* ACTION BUTTONS */
+/* -------------------------------------------------- */
 
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 10px;
+    margin-top: 8px;
     padding-top: 16px;
-    border-top: 1px solid #e5e7eb;
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 12px 26px;
+    border-radius: 30px;
+    font-size: 16px;
     border: none;
-    border-radius: 999px;
-    font-size: 14px;
-    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    font-weight: 500;
+    transition: 0.25s ease;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: #ffffff;
+    background: linear-gradient(135deg, #6d5dfc, #8a65ff);
+    color: #fff;
 }
 
 .btn-primary:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 6px 18px rgba(120, 92, 255, 0.45);
+    transform: translateY(-2px);
 }
 
 .btn-secondary {
-    background-color: #6b7280;
-    color: #ffffff;
+    background: #6b7280;
+    color: #fff;
     margin-right: 20px;
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background-color: #4b5563;
-}
-
-.btn-delete {
-    background-color: #f97373;
-    color: #ffffff;
-}
-
-.btn-delete:hover:not(:disabled) {
-    background-color: #ef4444;
+    background: #4b5563;
 }
 
 .btn:disabled {
@@ -173,91 +156,98 @@
     cursor: not-allowed;
 }
 
-/* Cart section */
+/* -------------------------------------------------- */
+/* CART TABLE */
+/* -------------------------------------------------- */
+
 .cart-title {
-    margin-top: 28px;
+    margin-top: 30px;
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
-    color: #111827;
 }
 
 .cart-container {
-    margin-top: 8px;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
+    margin-top: 15px;
+    border-radius: 12px;
     overflow: hidden;
-    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    background: #fafafa;
 }
 
 .cart-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
 }
 
 .cart-table thead {
     background: #111827;
-    color: #f9fafb;
+    color: #ffffff;
 }
 
 .cart-table th {
-    padding: 16px 12px;
+    padding: 12px 16px;
     text-align: left;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.cart-table td {
-    padding: 0px 12px;
-    text-align: left;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.cart-table tbody tr:nth-child(even) {
-    background-color: #f3f4f6;
-}
-
-.cart-table tbody tr:hover {
-    background-color: #e5e7eb;
-}
-
-.empty-cart-text {
-    padding: 14px 16px;
-    color: #6b7280;
     font-size: 14px;
 }
 
-/* status pill */
+.cart-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+}
+
+.cart-table tbody tr:nth-child(even) {
+    background: #f3f4f6;
+}
+
+.cart-table tbody tr:hover {
+    background: #ededed;
+}
+
+.empty-cart-text {
+    padding: 14px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* -------------------------------------------------- */
+/* STATUS BADGES */
+/* -------------------------------------------------- */
 .status-pill {
     display: inline-flex;
-    align-items: center;
     padding: 4px 10px;
-    border-radius: 999px;
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    border-radius: 20px;
 }
 
 .status-pending {
-    background-color: #fef3c7;
+    background: #fef3c7;
     color: #92400e;
 }
 
 .status-approved {
-    background-color: #dcfce7;
+    background: #dcfce7;
     color: #166534;
 }
 
+/* -------------------------------------------------- */
+/* FINAL SUBMIT ROW */
+/* -------------------------------------------------- */
 .submit-row {
-    margin-top: 18px;
     display: flex;
     justify-content: flex-end;
+    margin-top: 20px;
+    gap: 15px;
 }
 
-/* Responsive */
+/* -------------------------------------------------- */
+/* RESPONSIVE */
+/* -------------------------------------------------- */
 @media (max-width: 900px) {
     .form-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -267,12 +257,6 @@
     }
 
     .form-card {
-        padding: 20px 16px;
+        padding: 24px 16px;
     }
-}
-
-.table-row th {
-    padding: 2px 6px !important;
-    line-height: 12px !important;
-    height: 16px !important;
 }

@@ -295,6 +295,10 @@ export class KmListComponent implements OnInit {
       }
     });
   }
+  isAdmin(): boolean {
+    return this.currentUserRole === 'ROLE_ADMIN';
+  }
+
 
   download(batchNo?: number) {
     if (!batchNo) return;
@@ -345,6 +349,25 @@ export class KmListComponent implements OnInit {
     return this.currentUserRole === 'ROLE_ADMIN' || this.currentUserRole === 'ROLE_L1';
   }
 
+  canReject(): boolean {
+    const stage = this.selectedBatch?.approvalStage || 'NONE';
+
+    // After L2 approval → only L3 can reject
+    if (stage === 'L2' && this.currentUserRole !== 'ROLE_L3') {
+      return false;
+    }
+
+    // After L3 approval → no one can reject
+    if (stage === 'L3') {
+      return false;
+    }
+
+    return (
+      this.currentUserRole === 'ROLE_L1' ||
+      this.currentUserRole === 'ROLE_L2' ||
+      this.currentUserRole === 'ROLE_L3'
+    );
+  }
 
 
 }

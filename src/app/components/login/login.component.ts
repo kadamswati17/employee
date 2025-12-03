@@ -49,8 +49,22 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(credentials).subscribe({
       next: () => {
-        this.router.navigate(['/employees']);
-      },
+        const user = this.authService.getCurrentUser();
+
+        if (!user) return;
+
+        // ROLE-BASED REDIRECT
+        if (user.role === 'ROLE_ADMIN') {
+          this.router.navigate(['/employees']);
+        } else if (
+          user.role === 'ROLE_L1' ||
+          user.role === 'ROLE_L2' ||
+          user.role === 'ROLE_L3'
+        ) {
+          this.router.navigate(['/customers']);   // or '/km-list' if you prefer
+        }
+      }
+      ,
       error: (err) => {
         this.isLoginFailed = true;
         this.errorMessage = err.error?.message || 'Invalid login credentials';

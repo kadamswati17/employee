@@ -8,30 +8,30 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
             <!-- Username -->
-            <div class="form-group">
-                <label>Username <span>*</span></label>
-                <input type="text" formControlName="username" class="form-input" placeholder="Enter username">
+            <div class="floating-group">
+                <input type="text" formControlName="username" placeholder=" " required>
+                <label>Username *</label>
             </div>
 
             <!-- Email -->
-            <div class="form-group">
-                <label>Email <span>*</span></label>
-                <input type="email" formControlName="email" class="form-input" placeholder="Enter email">
+            <div class="floating-group">
+                <input type="email" formControlName="email" placeholder=" " required>
+                <label>Email *</label>
             </div>
 
-            <!-- Password (Hide in EDIT Mode) -->
-            <div class="form-group" *ngIf="!isEdit">
-                <label>Password <span>*</span></label>
-                <input type="password" formControlName="password" class="form-input" placeholder="Enter password">
+            <!-- Password -->
+            <div class="floating-group" *ngIf="!isEdit">
+                <input type="password" formControlName="password" placeholder=" " required>
+                <label>Password *</label>
             </div>
 
             <!-- Role -->
-            <div class="form-group">
-                <label>Role <span>*</span></label>
-                <select formControlName="role" class="form-select">
-                    <option value="">Select Role</option>
+            <div class="floating-group">
+                <select formControlName="role" required>
+                    <option value="" disabled selected></option>
                     <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
                 </select>
+                <label>Role *</label>
             </div>
 
             <!-- Buttons -->

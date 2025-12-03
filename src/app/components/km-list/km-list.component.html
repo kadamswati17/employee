@@ -11,17 +11,32 @@
 
     <!-- FILTER BUTTONS -->
     <div class="filter-buttons mb-3">
-        <button class="filter-btn" [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">All</button>
-        <button class="filter-btn" [class.active]="activeFilter === 'PENDING'"
-            (click)="setFilter('PENDING')">Pending</button>
-        <button class="filter-btn" [class.active]="activeFilter === 'APPROVED'"
-            (click)="setFilter('APPROVED')">Approved</button>
-        <button class="filter-btn" *ngIf="canSeeRejectedFilter()" [class.active]="activeFilter === 'REJECTED'"
-            (click)="setFilter('REJECTED')">
-            Rejected
+
+        <!-- ALWAYS visible -->
+        <button class="filter-btn" [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">
+            All
         </button>
 
+        <!-- ONLY L1/L2/L3 -->
+        <button class="filter-btn" *ngIf="!isAdmin()" [class.active]="activeFilter === 'PENDING'"
+            (click)="setFilter('PENDING')">
+            Pending
+        </button>
+
+        <!-- ONLY L1/L2/L3 -->
+        <button class="filter-btn" *ngIf="!isAdmin()" [class.active]="activeFilter === 'APPROVED'"
+            (click)="setFilter('APPROVED')">
+            Approved
+        </button>
+
+        <!-- ONLY L1 CAN SEE REJECTED (same as your logic) -->
+        <!-- <button class="filter-btn" *ngIf="!isAdmin() && canSeeRejectedFilter()"
+            [class.active]="activeFilter === 'REJECTED'" (click)="setFilter('REJECTED')">
+            Rejected
+        </button> -->
+
     </div>
+
 
     <div *ngIf="isLoading" class="loading">Loading...</div>
 
