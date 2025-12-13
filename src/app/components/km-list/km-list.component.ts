@@ -368,6 +368,30 @@ export class KmListComponent implements OnInit {
       this.currentUserRole === 'ROLE_L3'
     );
   }
+  // km-list.component.ts
+  /** IMAGE URL BUILDER — handles base64 or server path */
+  getImageUrl(path: string | undefined | null) {
+    if (!path) return '';               // no path
+    const trimmed = (path as string).trim();
+    // If it's already a base64 data URL (starts with data:image) return as-is
+    if (trimmed.startsWith('data:image')) {
+      return trimmed;
+    }
+    // If path already looks like full URL, return it
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    // Otherwise assume server relative path and prefix host
+    return `http://localhost:8080/${trimmed}`;
+  }
+
+  /** OPEN IMAGE: open in new tab (works for base64 too) */
+  openImage(path: string | undefined | null) {
+    const url = this.getImageUrl(path);
+    if (!url) return;
+    // For base64 the browser can open it in new tab as well
+    window.open(url, '_blank');
+  }
 
 
 }

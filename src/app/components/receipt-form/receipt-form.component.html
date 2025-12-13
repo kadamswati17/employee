@@ -1,0 +1,91 @@
+<div class="receipt-container">
+
+    <!-- CLOSE BUTTON -->
+    <button class="close-btn" (click)="close()">✖</button>
+
+    <h2 class="title">{{ isEdit ? "Edit Receipt" : "Add Receipt" }}</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" enctype="multipart/form-data">
+
+        <!-- GRID 4 COLUMNS -->
+        <div class="form-grid">
+
+            <!-- Party Name -->
+            <div class="field" [class.filled]="form.get('partyId')?.value">
+                <select formControlName="partyId" (change)="onPartyChange($event)">
+                    <option value="">Select Party</option>
+                    <option *ngFor="let u of users" [value]="u.id">{{ u.username }}</option>
+                </select>
+                <label>Party Name</label>
+            </div>
+
+            <!-- Mobile -->
+            <!-- <div class="field" [class.filled]="form.get('mobile')?.value">
+                <input type="text" formControlName="mobile" placeholder=" " />
+                <label>Mobile</label>
+            </div> -->
+
+            <!-- Amount -->
+            <div class="field" [class.filled]="form.get('amount')?.value">
+                <input type="number" formControlName="amount" placeholder=" " />
+                <label>Amount</label>
+            </div>
+
+            <!-- Transaction Type -->
+            <div class="field" [class.filled]="form.get('transactionType')?.value">
+                <select formControlName="transactionType">
+                    <option value="1">Receive</option>
+                    <option value="2">Payment</option>
+                </select>
+                <label>Transaction Type</label>
+            </div>
+
+            <!-- Payment Mode -->
+            <div class="field" [class.filled]="form.get('paymentMode')?.value">
+                <select formControlName="paymentMode">
+                    <option value="0">Cash</option>
+                    <option value="1">UPI</option>
+                    <option value="2">Bank Transfer</option>
+                    <option value="3">Card</option>
+                </select>
+                <label>Payment Mode</label>
+            </div>
+
+            <!-- Transaction ID -->
+            <div class="field" [class.filled]="form.get('transactionId')?.value">
+                <input type="text" formControlName="transactionId" placeholder=" " />
+                <label>Transaction ID</label>
+            </div>
+
+            <!-- Date -->
+            <div class="field" [class.filled]="form.get('receiptDate')?.value">
+                <input type="date" formControlName="receiptDate" placeholder=" " />
+                <label>Date</label>
+            </div>
+
+            <!-- IMAGE UPLOAD -->
+            <div class="field" [class.filled]="selectedFileName">
+                <input type="file" id="fileUpload" hidden (change)="onImageSelected($event)">
+                <div class="file-box" (click)="triggerFile()">
+                    <i class="bi bi-upload"></i>
+                    {{ selectedFileName || "Choose Image" }}
+                </div>
+                <!-- <label>Receipt Image</label> -->
+            </div>
+
+            <!-- DESCRIPTION FULL WIDTH -->
+            <div class="field full" [class.filled]="form.get('description')?.value">
+                <textarea formControlName="description" rows="3" placeholder=" "></textarea>
+                <label>Description</label>
+            </div>
+
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button class="submit-btn" type="submit">
+            {{ isEdit ? "Update" : "Save" }}
+        </button>
+
+    </form>
+
+</div>

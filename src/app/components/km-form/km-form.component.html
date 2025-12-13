@@ -73,6 +73,7 @@
                         <th>End KM</th>
                         <th>Visited Place</th>
                         <th>Date</th>
+                        <th>Image</th>
                         <th>Edit</th>
                         <th>Remove</th>
                     </tr>
@@ -86,6 +87,15 @@
                         <td>{{ c.endKm }}</td>
                         <td>{{ c.visitedPlace }}</td>
                         <td>{{ c.trnDate | date:'shortDate' }}</td>
+                        <td>
+                            <ng-container *ngIf="c.filePath; else noImage">
+                                <img [src]="c.filePath" class="cart-img" />
+                            </ng-container>
+                            <ng-template #noImage>
+                                <span class="text-muted">No Image</span>
+                            </ng-template>
+                        </td>
+
                         <td><button class="btn btn-outline-primary btn-sm" (click)="editCart(i)">✎</button></td>
                         <td><button class="btn btn-outline-danger btn-sm" (click)="removeCart(i)">✕</button></td>
                     </tr>

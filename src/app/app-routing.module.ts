@@ -13,6 +13,8 @@ import { UserListComponent } from './user-list/user-list.component';
 import { CreateUserComponent } from './admin/create-user/create-user.component';
 import { KmFormComponent } from './components/km-form/km-form.component';
 import { KmListComponent } from './components/km-list/km-list.component';
+import { ReceiptFormComponent } from './components/receipt-form/receipt-form.component';
+import { ReceiptListComponent } from './components/receipt-list/receipt-list.component';
 
 
 const routes: Routes = [
@@ -39,6 +41,10 @@ const routes: Routes = [
   { path: 'km-form', component: KmFormComponent, canActivate: [AuthGuard] },
   { path: 'km-list', component: KmListComponent, canActivate: [AuthGuard] },
 
+
+  { path: 'receipts', component: ReceiptListComponent },
+  { path: 'receipts/new', component: ReceiptFormComponent },
+  { path: 'receipts/edit/:id', component: ReceiptFormComponent },
   // WILDCARD MUST BE LAST
   { path: '**', redirectTo: '/login' }
 ];

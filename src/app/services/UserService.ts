@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:8080/api/users';
+const API_URL = "http://localhost:8080/api/users";
 
 @Injectable({
     providedIn: 'root'
@@ -19,17 +19,18 @@ export class UserService {
         return this.http.get<any>(`${API_URL}/${id}`);
     }
 
-    createUser(user: any): Observable<any> {
+    createUser(user: any) {
         return this.http.post(API_URL, user);
     }
 
-    updateUser(id: number, user: any): Observable<any> {
+    updateUser(id: number, user: any) {
         return this.http.put(`${API_URL}/${id}`, user);
     }
 
-    deleteUser(id: number): Observable<any> {
+    deleteUser(id: number) {
         return this.http.delete(`${API_URL}/${id}`);
     }
+
     activateUser(id: number) {
         return this.http.put(`${API_URL}/${id}/activate`, {});
     }
@@ -37,5 +38,4 @@ export class UserService {
     deactivateUser(id: number) {
         return this.http.put(`${API_URL}/${id}/deactivate`, {});
     }
-
 }

@@ -47,9 +47,32 @@ export class KmFormComponent implements OnInit {
     }
   }
 
+  // km-form.component.ts
   onFileSelected(e: any) {
-    this.selectedFile = e.target.files?.[0] || null;
+    const file: File | undefined = e.target.files?.[0];
+    if (!file) {
+      this.selectedFile = null;
+      return;
+    }
+
+    this.selectedFile = file;
+
+    // Convert file to base64 data URL and set into the form control 'filePath'
+    const reader = new FileReader();
+    reader.onload = () => {
+      // reader.result is a string like "data:image/png;base64,...."
+      this.kmForm.patchValue({
+        filePath: reader.result as string
+      });
+    };
+    reader.onerror = (err) => {
+      console.error('File read error', err);
+      alert('Failed to read file');
+    };
+
+    reader.readAsDataURL(file);
   }
+
 
   onAddKm() {
     if (this.kmForm.invalid) {

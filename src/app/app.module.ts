@@ -19,6 +19,9 @@ import { UserListComponent } from './user-list/user-list.component';
 import { CreateUserComponent } from './admin/create-user/create-user.component';
 import { KmFormComponent } from './components/km-form/km-form.component';
 import { KmListComponent } from './components/km-list/km-list.component';
+// import { ReceiptComponent } from './components/receipt/receipt.component';
+import { ReceiptFormComponent } from './components/receipt-form/receipt-form.component';
+import { ReceiptListComponent } from './components/receipt-list/receipt-list.component';
 
 
 @NgModule({
@@ -35,7 +38,10 @@ import { KmListComponent } from './components/km-list/km-list.component';
     UserFormComponent,
     CreateUserComponent,
     KmFormComponent,
-    KmListComponent
+    KmListComponent,
+
+    ReceiptFormComponent,
+    ReceiptListComponent
   ],
   imports: [
     BrowserModule,
