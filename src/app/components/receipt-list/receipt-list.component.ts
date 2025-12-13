@@ -4,6 +4,7 @@ import { ReceiptService } from 'src/app/services/receiptService';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/UserService';
 
 @Component({
   selector: 'app-receipt-list',
@@ -27,26 +28,37 @@ export class ReceiptListComponent implements OnInit {
 
   constructor(
     private receiptService: ReceiptService,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
     this.loadReceipts();
 
     const userJson = localStorage.getItem('currentUser');
+    console.log("Loaded user from localStorage:", userJson);
+
+
+    const storedUser = UserService.getUser();
+    console.log("LOCAL STORAGE USER = ", storedUser);
+
     if (userJson) this.loggedInUser = JSON.parse(userJson);
 
     this.todayDate = new Date().toISOString().split("T")[0];
   }
 
   loadReceipts() {
-    this.receiptService.getAll().subscribe({
-      next: (res: Receipt[]) => {
-        this.receipts = res || [];
-        this.totalPages = Math.max(1, Math.ceil(this.receipts.length / this.pageSize));
-        this.setPage(this.page > this.totalPages ? 1 : this.page);  // 🟢 FIX
-      }
-    });
+    setTimeout(() => {
+      this.receiptService.getAll().subscribe({
+        next: (res: Receipt[]) => {
+          console.log("Fetched receipts:", res);
+          this.receipts = res || [];
+          this.totalPages = Math.max(1, Math.ceil(this.receipts.length / this.pageSize));
+          this.setPage(this.page > this.totalPages ? 1 : this.page);  // 🟢 FIX
+        }
+      });
+    }, 500);
+
   }
 
 
@@ -54,6 +66,7 @@ export class ReceiptListComponent implements OnInit {
     this.page = p;
     const start = (p - 1) * this.pageSize;
     this.paginatedReceipts = this.receipts.slice(start, start + this.pageSize);
+    console.log(`Set to page ${p}:`, this.paginatedReceipts);
   }
 
   prevPage() { if (this.page > 1) this.setPage(this.page - 1); }
@@ -74,44 +87,43 @@ export class ReceiptListComponent implements OnInit {
         this.ledger = res.ledger || [];
         this.loggedInUser = res.loggedInUser || this.loggedInUser;
 
-        // ⭐ FIX: Get latest updated mobile from receipt list
-        if (this.ledger.length > 0) {
-          const latestReceipt = this.ledger[this.ledger.length - 1]; // last record
-          if (latestReceipt.mobile) {
-            this.customerInfo.mobile = latestReceipt.mobile;
-          }
-        }
-
-        // image normalization (existing code)
+        // ⭐ FIX IMAGE NORMALIZATION
         if (this.loggedInUser?.profileImage)
           this.loggedInUser.profileImage = this.normalizeImageForView(this.loggedInUser.profileImage);
 
         if (this.customerInfo?.parentImage)
           this.customerInfo.parentImage = this.normalizeImageForView(this.customerInfo.parentImage);
+
+        // ⭐ WAIT for modal animation + DOM update
+        setTimeout(() => console.log("Modal ready"), 500);
       }
     });
   }
 
 
+
   delete(id?: number) {
     if (!id || !confirm("Delete receipt?")) return;
+    this.loadReceipts();
 
     this.receiptService.delete(id).subscribe(() => {
-      alert("Deleted successfully!");
+      // alert("Deleted successfully!");
+      this.loadReceipts();
 
-      // 🔥 Remove from receipts array immediately
+      // Remove from receipts array immediately
       this.receipts = this.receipts.filter(r => r.id !== id);
 
-      // 🔥 Recalculate total pages
+      // Recalculate total pages
       this.totalPages = Math.max(1, Math.ceil(this.receipts.length / this.pageSize));
 
-      // 🔥 Adjust current page if needed
+      // Adjust current page
       if (this.page > this.totalPages) {
         this.page = this.totalPages;
       }
 
-      // 🔥 Refresh the paginated list instantly
+      // Refresh paginated list instantly
       this.setPage(this.page);
+
     });
   }
 
@@ -125,51 +137,79 @@ export class ReceiptListComponent implements OnInit {
         next: (res: any) => {
           this.customerInfo = res.customerInfo || {};
           this.ledger = res.ledger || [];
+          // Ensure the loggedInUser is updated so the PDF shows the profile data
+          this.loggedInUser = res.loggedInUser || this.loggedInUser;
 
-          setTimeout(() => this.generatePDF(), 400);
+          // Normalize the image if present
+          if (this.loggedInUser?.profileImage)
+            this.loggedInUser.profileImage = this.normalizeImageForView(this.loggedInUser.profileImage);
+
+          // ⭐ Wait for Angular + DOM to finish rendering, then generate PDF
+          setTimeout(() => this.generatePDF(), 800);
         }
       });
 
       return;
     }
 
-    this.generatePDF();
+    setTimeout(() => this.generatePDF(), 800);
   }
 
+
   generatePDF() {
-    const element = document.getElementById("ledger-content");
-    if (!element) return;
+    const source = document.getElementById("ledger-content");
+    if (!source) return;
 
-    html2canvas(element, { scale: 3 }).then(canvas => {
+    // ⭐ Clone DOM to avoid Bootstrap fade issues
+    const clone = source.cloneNode(true) as HTMLElement;
+    clone.style.position = "absolute";
+    clone.style.left = "-9999px";
+    document.body.appendChild(clone);
+
+    html2canvas(clone, { scale: 3 }).then(canvas => {
       const imgData = canvas.toDataURL("image/png");
-
-      const pdf = new jsPDF("p", "mm", "a4");
+      const pdf = new jsPDF('p', 'mm', 'a4');
 
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      const paddingLeft = 4;
-      const paddingRight = 4;
-      const paddingTop = 4;
-
-      const usableWidth = pageWidth - paddingLeft - paddingRight;
+      const padding = 8;
+      const usableWidth = pageWidth - padding * 2;
       const imgHeight = (canvas.height * usableWidth) / canvas.width;
 
       let heightLeft = imgHeight;
-      let position = paddingTop;
+      let position = padding;
 
-      pdf.addImage(imgData, "PNG", paddingLeft, position, usableWidth, imgHeight);
+      pdf.addImage(imgData, 'PNG', padding, position, usableWidth, imgHeight);
       heightLeft -= pageHeight;
 
       while (heightLeft > 0) {
-        position = heightLeft - imgHeight + paddingTop;
         pdf.addPage();
-        pdf.addImage(imgData, "PNG", paddingLeft, position, usableWidth, imgHeight);
+        position = heightLeft - imgHeight + padding;
+        pdf.addImage(imgData, 'PNG', padding, position, usableWidth, imgHeight);
         heightLeft -= pageHeight;
       }
 
       pdf.save(`ledger_${this.selectedCustomerId}.pdf`);
-    });
+    })
+      .finally(() => document.body.removeChild(clone));
   }
+
+
+
+  downloadLedgerPDF() {
+    if (!this.selectedCustomerId) {
+      alert("Please select a customer first");
+      return;
+    }
+
+    // ⭐ Wait 600–800ms ALWAYS before generating PDF
+    setTimeout(() => {
+      this.handlePDF(this.selectedCustomerId!);
+    }, 800);
+  }
+
+
+
 
 }

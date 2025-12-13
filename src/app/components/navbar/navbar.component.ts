@@ -73,7 +73,10 @@ export class NavbarComponent implements OnInit {
   }
 
 
+  openProfile() {
+    this.router.navigate(['/profile']);
 
+  }
 
 }
 

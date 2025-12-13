@@ -53,11 +53,9 @@
 
                     <td class="numeric">{{ r.transactionId }}</td>
                     <td class="numeric">{{ r.amount }}</td>
-
                     <td>{{ r.receiptDate | date: 'dd-MM-yyyy' }}</td>
 
                     <td class="action-buttons">
-
                         <button class="icon-btn edit-btn" [routerLink]="['/receipts/edit', r.id]">
                             <i class="bi bi-pencil"></i>
                         </button>
@@ -65,7 +63,6 @@
                         <button class="icon-btn delete-btn" (click)="delete(r.id)">
                             <i class="bi bi-trash"></i>
                         </button>
-
                     </td>
 
                     <td>
@@ -95,8 +92,8 @@
 
 </div>
 
-<!-- LEDGER MODAL -->
-<!-- LEDGER MODAL -->
+
+<!-- Ledger Modal -->
 <div class="modal fade" id="customerReceiptsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content premium-modal">
@@ -104,18 +101,18 @@
             <div class="modal-header premium-header d-flex align-items-center">
                 <h4 class="modal-title">Customer Ledger Report</h4>
 
-                <button class="btn btn-outline-primary pdf-btn" (click)="generatePDF()">
+                <!-- FIXED BUTTON -->
+                <button class="btn btn-outline-primary pdf-btn" (click)="downloadLedgerPDF()">
                     <i class="bi bi-download"></i> Download PDF
                 </button>
+
+
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body" id="ledger-content">
 
-                <!-- ===========================
-                    BLOCK 1 - Centered Logged-in User
-                ============================ -->
                 <div class="user-center-side">
                     <img *ngIf="loggedInUser?.profileImage; else noUserImage"
                         [src]="normalizeImageForView(loggedInUser.profileImage)" class="side-user-img" />
@@ -127,28 +124,20 @@
                     <h3 class="side-username">{{ loggedInUser?.name || 'User' }}</h3>
                 </div>
 
-                <!-- ===========================
-                     BLOCK 2 - Customer Info Left & Right
-                ============================ -->
                 <div class="customer-info-container">
-
-                    <!-- LEFT SIDE -->
                     <div class="info-left">
                         <p><strong>ID:</strong> {{ customerInfo.id }}</p>
                         <p><strong>Name:</strong> {{ customerInfo.name }}</p>
                     </div>
 
-                    <!-- RIGHT SIDE -->
                     <div class="info-right">
                         <p><strong>Mobile:</strong> {{ customerInfo.mobile }}</p>
                         <p><strong>Email:</strong> {{ customerInfo.email }}</p>
                     </div>
-
                 </div>
 
                 <hr class="section-divider" />
 
-                <!-- LEDGER TABLE -->
                 <table class="premium-table" *ngIf="ledger.length > 0">
                     <thead>
                         <tr>

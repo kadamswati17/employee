@@ -32,12 +32,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
         // Backend returns 403 -> NO_AUTH
         if (error.status === 403 && error.error?.message === "NO_AUTH") {
-          alert("❌ You are not authorized to perform this action.");
+          // alert("❌ You are not authorized to perform this action.");
         }
 
         // Missing or invalid token → 401
         if (error.status === 401) {
-          alert("❌ You are not authorized to perform this action.");
+          // alert("❌ You are not authorized to perform this action.");
         }
 
         return throwError(() => error);

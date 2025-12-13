@@ -29,7 +29,7 @@
 
     <!-- USER INFO + LOGOUT -->
     <div class="user-info" *ngIf="isLoggedIn">
-      <span class="username">{{ currentUser?.username }}</span>
+      <span (click)="openProfile()" class="username">{{ currentUser?.username }}</span>
       <button class="btn-logout" (click)="logout()">Logout</button>
     </div>
 

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginRequest } from '../models/auth.model';
 import { TokenStorageService } from './token-storage.service';
+import { UserService } from './UserService';
 
 const AUTH_API = 'http://localhost:8080/api/auth';
 const API_URL = 'http://localhost:8080/api';
@@ -17,7 +18,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private userService: UserService
   ) { }
 
   // =======================================
@@ -38,6 +40,14 @@ export class AuthService {
             email: response.email,
             role: response.role  // role is string from backend
           });
+
+          UserService.saveUser({
+            id: response.id,
+            username: response.username,
+            email: response.email,
+            role: response.role
+          });
+
           this.loginStatus.next(true);
         }
       })
@@ -84,4 +94,14 @@ export class AuthService {
   getCurrentUserFromAPI(): Observable<any> {
     return this.http.get(`${AUTH_API}/me`);
   }
+
+  // ⭐ REQUIRED BY PROFILE COMPONENT
+  getUserInfo(id: number): Observable<any> {
+    return this.http.get(`${API_URL}/users/${id}/info`);
+  }
+
+  updateUserProfile(id: number, data: any): Observable<any> {
+    return this.http.put(`${API_URL}/users/${id}/profile`, data);
+  }
+
 }

@@ -15,6 +15,7 @@ import { KmFormComponent } from './components/km-form/km-form.component';
 import { KmListComponent } from './components/km-list/km-list.component';
 import { ReceiptFormComponent } from './components/receipt-form/receipt-form.component';
 import { ReceiptListComponent } from './components/receipt-list/receipt-list.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 const routes: Routes = [
@@ -45,6 +46,7 @@ const routes: Routes = [
   { path: 'receipts', component: ReceiptListComponent },
   { path: 'receipts/new', component: ReceiptFormComponent },
   { path: 'receipts/edit/:id', component: ReceiptFormComponent },
+  { path: 'profile', component: ProfileComponent },
   // WILDCARD MUST BE LAST
   { path: '**', redirectTo: '/login' }
 ];

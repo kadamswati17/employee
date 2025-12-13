@@ -11,6 +11,25 @@ export class UserService {
 
     constructor(private http: HttpClient) { }
 
+    // // ⭐ REQUIRED — fetch logged-in user from localStorage
+    // static getUser() {
+    //     return JSON.parse(localStorage.getItem('user') || '{}');
+    // }
+
+    static saveUser(user: any) {
+        localStorage.setItem("user", JSON.stringify(user));
+    }
+
+    static getUser() {
+        const user = localStorage.getItem("user");
+        return user ? JSON.parse(user) : null;
+    }
+
+    static clearUser() {
+        localStorage.removeItem("user");
+    }
+
+
     getAllUsers(): Observable<any[]> {
         return this.http.get<any[]>(API_URL);
     }

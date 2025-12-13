@@ -22,6 +22,15 @@ import { KmListComponent } from './components/km-list/km-list.component';
 // import { ReceiptComponent } from './components/receipt/receipt.component';
 import { ReceiptFormComponent } from './components/receipt-form/receipt-form.component';
 import { ReceiptListComponent } from './components/receipt-list/receipt-list.component';
+// import { ProfileComponent } from './components/profile/profile.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -41,7 +50,9 @@ import { ReceiptListComponent } from './components/receipt-list/receipt-list.com
     KmListComponent,
 
     ReceiptFormComponent,
-    ReceiptListComponent
+    ReceiptListComponent,
+    ProfileComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -50,6 +61,14 @@ import { ReceiptListComponent } from './components/receipt-list/receipt-list.com
     ReactiveFormsModule,
     CommonModule,
     FormsModule,
+    BrowserAnimationsModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
   ],
   providers: [
     {
