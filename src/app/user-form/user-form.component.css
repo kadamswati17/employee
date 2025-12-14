@@ -1,7 +1,7 @@
 .user-form-container {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 15px;
 }
 
 .form-box {
@@ -15,7 +15,7 @@
 
 .form-title {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 2px;
     font-size: 26px;
     font-weight: 700;
     color: #333;

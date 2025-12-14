@@ -34,6 +34,24 @@
                 <label>Role *</label>
             </div>
 
+            <!-- Mobile -->
+            <div class="floating-group">
+                <input type="text" formControlName="mobile" placeholder=" ">
+                <label>Mobile</label>
+            </div>
+
+            <!-- Profile Image -->
+            <div class="floating-group">
+                <input type="file" accept="image/*" (change)="onImageSelected($event)">
+                <label>Profile Image</label>
+            </div>
+
+            <!-- Preview -->
+            <div class="image-preview" *ngIf="imagePreview">
+                <img [src]="imagePreview" alt="Preview">
+            </div>
+
+
             <!-- Buttons -->
             <div class="button-row">
                 <button type="submit" class="btn-submit">

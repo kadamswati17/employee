@@ -31,6 +31,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductFormComponent } from './components/product-form/product-form.component';
+import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
+import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
+// import { FormsModule } from '@angular/forms';
+
+
 
 
 @NgModule({
@@ -52,6 +59,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ReceiptFormComponent,
     ReceiptListComponent,
     ProfileComponent,
+    ProductListComponent,
+    ProductFormComponent,
+    PurchaseOrderListComponent,
+    PurchaseOrderFormComponent,
 
   ],
   imports: [
@@ -69,6 +80,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
+    FormsModule
   ],
   providers: [
     {

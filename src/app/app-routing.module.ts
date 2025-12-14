@@ -16,6 +16,10 @@ import { KmListComponent } from './components/km-list/km-list.component';
 import { ReceiptFormComponent } from './components/receipt-form/receipt-form.component';
 import { ReceiptListComponent } from './components/receipt-list/receipt-list.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ProductFormComponent } from './components/product-form/product-form.component';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
+import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
 
 
 const routes: Routes = [
@@ -48,6 +52,13 @@ const routes: Routes = [
   { path: 'receipts/edit/:id', component: ReceiptFormComponent },
   { path: 'profile', component: ProfileComponent },
   // WILDCARD MUST BE LAST
+
+  { path: 'products', component: ProductListComponent, canActivate: [AuthGuard] },
+  { path: 'products/new', component: ProductFormComponent, canActivate: [AuthGuard] },
+
+  // PURCHASE ORDERS
+  { path: 'purchase-orders', component: PurchaseOrderListComponent, canActivate: [AuthGuard] },
+  { path: 'purchase-orders/new', component: PurchaseOrderFormComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/login' }
 ];
 

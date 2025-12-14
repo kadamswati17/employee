@@ -14,7 +14,8 @@ export class UserFormComponent implements OnInit {
   isEdit = false;
   userId: number | null = null;
 
-  // Single-role (because DB column = role)
+  imagePreview: string | null = null;
+
   roles = [
     'ROLE_ADMIN', 'ROLE_USER',
     'ROLE_L1', 'ROLE_L2', 'ROLE_L3', 'ROLE_L4', 'ROLE_L5'
@@ -31,8 +32,10 @@ export class UserFormComponent implements OnInit {
     this.form = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      role: ['', Validators.required]   // ⬅ updated: single role
+      password: [''],               // 🔧 not required by default
+      role: ['', Validators.required],
+      mobile: [''],
+      profileImage: ['']
     });
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -40,6 +43,9 @@ export class UserFormComponent implements OnInit {
       this.isEdit = true;
       this.userId = +id;
       this.loadUser(this.userId);
+    } else {
+      // password required ONLY when creating
+      this.form.get('password')?.setValidators(Validators.required);
     }
   }
 
@@ -48,26 +54,48 @@ export class UserFormComponent implements OnInit {
       this.form.patchValue({
         username: user.username,
         email: user.email,
-        role: user.role   // ⬅ single role
+        role: user.role,
+        mobile: user.mobile
+        // ❌ do NOT patch profileImage blindly
       });
 
-      // Password not required when editing
-      this.form.get('password')?.clearValidators();
-      this.form.get('password')?.updateValueAndValidity();
+      this.imagePreview = user.profileImage || null;
     });
+  }
+
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.imagePreview = base64;
+      this.form.patchValue({ profileImage: base64 });
+    };
+    reader.readAsDataURL(file);
   }
 
   onSubmit() {
     if (this.form.invalid) return;
 
+    const payload = { ...this.form.value };
+
+    // 🔥 prevent empty overwrite
+    if (!payload.profileImage) {
+      delete payload.profileImage;
+    }
+
+    if (!payload.password) {
+      delete payload.password;
+    }
+
     if (this.isEdit) {
-      this.userService.updateUser(this.userId!, this.form.value).subscribe(() => {
-        this.router.navigate(['/users']);
-      });
+      this.userService.updateUser(this.userId!, payload)
+        .subscribe(() => this.router.navigate(['/users']));
     } else {
-      this.userService.createUser(this.form.value).subscribe(() => {
-        this.router.navigate(['/users']);
-      });
+      this.userService.createUser(payload)
+        .subscribe(() => this.router.navigate(['/users']));
     }
   }
 }
