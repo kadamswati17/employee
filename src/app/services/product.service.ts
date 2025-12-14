@@ -61,4 +61,24 @@ export class ProductService {
         );
     }
 
+    // add(product: Product, userId: number) {
+    //     return this.http.post<Product>(`${API_URL}/${userId}`, product);
+    // }
+
+    // create(product: Product, userId: number) {
+    //     return this.http.post<Product>(
+    //         `${API_URL}/${userId}`,
+    //         product,
+    //         this.authHeaders()
+    //     );
+    // }
+
+    createForLoggedInUser(product: Product): Observable<Product> {
+        return this.http.post<Product>(
+            `${API_URL}/addProduct`,
+            product,
+            this.authHeaders()
+        );
+    }
+
 }

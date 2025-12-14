@@ -20,6 +20,7 @@ import { ProductFormComponent } from './components/product-form/product-form.com
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
 import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
+import { PostProductComponent } from './post-product/post-product.component';
 
 
 const routes: Routes = [
@@ -59,6 +60,7 @@ const routes: Routes = [
   // PURCHASE ORDERS
   { path: 'purchase-orders', component: PurchaseOrderListComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders/new', component: PurchaseOrderFormComponent, canActivate: [AuthGuard] },
+  // { path: 'update-product/:id', component: PostProductComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/login' }
 ];
 

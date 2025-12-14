@@ -2,16 +2,17 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+// Components
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
 import { EmployeeFormComponent } from './components/employee-form/employee-form.component';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { CustomerListComponent } from './customer-list/customer-list.component';
 import { UserFormComponent } from './user-form/user-form.component';
@@ -19,26 +20,27 @@ import { UserListComponent } from './user-list/user-list.component';
 import { CreateUserComponent } from './admin/create-user/create-user.component';
 import { KmFormComponent } from './components/km-form/km-form.component';
 import { KmListComponent } from './components/km-list/km-list.component';
-// import { ReceiptComponent } from './components/receipt/receipt.component';
 import { ReceiptFormComponent } from './components/receipt-form/receipt-form.component';
 import { ReceiptListComponent } from './components/receipt-list/receipt-list.component';
-// import { ProfileComponent } from './components/profile/profile.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ProductListComponent } from './components/product-list/product-list.component';
+import { ProductFormComponent } from './components/product-form/product-form.component';
+import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
+import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
+
+// Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ProductListComponent } from './components/product-list/product-list.component';
-import { ProductFormComponent } from './components/product-form/product-form.component';
-import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
-import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
-// import { FormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 
-
-
+// Interceptor
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { PostProductComponent } from './post-product/post-product.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,6 @@ import { PurchaseOrderFormComponent } from './components/purchase-order-form/pur
     CreateUserComponent,
     KmFormComponent,
     KmListComponent,
-
     ReceiptFormComponent,
     ReceiptListComponent,
     ProfileComponent,
@@ -63,24 +64,25 @@ import { PurchaseOrderFormComponent } from './components/purchase-order-form/pur
     ProductFormComponent,
     PurchaseOrderListComponent,
     PurchaseOrderFormComponent,
-
+    PostProductComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,   // ⭐ REQUIRED ONCE
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule,
-    CommonModule,
     FormsModule,
-    BrowserAnimationsModule,
-    MatSnackBarModule,
+    ReactiveFormsModule,
+
+    // ⭐ Angular Material (ONCE)
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    FormsModule
+    MatDividerModule,
+    MatDialogModule
   ],
   providers: [
     {

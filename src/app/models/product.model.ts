@@ -4,4 +4,7 @@ export interface Product {
     unitPrice: number;
     description?: string;
     img?: string; // base64
+
+    byteImg?: string; // base64
+    category?: string;
 }
