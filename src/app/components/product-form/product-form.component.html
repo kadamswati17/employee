@@ -18,10 +18,9 @@
 
     <div class="field">
         <label>Image</label>
+        <!-- ✅ only file name will show -->
         <input type="file" accept="image/*" (change)="onImageSelected($event)">
     </div>
-
-    <img *ngIf="previewImage" [src]="previewImage" class="preview">
 
     <button (click)="save()">Save Product</button>
 </div>

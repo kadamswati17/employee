@@ -40,17 +40,11 @@
                 <label>Mobile</label>
             </div>
 
-            <!-- Profile Image -->
+            <!-- Profile Image (ONLY FILE NAME SHOWN) -->
             <div class="floating-group">
                 <input type="file" accept="image/*" (change)="onImageSelected($event)">
                 <label>Profile Image</label>
             </div>
-
-            <!-- Preview -->
-            <div class="image-preview" *ngIf="imagePreview">
-                <img [src]="imagePreview" alt="Preview">
-            </div>
-
 
             <!-- Buttons -->
             <div class="button-row">
