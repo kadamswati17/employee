@@ -110,6 +110,10 @@
     background: #777;
 }
 
+.ROLE_PARTY_NAME {
+    background-color: #8e44ad;
+}
+
 /* Actions */
 .actions {
     display: flex;

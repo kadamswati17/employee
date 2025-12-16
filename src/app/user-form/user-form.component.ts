@@ -18,7 +18,7 @@ export class UserFormComponent implements OnInit {
 
   roles = [
     'ROLE_ADMIN', 'ROLE_USER',
-    'ROLE_L1', 'ROLE_L2', 'ROLE_L3', 'ROLE_L4', 'ROLE_L5'
+    'ROLE_L1', 'ROLE_L2', 'ROLE_L3', 'ROLE_L4', 'ROLE_L5', 'ROLE_PARTY_NAME'
   ];
 
   constructor(

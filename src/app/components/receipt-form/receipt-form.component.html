@@ -10,6 +10,19 @@
         <!-- GRID 4 COLUMNS -->
         <div class="form-grid">
 
+            <!-- Date -->
+            <div class="field" [class.filled]="form.get('receiptDate')?.value">
+                <input type="date" formControlName="receiptDate" placeholder=" " />
+                <label>Date</label>
+            </div>
+
+            <div class="field" [class.filled]="form.get('transactionType')?.value">
+                <select formControlName="transactionType">
+                    <option value="1">Receive</option>
+                    <option value="2">Payment</option>
+                </select>
+                <label>Transaction Type</label>
+            </div>
             <!-- Party Name -->
             <div class="field" [class.filled]="form.get('partyId')?.value">
                 <select formControlName="partyId" (change)="onPartyChange($event)">
@@ -32,13 +45,7 @@
             </div>
 
             <!-- Transaction Type -->
-            <div class="field" [class.filled]="form.get('transactionType')?.value">
-                <select formControlName="transactionType">
-                    <option value="1">Receive</option>
-                    <option value="2">Payment</option>
-                </select>
-                <label>Transaction Type</label>
-            </div>
+
 
             <!-- Payment Mode -->
             <div class="field" [class.filled]="form.get('paymentMode')?.value">
@@ -57,11 +64,7 @@
                 <label>Transaction ID</label>
             </div>
 
-            <!-- Date -->
-            <div class="field" [class.filled]="form.get('receiptDate')?.value">
-                <input type="date" formControlName="receiptDate" placeholder=" " />
-                <label>Date</label>
-            </div>
+
 
             <!-- IMAGE UPLOAD -->
             <div class="field" [class.filled]="selectedFileName">

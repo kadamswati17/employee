@@ -138,3 +138,12 @@
         }
     }
 }
+
+.modal-body p {
+    margin-bottom: 4px;
+}
+
+table th,
+table td {
+    vertical-align: middle;
+}

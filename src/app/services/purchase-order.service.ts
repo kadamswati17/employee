@@ -17,7 +17,13 @@ export interface CartItem {
     quantity: number;
     productImg?: string;
     totalAmount?: number;
+
+    // 🔥 UI edit helpers
+    isEditing?: boolean;
+    tempQty?: number;
+    tempPrice?: number;   // ✅ ADD THIS LINE
 }
+
 
 export interface PlacePurchaseOrderDto {
     id?: number;
@@ -105,4 +111,13 @@ export class PurchaseService {
             this.headers()
         );
     }
+
+    /* ================= PRODUCTS ================= */
+    getAllProducts(): Observable<any[]> {
+        return this.http.get<any[]>(
+            `${PRODUCT_API}`,
+            this.headers()
+        );
+    }
+
 }
