@@ -57,4 +57,16 @@ export class UserService {
     deactivateUser(id: number) {
         return this.http.put(`${API_URL}/${id}/deactivate`, {});
     }
+
+    getSuppliers(): Observable<any[]> {
+        return this.http.get<any[]>(
+            'http://localhost:8080/api/users/suppliers',
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            }
+        );
+    }
+
 }

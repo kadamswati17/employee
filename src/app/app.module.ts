@@ -25,8 +25,8 @@ import { ReceiptListComponent } from './components/receipt-list/receipt-list.com
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductFormComponent } from './components/product-form/product-form.component';
-import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
-import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
+// import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
+// import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
 
 // Angular Material
 import { MatCardModule } from '@angular/material/card';
@@ -41,6 +41,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 // Interceptor
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { PostProductComponent } from './post-product/post-product.component';
+import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 
 @NgModule({
   declarations: [
@@ -62,9 +63,10 @@ import { PostProductComponent } from './post-product/post-product.component';
     ProfileComponent,
     ProductListComponent,
     ProductFormComponent,
-    PurchaseOrderListComponent,
-    PurchaseOrderFormComponent,
-    PostProductComponent
+    // PurchaseOrderListComponent,
+    // PurchaseOrderFormComponent,
+    PostProductComponent,
+    PurchaseOrderComponent
   ],
   imports: [
     BrowserModule,

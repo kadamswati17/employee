@@ -18,9 +18,10 @@ import { ReceiptListComponent } from './components/receipt-list/receipt-list.com
 import { ProfileComponent } from './components/profile/profile.component';
 import { ProductFormComponent } from './components/product-form/product-form.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
-import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
-import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
-import { PostProductComponent } from './post-product/post-product.component';
+// import { PurchaseOrderFormComponent } from './components/purchase-order-form/purchase-order-form.component';
+// import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
+// import { PostProductComponent } from './post-product/post-product.component';
+import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 
 
 const routes: Routes = [
@@ -56,10 +57,11 @@ const routes: Routes = [
 
   { path: 'products', component: ProductListComponent, canActivate: [AuthGuard] },
   { path: 'products/new', component: ProductFormComponent, canActivate: [AuthGuard] },
+  { path: 'purchase-orders', component: PurchaseOrderComponent, canActivate: [AuthGuard] },
 
   // PURCHASE ORDERS
-  { path: 'purchase-orders', component: PurchaseOrderListComponent, canActivate: [AuthGuard] },
-  { path: 'purchase-orders/new', component: PurchaseOrderFormComponent, canActivate: [AuthGuard] },
+  // { path: 'purchase-orders', component: PurchaseOrderListComponent, canActivate: [AuthGuard] },
+  // { path: 'purchase-orders/new', component: PurchaseOrderFormComponent, canActivate: [AuthGuard] },
   // { path: 'update-product/:id', component: PostProductComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/login' }
 ];

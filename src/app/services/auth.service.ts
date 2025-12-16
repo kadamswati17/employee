@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginRequest } from '../models/auth.model';
 import { TokenStorageService } from './token-storage.service';
@@ -7,6 +7,8 @@ import { UserService } from './UserService';
 
 const AUTH_API = 'http://localhost:8080/api/auth';
 const API_URL = 'http://localhost:8080/api';
+
+const BASIC_URL = 'http://localhost:8080/';
 
 @Injectable({
   providedIn: 'root'
@@ -102,6 +104,24 @@ export class AuthService {
 
   updateUserProfile(id: number, data: any): Observable<any> {
     return this.http.put(`${API_URL}/users/${id}/profile`, data);
+  }
+
+  getAllUsers(): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenStorage.getToken()}`
+    });
+    return this.http.get<any[]>(BASIC_URL + 'api/user/all', { headers });
+  }
+
+  getSuppliers(): Observable<any[]> {
+    return this.http.get<any[]>(
+      'http://localhost:8080/api/users/suppliers',
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    );
   }
 
 }

@@ -1,0 +1,214 @@
+<div class="container my-4">
+
+    <!-- Toggle Button -->
+    <button class="btn btn-primary mb-3" (click)="showOrderForm = !showOrderForm">
+        {{ showOrderForm ? '← Back to Orders' : '+ Purchase Order' }}
+    </button>
+
+    <!-- ================= ORDERS LIST ================= -->
+    <div *ngIf="!showOrderForm">
+
+        <h2>Purchase Orders</h2>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Party Name</th>
+                        <!-- <th>Tracking ID</th> -->
+
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <!-- <th>Address</th> -->
+
+                        <!-- <th>Status</th>
+                        <th>Action</th> -->
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let order of myOrders">
+
+                        <td>
+                            <a href="javascript:void(0)" (click)="getOrderDetailsById(order.id!)" data-bs-toggle="modal"
+                                data-bs-target="#orderDetailsModal">
+                                {{ order.id }}
+                            </a>
+                        </td>
+                        <td>{{ order.date | date:'short' }}</td>
+                        <td>{{ order.userName || 'N/A' }}</td>
+                        <!-- <td>{{ order.trackingId }}</td> -->
+
+                        <td>{{ order.orderDescription }}</td>
+                        <td>{{ order.amount | currency:'INR' }}</td>
+                        <!-- <td>{{ order.address }}</td> -->
+
+                        <!-- 
+                        <td>
+                            <span class="badge bg-info">
+                                {{ order.orderStatus }}
+                            </span>
+                        </td>
+
+                        <td class="btn-group">
+                            <button class="btn btn-sm btn-primary" (click)="changeOrderStatus(order.id!, 'SHIPPED')">
+                                Shipped
+                            </button>
+
+                            <button class="btn btn-sm btn-warning mx-2"
+                                (click)="changeOrderStatus(order.id!, 'DELIVERED')">
+                                Delivered
+                            </button>
+                        </td> -->
+
+                    </tr>
+
+                    <tr *ngIf="myOrders.length === 0">
+                        <td colspan="9" class="text-center text-muted">
+                            No orders found
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= PURCHASE FORM ================= -->
+    <div *ngIf="showOrderForm">
+
+        <!-- Order Date + Parent -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Order Date</label>
+                <input type="date" class="form-control" [(ngModel)]="dateValue">
+            </div>
+
+            <div class="col-md-8">
+                <label class="form-label">Select Parent (Supplier)</label>
+                <select class="form-select" (change)="onParentChange($event)" [value]="selectedParentId">
+                    <option value="">-- Select Parent --</option>
+                    <option *ngFor="let p of parents" [value]="p.id">
+                        {{ p.username || p.userName }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Product Form -->
+        <form [formGroup]="cartForm">
+            <div class="row g-3 align-items-end">
+
+                <div class="col-md-5">
+                    <label class="form-label">Product</label>
+                    <select class="form-select" formControlName="productId" (change)="onProductChange($event)">
+                        <option value="">-- Select Product --</option>
+                        <option *ngFor="let pr of products" [value]="pr.id">
+                            {{ pr.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Price</label>
+                    <input class="form-control" [value]="productPrice" readonly>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Quantity</label>
+                    <input type="number" class="form-control" formControlName="quantity" min="1">
+                </div>
+
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary w-100" (click)="addToCart()">
+                        Add to Cart
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+        <hr>
+
+        <!-- Cart Table -->
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let it of cartItems; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ it.productName }}</td>
+                    <td>{{ it.price | currency:'INR' }}</td>
+                    <td>{{ it.quantity }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" (click)="removeItem(i)">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+
+                <tr *ngIf="cartItems.length === 0">
+                    <td colspan="5" class="text-center text-muted">
+                        Cart is empty
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-success" (click)="placeOrder()">
+                Place Order
+            </button>
+            <strong>Total: {{ totalAmount | currency:'INR' }}</strong>
+        </div>
+    </div>
+
+    <!-- ================= ORDER DETAILS MODAL ================= -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p><b>Tracking ID:</b> {{ selectedOrder?.trackingId }}</p>
+                    <p><b>Status:</b> {{ selectedOrder?.orderStatus }}</p>
+                    <p><b>Total:</b> {{ selectedOrder?.amount | currency:'INR' }}</p>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of selectedOrder?.cartItems">
+                                <td>{{ item.productName }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.price | currency:'INR' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
