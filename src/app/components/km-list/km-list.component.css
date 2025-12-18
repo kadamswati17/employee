@@ -124,11 +124,13 @@
     color: #222;
     cursor: pointer;
     font-size: 13px;
+    width: 100px;
 }
 
 .filter-btn.active {
     background: #4f46e5;
     color: #fff;
+    width: 100px;
 }
 
 /* Pagination */

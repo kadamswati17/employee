@@ -72,6 +72,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CommonModule } from '@angular/common';
 import { PriceListComponent } from './components/price-list/price-list.component';
+import { SellOrderComponent } from './sell-order/sell-order.component';
 
 @NgModule({
   declarations: [
@@ -116,12 +117,14 @@ import { PriceListComponent } from './components/price-list/price-list.component
 
     // Purchase Order
     PurchaseOrderComponent,
+    SellOrderComponent,
 
     // Root
     RootMasterComponent,
 
     // ✅ Price List
-    PriceListComponent
+    PriceListComponent,
+    SellOrderComponent
   ],
   imports: [
     BrowserModule,

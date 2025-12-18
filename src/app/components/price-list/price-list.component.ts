@@ -88,20 +88,23 @@ export class PriceListComponent implements OnInit {
   // ================= APPLY PARTY FILTER =================
   applyPartyFilter(): void {
 
-    let filtered = [...this.priceList];
-
-    // ✅ FILTER BY SELECTED PARTY
-    if (this.selectedPartyId) {
-      filtered = filtered.filter(
-        item => item.partyId === this.selectedPartyId
-      );
+    // ❌ NO PARTY SELECTED → SHOW NOTHING
+    if (!this.selectedPartyId) {
+      this.paginatedPriceList = [];
+      return;
     }
+
+    // ✅ PARTY SELECTED → FILTER
+    const filtered = this.priceList.filter(
+      item => item.partyId === this.selectedPartyId
+    );
 
     const start = (this.page - 1) * this.pageSize;
     const end = start + this.pageSize;
 
     this.paginatedPriceList = filtered.slice(start, end);
   }
+
 
   // ================= SUBMIT / UPDATE =================
   submit(): void {
@@ -174,17 +177,28 @@ export class PriceListComponent implements OnInit {
     this.page = page;
     this.applyPartyFilter();
   }
-
   totalPages(): number {
 
-    let filtered = [...this.priceList];
-
-    if (this.selectedPartyId) {
-      filtered = filtered.filter(
-        item => item.partyId === this.selectedPartyId
-      );
+    if (!this.selectedPartyId) {
+      return 0;
     }
+
+    const filtered = this.priceList.filter(
+      item => item.partyId === this.selectedPartyId
+    );
 
     return Math.ceil(filtered.length / this.pageSize);
   }
+
+  getSerialNo(i: number): number {
+    if (!this.selectedPartyId) return 0;
+
+    const filteredCount = this.priceList.filter(
+      item => item.partyId === this.selectedPartyId
+    ).length;
+
+    return filteredCount - ((this.page - 1) * this.pageSize + i);
+  }
+
+
 }

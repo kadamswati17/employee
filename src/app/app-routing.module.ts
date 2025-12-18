@@ -25,6 +25,7 @@ import { PurchaseOrderComponent } from './purchase-order/purchase-order.componen
 import { PriceListComponent } from './components/price-list/price-list.component';
 import { RootMasterComponent } from './components/root-master/root-master.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
+import { SellOrderComponent } from './sell-order/sell-order.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -62,6 +63,7 @@ const routes: Routes = [
   { path: 'products', component: ProductListComponent, canActivate: [AuthGuard] },
   { path: 'products/new', component: ProductFormComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders', component: PurchaseOrderComponent, canActivate: [AuthGuard] },
+  { path: 'sell-orders', component: SellOrderComponent, canActivate: [AuthGuard] },
   // { path: 'party-price', component: PartyPriceComponent, canActivate: [AuthGuard] },
   { path: 'price-list', component: PriceListComponent, canActivate: [AuthGuard] },
   { path: 'root-master', component: RootMasterComponent, canActivate: [AuthGuard] },
