@@ -1,0 +1,130 @@
+<div class="user-details-container">
+
+    <h2 class="title">User Role Wise Details</h2>
+
+    <!-- FORM -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-form">
+
+        <div class="form-row">
+
+            <!-- USER NAME -->
+            <div class="field">
+                <input type="text" formControlName="username" list="partyUsersList" placeholder=" " />
+                <label>User Name</label>
+
+                <datalist id="partyUsersList">
+                    <option *ngFor="let u of partyUsers" [value]="u.username"></option>
+                </datalist>
+            </div>
+
+            <!-- ROOT NAME -->
+            <div class="field">
+                <input type="text" formControlName="rootName" list="rootList" placeholder=" " />
+                <label>Root Name</label>
+
+                <datalist id="rootList">
+                    <option *ngFor="let r of roots" [value]="r.rootName"></option>
+                </datalist>
+            </div>
+
+            <!-- GST -->
+            <div class="field">
+                <input type="text" formControlName="gstNo" placeholder=" " />
+                <label>GST No</label>
+            </div>
+
+        </div>
+
+        <div class="form-row">
+            <div class="field full">
+                <input type="text" formControlName="address" placeholder=" " />
+                <label>Address</label>
+            </div>
+        </div>
+
+        <div class="form-row">
+
+            <div class="field">
+                <input type="text" formControlName="state" placeholder=" " />
+                <label>State</label>
+            </div>
+
+
+            <div class="field">
+                <input type="text" formControlName="dist" placeholder=" " />
+                <label>Dist</label>
+            </div>
+
+            <div class="field">
+                <input type="text" formControlName="tq" placeholder=" " />
+                <label>TQ</label>
+            </div>
+            <div class="field">
+                <input type="text" formControlName="city" placeholder=" " />
+                <label>City</label>
+            </div>
+
+
+
+            <div class="field">
+                <input type="number" formControlName="balance" placeholder=" " />
+                <label>Balance</label>
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn-submit">
+            {{ isEdit ? 'Update' : 'Submit' }}
+        </button>
+
+    </form>
+
+    <!-- TABLE -->
+    <div class="table-wrapper" *ngIf="paginatedUsers.length > 0">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>User Name</th>
+                    <th>Root Name</th>
+                    <th>GST No</th>
+                    <th>Address</th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Dist</th>
+                    <th>TQ</th>
+                    <th>Balance</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let u of paginatedUsers; let i = index">
+                    <td>{{ users.length - ((page - 1) * pageSize + i) }}</td>
+
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.rootName }}</td>
+                    <td>{{ u.gstNo }}</td>
+                    <td>{{ u.address }}</td>
+                    <td>{{ u.state }}</td>
+                    <td>{{ u.city }}</td>
+                    <td>{{ u.dist }}</td>
+                    <td>{{ u.tq }}</td>
+                    <td>{{ u.balance }}</td>
+                    <td>
+                        <button class="btn-edit" (click)="edit(u)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- PAGINATION -->
+        <div style="margin-top:15px; text-align:center;">
+            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
+                [disabled]="page === i + 1" style="margin: 0 5px; padding: 5px 10px;">
+                {{ i + 1 }}
+            </button>
+        </div>
+    </div>
+
+</div>

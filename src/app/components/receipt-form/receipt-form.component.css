@@ -34,7 +34,7 @@
 /* GRID */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 22px;
 }
 
@@ -102,7 +102,7 @@
 
 /* SUBMIT BUTTON */
 .submit-btn {
-    width: 15%;
+    width: 180px;
     margin: 25px auto 0;
     display: block;
     padding: 12px;
@@ -117,4 +117,15 @@
 
 .submit-btn:hover {
     background: #2e3fa0;
+}
+
+/* GRID FIX */
+.grid-spacer {
+    visibility: hidden;
+}
+
+/* Force 4-column alignment consistency */
+.row-1,
+.row-2 {
+    grid-column: span 1;
 }

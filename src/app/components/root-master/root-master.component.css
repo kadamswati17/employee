@@ -1,0 +1,106 @@
+.root-master-container {
+    max-width: 100%;
+    margin: 25px 100px;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+/* FORM */
+.root-form {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 30px;
+}
+
+.field {
+    position: relative;
+    width: 100%;
+}
+
+.field input {
+    width: 100%;
+    padding: 12px 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    background: transparent;
+}
+
+.field label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    background: white;
+    padding: 0 6px;
+    color: #777;
+    font-size: 14px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+/* FLOATING LABEL */
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label {
+    top: -6px;
+    font-size: 12px;
+    color: #6a11cb;
+}
+
+/* BUTTON */
+.btn-submit {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* TABLE */
+.table-wrapper {
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #6a11cb;
+    color: white;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-edit {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.note {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #666;
+}

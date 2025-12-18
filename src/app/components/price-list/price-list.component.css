@@ -1,0 +1,114 @@
+.party-price-container {
+    max-width: 100%;
+    margin: 25px 100px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+/* FORM */
+.price-form {
+    margin-bottom: 30px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.field {
+    position: relative;
+    width: 100%;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    padding: 12px 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    background: transparent;
+}
+
+.field label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    background: white;
+    padding: 0 6px;
+    color: #777;
+    font-size: 14px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+/* FLOATING LABEL */
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label,
+.field select:focus+label,
+.field select:not([value=""])+label {
+    top: -6px;
+    font-size: 12px;
+    color: #6a11cb;
+}
+
+/* BUTTON */
+.btn-submit {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    margin-top: 20px;
+    margin-left: 390px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* TABLE */
+.table-wrapper {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #6a11cb;
+    color: white;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.btn-edit {
+    background: #2ecc71;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.note {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #666;
+}

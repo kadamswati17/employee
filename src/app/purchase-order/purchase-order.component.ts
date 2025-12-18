@@ -16,7 +16,7 @@ export class PurchaseOrderComponent implements OnInit {
 
   /* ================= DATA ================= */
   parents: any[] = [];        // suppliers
-  products: any[] = [];       // products by supplier
+  products: any[] = [];       // products
   cartItems: CartItem[] = [];
 
   myOrders: PlacePurchaseOrderDto[] = [];
@@ -32,12 +32,12 @@ export class PurchaseOrderComponent implements OnInit {
   totalAmount = 0;
   dateValue = '';
   showOrderForm = false;
-  // ================= PAGINATION =================
+
+  /* ================= PAGINATION ================= */
   currentPage = 1;
   pageSize = 9;
   totalPages = 0;
   paginatedOrders: PlacePurchaseOrderDto[] = [];
-
 
   constructor(
     private fb: FormBuilder,
@@ -53,30 +53,26 @@ export class PurchaseOrderComponent implements OnInit {
   /* ================= INIT ================= */
   ngOnInit(): void {
     this.loadSuppliers();
-    this.loadAllProducts();   // 🔥 ADD THIS
+    this.loadAllProducts();
     this.loadOrders();
     this.dateValue = new Date().toISOString().substring(0, 10);
   }
-
 
   /* ================= SUPPLIERS ================= */
   loadSuppliers(): void {
     this.authService.getSuppliers().subscribe({
       next: res => {
-        this.parents = res;
+        this.parents = res; // already ROLE_PARTY_NAME only
       },
-      error: err => {
-        console.error('Supplier load error', err);
-      }
+      error: err => console.error(err)
     });
   }
 
   onParentChange(event: any): void {
     const userId = Number(event.target.value);
-
     this.selectedParentId = userId;
 
-    // reset cart & totals only
+    // reset cart & totals
     this.cartItems = [];
     this.totalAmount = 0;
     this.selectedProduct = null;
@@ -85,11 +81,9 @@ export class PurchaseOrderComponent implements OnInit {
     this.cartForm.reset({ productId: null, quantity: 1 });
   }
 
-
   /* ================= PRODUCTS ================= */
   onProductChange(event: any): void {
     const productId = Number(event.target.value);
-
     this.selectedProduct = this.products.find(p => p.id === productId) || null;
     this.productPrice = this.selectedProduct?.unitPrice || 0;
   }
@@ -99,25 +93,18 @@ export class PurchaseOrderComponent implements OnInit {
 
     const qty = this.cartForm.value.quantity;
 
-    // 🔍 Check if product already exists in cart
     const existingItem = this.cartItems.find(
       item => item.productId === this.selectedProduct.id
     );
 
     if (existingItem) {
-      // ✅ If exists → increase quantity
       existingItem.quantity += qty;
-
-      // update total
       this.totalAmount += existingItem.price * qty;
-
     } else {
-      // ✅ If new product → add to cart
       const item: CartItem = {
         productId: this.selectedProduct.id,
         productName: this.selectedProduct.name,
         price: this.productPrice,
-
         quantity: qty,
         productImg: this.selectedProduct.img
       };
@@ -125,21 +112,18 @@ export class PurchaseOrderComponent implements OnInit {
       this.cartItems.push(item);
       this.totalAmount += item.price * item.quantity;
 
-      // optional backend save
       this.purchaseService.saveCartItem(item).subscribe();
     }
 
-    // 🔄 Reset quantity only (keep product selected if you want)
     this.cartForm.patchValue({ quantity: 1 });
   }
-
 
   removeItem(index: number): void {
     const removed = this.cartItems.splice(index, 1)[0];
     this.totalAmount -= removed.price * removed.quantity;
   }
 
-  /* ================= ORDER ================= */
+  /* ================= PLACE ORDER ================= */
   placeOrder(): void {
     if (!this.selectedParentId || this.cartItems.length === 0) return;
 
@@ -179,32 +163,23 @@ export class PurchaseOrderComponent implements OnInit {
     });
   }
 
-
-  changeOrderStatus(orderId: number, status: string): void {
-    this.purchaseService.changeOrderStatus(orderId, status).subscribe({
-      next: () => this.loadOrders(),
-      error: err => console.error(err)
-    });
-  }
-
   getOrderDetailsById(orderId: number): void {
     this.purchaseService.getPurchaseOrderDetails(orderId).subscribe({
-      next: res => this.selectedOrder = res,
+      next: res => {
+        this.selectedOrder = res;
+      },
       error: err => console.error(err)
     });
   }
 
   calculateGrandTotal(items: CartItem[] | undefined): number {
     if (!items) return 0;
-    return items.reduce((sum, item) => {
-      return sum + (item.price * item.quantity);
-    }, 0);
+    return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   }
 
+  /* ================= CART EDIT ================= */
   editItem(item: CartItem): void {
     item.isEditing = true;
-
-    // store temp values
     item.tempQty = item.quantity;
     item.tempPrice = item.price;
   }
@@ -215,19 +190,15 @@ export class PurchaseOrderComponent implements OnInit {
       item.tempPrice == null || item.tempPrice < 0
     ) return;
 
-    // remove old total
     this.totalAmount -= item.price * item.quantity;
-
-    // update values
     item.quantity = item.tempQty;
     item.price = item.tempPrice;
-
-    // add new total
     this.totalAmount += item.price * item.quantity;
 
     item.isEditing = false;
   }
 
+  /* ================= PRODUCTS ================= */
   loadAllProducts(): void {
     this.purchaseService.getAllProducts().subscribe({
       next: res => {
@@ -240,6 +211,7 @@ export class PurchaseOrderComponent implements OnInit {
     });
   }
 
+  /* ================= PAGINATION ================= */
   setupPagination(): void {
     this.totalPages = Math.ceil(this.myOrders.length / this.pageSize);
     this.setPage(1);
@@ -249,7 +221,6 @@ export class PurchaseOrderComponent implements OnInit {
     if (page < 1 || page > this.totalPages) return;
 
     this.currentPage = page;
-
     const start = (page - 1) * this.pageSize;
     const end = start + this.pageSize;
 
@@ -267,7 +238,4 @@ export class PurchaseOrderComponent implements OnInit {
       this.setPage(this.currentPage - 1);
     }
   }
-
-
-
 }

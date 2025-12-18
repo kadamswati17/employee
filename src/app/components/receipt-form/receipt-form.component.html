@@ -10,21 +10,21 @@
         <!-- GRID 4 COLUMNS -->
         <div class="form-grid">
 
-            <!-- Date -->
-            <div class="field" [class.filled]="form.get('receiptDate')?.value">
+            <!-- ROW 1 -->
+            <div class="field row-1" [class.filled]="form.get('receiptDate')?.value">
                 <input type="date" formControlName="receiptDate" placeholder=" " />
                 <label>Date</label>
             </div>
 
-            <div class="field" [class.filled]="form.get('transactionType')?.value">
+            <div class="field row-1" [class.filled]="form.get('transactionType')?.value">
                 <select formControlName="transactionType">
                     <option value="1">Receive</option>
                     <option value="2">Payment</option>
                 </select>
                 <label>Transaction Type</label>
             </div>
-            <!-- Party Name -->
-            <div class="field" [class.filled]="form.get('partyId')?.value">
+
+            <div class="field row-1" [class.filled]="form.get('partyId')?.value">
                 <select formControlName="partyId" (change)="onPartyChange($event)">
                     <option value="">Select Party</option>
                     <option *ngFor="let u of users" [value]="u.id">{{ u.username }}</option>
@@ -32,23 +32,16 @@
                 <label>Party Name</label>
             </div>
 
-            <!-- Mobile -->
-            <!-- <div class="field" [class.filled]="form.get('mobile')?.value">
-                <input type="text" formControlName="mobile" placeholder=" " />
-                <label>Mobile</label>
-            </div> -->
+            <!-- EMPTY SLOT TO KEEP GRID CLEAN -->
+            <div class="grid-spacer"></div>
 
-            <!-- Amount -->
-            <div class="field" [class.filled]="form.get('amount')?.value">
+            <!-- ROW 2 -->
+            <div class="field row-2" [class.filled]="form.get('amount')?.value">
                 <input type="number" formControlName="amount" placeholder=" " />
                 <label>Amount</label>
             </div>
 
-            <!-- Transaction Type -->
-
-
-            <!-- Payment Mode -->
-            <div class="field" [class.filled]="form.get('paymentMode')?.value">
+            <div class="field row-2" [class.filled]="form.get('paymentMode')?.value">
                 <select formControlName="paymentMode">
                     <option value="0">Cash</option>
                     <option value="1">UPI</option>
@@ -58,31 +51,22 @@
                 <label>Payment Mode</label>
             </div>
 
-            <!-- Transaction ID -->
-            <div class="field" [class.filled]="form.get('transactionId')?.value">
+            <div class="field row-2" [class.filled]="form.get('transactionId')?.value">
                 <input type="text" formControlName="transactionId" placeholder=" " />
                 <label>Transaction ID</label>
             </div>
 
+            <!-- EMPTY SLOT -->
+            <div class="grid-spacer"></div>
 
-
-            <!-- IMAGE UPLOAD -->
-            <div class="field" [class.filled]="selectedFileName">
-                <input type="file" id="fileUpload" hidden (change)="onImageSelected($event)">
-                <div class="file-box" (click)="triggerFile()">
-                    <i class="bi bi-upload"></i>
-                    {{ selectedFileName || "Choose Image" }}
-                </div>
-                <!-- <label>Receipt Image</label> -->
-            </div>
-
-            <!-- DESCRIPTION FULL WIDTH -->
+            <!-- DESCRIPTION -->
             <div class="field full" [class.filled]="form.get('description')?.value">
                 <textarea formControlName="description" rows="3" placeholder=" "></textarea>
                 <label>Description</label>
             </div>
 
         </div>
+
 
         <!-- SUBMIT BUTTON -->
         <button class="submit-btn" type="submit">

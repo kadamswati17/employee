@@ -1,14 +1,20 @@
 <div class="container my-4">
 
     <!-- Toggle Button -->
-    <button class="btn btn-primary mb-3" (click)="showOrderForm = !showOrderForm">
-        {{ showOrderForm ? '← Back to Orders' : '+ Purchase Order' }}
-    </button>
 
     <!-- ================= ORDERS LIST ================= -->
     <div *ngIf="!showOrderForm">
 
-        <h2>Purchase Orders</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">Purchase Orders</h2>
+
+            <button class="btn btn-primary" (click)="showOrderForm = !showOrderForm">
+                {{ showOrderForm ? '← Back to Orders' : '+ Purchase Order' }}
+            </button>
+        </div>
+
+
+
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">

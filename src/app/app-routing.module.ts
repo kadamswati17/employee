@@ -22,6 +22,10 @@ import { ProductListComponent } from './components/product-list/product-list.com
 // import { PurchaseOrderListComponent } from './components/purchase-order-list/purchase-order-list.component';
 // import { PostProductComponent } from './post-product/post-product.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
+import { PriceListComponent } from './components/price-list/price-list.component';
+import { RootMasterComponent } from './components/root-master/root-master.component';
+import { UserDetailsComponent } from './components/user-details/user-details.component';
+// import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
 const routes: Routes = [
@@ -58,6 +62,11 @@ const routes: Routes = [
   { path: 'products', component: ProductListComponent, canActivate: [AuthGuard] },
   { path: 'products/new', component: ProductFormComponent, canActivate: [AuthGuard] },
   { path: 'purchase-orders', component: PurchaseOrderComponent, canActivate: [AuthGuard] },
+  // { path: 'party-price', component: PartyPriceComponent, canActivate: [AuthGuard] },
+  { path: 'price-list', component: PriceListComponent, canActivate: [AuthGuard] },
+  { path: 'root-master', component: RootMasterComponent, canActivate: [AuthGuard] },
+  { path: 'user-details', component: UserDetailsComponent, canActivate: [AuthGuard] },
+
 
   // PURCHASE ORDERS
   // { path: 'purchase-orders', component: PurchaseOrderListComponent, canActivate: [AuthGuard] },

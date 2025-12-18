@@ -115,7 +115,7 @@ export class AuthService {
 
   getSuppliers(): Observable<any[]> {
     return this.http.get<any[]>(
-      'http://localhost:8080/api/users/suppliers',
+      'http://localhost:8080/api/users/parties',
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -123,5 +123,6 @@ export class AuthService {
       }
     );
   }
+
 
 }

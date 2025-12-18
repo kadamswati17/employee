@@ -10,6 +10,12 @@ import { UserService } from '../services/UserService';
 export class UserListComponent implements OnInit {
 
   users: any[] = [];
+
+  // 🔹 PAGINATION
+  page = 1;
+  pageSize = 5;
+  paginatedUsers: any[] = [];
+
   isLoading = false;
 
   constructor(
@@ -26,9 +32,22 @@ export class UserListComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (data) => {
         this.users = data;
+        this.setPage(1); // ✅ init pagination
         this.isLoading = false;
       }
     });
+  }
+
+  // ================= PAGINATION =================
+  setPage(page: number): void {
+    this.page = page;
+    const start = (page - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedUsers = this.users.slice(start, end);
+  }
+
+  totalPages(): number {
+    return Math.ceil(this.users.length / this.pageSize);
   }
 
   addUser() {
@@ -64,5 +83,4 @@ export class UserListComponent implements OnInit {
       });
     }
   }
-
 }

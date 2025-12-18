@@ -1,0 +1,53 @@
+<div class="root-master-container">
+
+    <h2 class="title">Root Master</h2>
+
+    <!-- FORM -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="root-form">
+
+        <div class="field">
+            <input type="text" formControlName="rootName" placeholder=" " />
+            <label>Root Name</label>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            {{ isEdit ? 'Update' : 'Submit' }}
+        </button>
+
+    </form>
+
+    <!-- TABLE -->
+    <div class="table-wrapper" *ngIf="paginatedRoots.length > 0">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Root Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let r of paginatedRoots; let i = index">
+                    <!-- ✅ DESCENDING SR NO -->
+                    <td>{{ roots.length - ((page - 1) * pageSize + i) }}</td>
+
+                    <td>{{ r.rootName }}</td>
+
+                    <td>
+                        <button class="btn-edit" (click)="editRoot(r)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- PAGINATION -->
+        <div style="margin-top:15px; text-align:center;">
+            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
+                [disabled]="page === i + 1" style="margin: 0 5px; padding: 5px 10px;">
+                {{ i + 1 }}
+            </button>
+        </div>
+    </div>
+
+</div>

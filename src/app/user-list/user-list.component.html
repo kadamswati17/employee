@@ -3,12 +3,11 @@
     <div class="header-section">
         <h2 class="title">User Management</h2>
 
-        <!-- ADD NEW USER BUTTON -->
         <button class="btn-add" (click)="addUser()">+ Add User</button>
     </div>
 
     <div class="table-wrapper">
-        <table class="excel-table" *ngIf="users.length > 0">
+        <table class="excel-table" *ngIf="paginatedUsers.length > 0">
             <thead>
                 <tr>
                     <th style="width: 80px;">ID</th>
@@ -20,7 +19,7 @@
             </thead>
 
             <tbody>
-                <tr *ngFor="let u of users">
+                <tr *ngFor="let u of paginatedUsers">
                     <td>{{ u.id }}</td>
                     <td>{{ u.username }}</td>
                     <td>{{ u.email }}</td>
@@ -42,11 +41,18 @@
 
                         <button class="btn btn-delete" (click)="deleteUser(u.id)">Delete</button>
                     </td>
-
                 </tr>
             </tbody>
         </table>
 
-        <p *ngIf="users.length === 0" class="no-data">No users found.</p>
+        <p *ngIf="paginatedUsers.length === 0" class="no-data">No users found.</p>
+
+        <!-- 🔹 PAGINATION -->
+        <div style="margin-top:15px; text-align:center;">
+            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
+                [disabled]="page === i + 1" style="margin: 0 5px; padding: 6px 12px;">
+                {{ i + 1 }}
+            </button>
+        </div>
     </div>
 </div>
