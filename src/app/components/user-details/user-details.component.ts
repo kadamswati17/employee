@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserRoleDetailsService } from 'src/app/services/UserRoleDetailsService';
+import { LocationService } from 'src/app/services/LocationService';
 
 @Component({
   selector: 'app-user-details',
@@ -20,6 +21,12 @@ export class UserDetailsComponent implements OnInit {
   partyUsers: any[] = [];   // ROLE_PARTY_NAME
   roots: any[] = [];        // ROOT MASTER
 
+  // 🔹 LOCATION DATA
+  states: any[] = [];
+  districts: any[] = [];
+  talukas: any[] = [];
+  cities: any[] = [];
+
   isEdit: boolean = false;
   editId: number | null = null;
 
@@ -30,7 +37,8 @@ export class UserDetailsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private service: UserRoleDetailsService
+    private service: UserRoleDetailsService,
+    private locationService: LocationService
   ) { }
 
   // ================= INIT =================
@@ -42,12 +50,13 @@ export class UserDetailsComponent implements OnInit {
       gstNo: ['', Validators.required],
       address: [''],
       state: [''],
-      city: [''],
       dist: [''],
       tq: [''],
+      city: [''],
       balance: ['']
     });
 
+    this.loadStates();
     this.loadPartyUsers();
     this.loadRoots();
     this.loadUserDetails();
@@ -57,6 +66,56 @@ export class UserDetailsComponent implements OnInit {
       this.applyFilter();
     });
   }
+
+  // ================= LOCATION LOAD =================
+
+  loadStates(): void {
+    this.locationService.getStates().subscribe(res => {
+      this.states = res;
+    });
+  }
+
+  onStateChange(): void {
+    const stateId = this.form.get('state')?.value;
+
+    this.form.patchValue({ dist: '', tq: '', city: '' });
+    this.districts = [];
+    this.talukas = [];
+    this.cities = [];
+
+    if (!stateId) return;
+
+    this.locationService.getDistricts(stateId)
+      .subscribe(res => this.districts = res);
+  }
+
+
+  onDistrictChange(): void {
+    const districtId = this.form.get('dist')?.value;
+
+    this.form.patchValue({ tq: '', city: '' });
+    this.talukas = [];
+    this.cities = [];
+
+    if (!districtId) return;
+
+    this.locationService.getTalukas(districtId)
+      .subscribe(res => this.talukas = res);
+  }
+
+
+  onTalukaChange(): void {
+    const talukaId = this.form.get('tq')?.value;
+
+    this.form.patchValue({ city: '' });
+    this.cities = [];
+
+    if (!talukaId) return;
+
+    this.locationService.getCities(talukaId)
+      .subscribe(res => this.cities = res);
+  }
+
 
   // ================= LOAD DATA =================
 
@@ -74,16 +133,12 @@ export class UserDetailsComponent implements OnInit {
 
   loadUserDetails(): void {
     this.service.getAll().subscribe(data => {
-
-      // 🔹 SORT LATEST FIRST
       this.allUsers = data.sort((a, b) => b.id - a.id);
-
-      // 🔹 APPLY FILTER INITIALLY
       this.applyFilter();
     });
   }
 
-  // ================= FILTER + REMOVE DUPLICATES (TABLE ONLY) =================
+  // ================= FILTER + REMOVE DUPLICATES =================
 
   applyFilter(): void {
     const { username, rootName, gstNo } = this.form.value;
@@ -108,7 +163,6 @@ export class UserDetailsComponent implements OnInit {
       );
     }
 
-    // 🔹 REMOVE DUPLICATES FOR DISPLAY
     const uniqueMap = new Map<string, any>();
     filtered.forEach(u => {
       const key = `${u.username}_${u.rootName}_${u.gstNo}`;
@@ -118,11 +172,10 @@ export class UserDetailsComponent implements OnInit {
     });
 
     this.users = Array.from(uniqueMap.values());
-
     this.setPage(1);
   }
 
-  // ================= SUBMIT / UPDATE (STRICT DUPLICATE BLOCK) =================
+  // ================= SUBMIT / UPDATE =================
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -132,12 +185,10 @@ export class UserDetailsComponent implements OnInit {
 
     const { username, rootName, gstNo } = this.form.value;
 
-    // ❌ BLOCK DUPLICATE (username + rootName + gstNo)
     const duplicate = this.allUsers.find(u =>
       u.username === username &&
       u.rootName === rootName &&
       u.gstNo === gstNo &&
-      // ✅ Allow same record while editing
       (!this.isEdit || u.id !== this.editId)
     );
 
@@ -174,9 +225,9 @@ export class UserDetailsComponent implements OnInit {
       gstNo: user.gstNo,
       address: user.address,
       state: user.state,
-      city: user.city,
       dist: user.dist,
       tq: user.tq,
+      city: user.city,
       balance: user.balance
     });
   }
@@ -202,5 +253,4 @@ export class UserDetailsComponent implements OnInit {
   totalPages(): number {
     return Math.ceil(this.users.length / this.pageSize);
   }
-
 }

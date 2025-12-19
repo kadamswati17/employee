@@ -44,34 +44,46 @@
 
         <div class="form-row">
 
+            <!-- STATE -->
             <div class="field">
-                <input type="text" formControlName="state" placeholder=" " />
+                <select formControlName="state" (change)="onStateChange()">
+
+                    <option value="">Select State</option>
+                    <option *ngFor="let s of states" [value]="s.id">{{ s.name }}</option>
+                </select>
                 <label>State</label>
             </div>
 
-
+            <!-- DISTRICT -->
             <div class="field">
-                <input type="text" formControlName="dist" placeholder=" " />
-                <label>Dist</label>
+                <select formControlName="dist" (change)="onDistrictChange()">
+
+                    <option value="">Select District</option>
+                    <option *ngFor="let d of districts" [value]="d.id">{{ d.name }}</option>
+                </select>
+                <label>District</label>
             </div>
 
+            <!-- TALUKA -->
             <div class="field">
-                <input type="text" formControlName="tq" placeholder=" " />
+                <select formControlName="tq" (change)="onTalukaChange()">
+                    <option value="">Select Taluka</option>
+                    <option *ngFor="let t of talukas" [value]="t.id">{{ t.name }}</option>
+                </select>
                 <label>Taluka</label>
             </div>
+
+            <!-- CITY -->
             <div class="field">
-                <input type="text" formControlName="city" placeholder=" " />
+                <select formControlName="city">
+                    <option value="">Select City</option>
+                    <option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</option>
+                </select>
                 <label>City</label>
             </div>
 
-
-
-            <div class="field">
-                <input type="number" formControlName="balance" placeholder=" " />
-                <label>Balance</label>
-            </div>
-
         </div>
+
 
         <button type="submit" class="btn-submit">
             {{ isEdit ? 'Update' : 'Submit' }}

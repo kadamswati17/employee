@@ -26,6 +26,10 @@ import { PriceListComponent } from './components/price-list/price-list.component
 import { RootMasterComponent } from './components/root-master/root-master.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { SellOrderComponent } from './sell-order/sell-order.component';
+import { CityMasterComponent } from './components/city-master/city-master.component';
+import { DistrictMasterComponent } from './components/district-master/district-master.component';
+import { StateMasterComponent } from './components/state-master/state-master.component';
+import { TalukaMasterComponent } from './components/taluka-master/taluka-master.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -69,11 +73,13 @@ const routes: Routes = [
   { path: 'root-master', component: RootMasterComponent, canActivate: [AuthGuard] },
   { path: 'user-details', component: UserDetailsComponent, canActivate: [AuthGuard] },
 
+  { path: 'state-master', component: StateMasterComponent },
+  { path: 'district-master', component: DistrictMasterComponent },
+  { path: 'taluka-master', component: TalukaMasterComponent },
+  { path: 'city-master', component: CityMasterComponent },
 
-  // PURCHASE ORDERS
-  // { path: 'purchase-orders', component: PurchaseOrderListComponent, canActivate: [AuthGuard] },
-  // { path: 'purchase-orders/new', component: PurchaseOrderFormComponent, canActivate: [AuthGuard] },
-  // { path: 'update-product/:id', component: PostProductComponent, canActivate: [AuthGuard] },
+
+
   { path: '**', redirectTo: '/login' }
 ];
 

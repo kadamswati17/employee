@@ -1,0 +1,165 @@
+/* ================= CONTAINER ================= */
+.root-master-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= TITLE ================= */
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+/* ================= FORM ================= */
+.root-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 24px;
+    align-items: center;
+    width: 100%;
+}
+
+/* ================= FIELD ================= */
+.field {
+    position: relative;
+    width: 100%;
+}
+
+/* FORCE WIDTH (CRITICAL) */
+.field select,
+.field input {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* INPUT & SELECT */
+.field input,
+.field select {
+    height: 52px;
+    padding: 14px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    background: #ffffff;
+}
+
+/* REMOVE DEFAULT SELECT */
+.field select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* DROPDOWN ICON */
+.field::after {
+    content: "▾";
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    pointer-events: none;
+}
+
+/* FLOAT LABEL */
+.field label {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #6b7280;
+    background: #ffffff;
+    padding: 0 6px;
+    pointer-events: none;
+    transition: 0.2s ease;
+}
+
+.field input:focus+label,
+.field input:not(:placeholder-shown)+label,
+.field select:focus+label,
+.field select:valid+label {
+    top: -8px;
+    font-size: 12px;
+    color: #4f46e5;
+}
+
+/* FOCUS */
+.field input:focus,
+.field select:focus {
+    border-color: #4f46e5;
+}
+
+/* ================= BUTTON ================= */
+.btn-submit {
+    height: 52px;
+    padding: 0 32px;
+    background: #4f46e5;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background: #4338ca;
+}
+
+/* ================= TABLE ================= */
+.table-wrapper {
+    margin-top: 40px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #6d28d9;
+}
+
+th {
+    color: white;
+}
+
+th,
+td {
+    padding: 14px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* ================= EDIT BUTTON ================= */
+.btn-edit {
+    background: #22c55e;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ================= PAGINATION ================= */
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination button {
+    margin: 0 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+}

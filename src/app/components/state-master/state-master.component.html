@@ -1,0 +1,50 @@
+<div class="root-master-container">
+
+    <h2 class="title">State Master</h2>
+
+    <!-- FORM -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="root-form">
+
+        <div class="field">
+            <input type="text" formControlName="name" placeholder=" " />
+            <label>State Name</label>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            {{ isEdit ? 'Update' : 'Submit' }}
+        </button>
+
+    </form>
+
+    <!-- TABLE -->
+    <div class="table-wrapper" *ngIf="paginatedStates.length > 0">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>State Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let s of paginatedStates; let i = index">
+                    <td>{{ states.length - ((page - 1) * pageSize + i) }}</td>
+                    <td>{{ s.name }}</td>
+                    <td>
+                        <button class="btn-edit" (click)="edit(s)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- PAGINATION -->
+        <div style="margin-top:15px; text-align:center;">
+            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
+                [disabled]="page === i + 1" style="margin: 0 5px; padding: 5px 10px;">
+                {{ i + 1 }}
+            </button>
+        </div>
+    </div>
+
+</div>

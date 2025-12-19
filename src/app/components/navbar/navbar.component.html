@@ -34,6 +34,15 @@
 
     </select>
 
+    <select class="nav-select" (change)="navigate($event)" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+
+      <option value="" disabled selected hidden>Settings</option>
+      <option value="/state-master">State</option>
+      <option value="/district-master">Dist</option>
+      <option value="/taluka-master">Taluka</option>
+      <option value="/city-master">City</option>
+    </select>
+
 
 
 

@@ -73,6 +73,10 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CommonModule } from '@angular/common';
 import { PriceListComponent } from './components/price-list/price-list.component';
 import { SellOrderComponent } from './sell-order/sell-order.component';
+import { StateMasterComponent } from './components/state-master/state-master.component';
+import { DistrictMasterComponent } from './components/district-master/district-master.component';
+import { TalukaMasterComponent } from './components/taluka-master/taluka-master.component';
+import { CityMasterComponent } from './components/city-master/city-master.component';
 
 @NgModule({
   declarations: [
@@ -124,7 +128,11 @@ import { SellOrderComponent } from './sell-order/sell-order.component';
 
     // ✅ Price List
     PriceListComponent,
-    SellOrderComponent
+    SellOrderComponent,
+    StateMasterComponent,
+    DistrictMasterComponent,
+    TalukaMasterComponent,
+    CityMasterComponent
   ],
   imports: [
     BrowserModule,

@@ -217,3 +217,63 @@ td {
     border-radius: 6px;
     cursor: pointer;
 }
+
+/* COMMON FIELD */
+.field {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+}
+
+/* INPUT + SELECT SAME STYLE */
+.field input,
+.field select {
+    width: 100%;
+    height: 46px;
+    padding: 12px 10px;
+    font-size: 14px;
+    border: 1px solid #cfcfcf;
+    border-radius: 10px;
+    outline: none;
+    background: #fff;
+}
+
+/* REMOVE DEFAULT SELECT ARROW (CLEAN LOOK) */
+.field select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* FLOATING LABEL */
+.field label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    padding: 0 6px;
+    font-size: 13px;
+    color: #7a42f4;
+    pointer-events: none;
+    transition: 0.2s ease;
+}
+
+/* FLOAT LABEL WHEN VALUE EXISTS */
+.field input:not(:placeholder-shown)+label,
+.field select:not([value=""])+label,
+.field select:focus+label,
+.field input:focus+label {
+    top: -7px;
+    font-size: 12px;
+    color: #7a42f4;
+}
+
+/* FORM ROW ALIGNMENT */
+.form-row {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 18px;
+    flex-wrap: nowrap;
+}
