@@ -71,15 +71,25 @@ export class CityMasterComponent implements OnInit {
 
   // ================= EDIT =================
 
+  // edit(c: any): void {
+  //   this.isEdit = true;
+  //   this.editId = c.id;
+
+  //   this.form.patchValue({
+  //     name: c.name,
+  //     talukaId: c.taluka?.id
+  //   });
+  // }
   edit(c: any): void {
     this.isEdit = true;
-    this.editId = c.id;
+    this.editId = c.cityId;
 
     this.form.patchValue({
-      name: c.name,
-      talukaId: c.taluka?.id
+      name: c.cityName,
+      talukaId: c.talukaId
     });
   }
+
 
   // ================= UTILS =================
 

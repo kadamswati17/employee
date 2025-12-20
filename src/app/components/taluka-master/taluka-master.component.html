@@ -7,7 +7,9 @@
 
         <!-- DISTRICT SELECT -->
         <div class="field">
-            <select formControlName="districtId" required>
+            <!-- <select formControlName="districtId" required> -->
+            <select formControlName="districtId" (change)="onDistrictChange()" required>
+
                 <option value="" disabled hidden></option>
                 <option *ngFor="let d of districts" [value]="d.id">
                     {{ d.name }}
@@ -35,20 +37,28 @@
             <thead>
                 <tr>
                     <th>Sr No</th>
-                    <th>Taluka Name</th>
+                    <th>Taluka</th>
+                    <th>District</th>
+                    <th>State</th>
                     <th>Action</th>
                 </tr>
             </thead>
 
+
             <tbody>
                 <tr *ngFor="let t of paginatedTalukas; let i = index">
                     <td>{{ talukas.length - ((page - 1) * pageSize + i) }}</td>
+
                     <td>{{ t.name }}</td>
+                    <td>{{ t.district?.name }}</td>
+                    <td>{{ t.district?.state?.name }}</td>
+
                     <td>
                         <button class="btn-edit" (click)="edit(t)">Edit</button>
                     </td>
                 </tr>
             </tbody>
+
         </table>
 
         <!-- PAGINATION -->

@@ -33,7 +33,7 @@ export class DistrictMasterComponent implements OnInit {
     });
 
     this.loadStates();
-    this.loadDistricts();
+    // this.loadDistricts();
   }
 
   loadStates(): void {
@@ -61,7 +61,7 @@ export class DistrictMasterComponent implements OnInit {
     this.service.addDistrict(payload, stateId).subscribe(() => {
       alert(this.isEdit ? 'District Updated' : 'District Added');
       this.reset();
-      this.loadDistricts();
+      // this.loadDistricts();
     });
   }
 
@@ -86,4 +86,15 @@ export class DistrictMasterComponent implements OnInit {
     const start = (page - 1) * this.pageSize;
     this.paginated = this.districts.slice(start, start + this.pageSize);
   }
+
+  onStateChange(): void {
+    const stateId = this.form.get('stateId')?.value;
+    if (!stateId) return;
+
+    this.service.getDistricts(stateId).subscribe(res => {
+      this.districts = res;
+      this.setPage(1);
+    });
+  }
+
 }

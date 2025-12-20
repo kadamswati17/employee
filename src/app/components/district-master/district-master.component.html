@@ -6,7 +6,9 @@
 
         <!-- STATE DROPDOWN -->
         <div class="field">
-            <select formControlName="stateId" required>
+            <!-- <select formControlName="stateId" required> -->
+            <select formControlName="stateId" (change)="onStateChange()" required>
+
                 <option value="" disabled hidden></option>
                 <option *ngFor="let s of states" [value]="s.id">
                     {{ s.name }}
@@ -34,20 +36,26 @@
             <thead>
                 <tr>
                     <th>Sr No</th>
-                    <th>District Name</th>
+                    <th>District</th>
+                    <th>State</th>
                     <th>Action</th>
                 </tr>
             </thead>
 
+
             <tbody>
                 <tr *ngFor="let d of paginated; let i = index">
                     <td>{{ districts.length - ((page - 1) * pageSize + i) }}</td>
+
                     <td>{{ d.name }}</td>
+                    <td>{{ d.state?.name }}</td>
+
                     <td>
                         <button class="btn-edit" (click)="edit(d)">Edit</button>
                     </td>
                 </tr>
             </tbody>
+
         </table>
     </div>
 

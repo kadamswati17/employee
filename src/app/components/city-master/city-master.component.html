@@ -32,20 +32,30 @@
             <thead>
                 <tr>
                     <th>Sr No</th>
-                    <th>City Name</th>
+                    <th>City</th>
+                    <th>Taluka</th>
+                    <th>District</th>
+                    <th>State</th>
                     <th>Action</th>
                 </tr>
             </thead>
 
+
             <tbody>
                 <tr *ngFor="let c of paginatedCities; let i = index">
                     <td>{{ cities.length - ((page - 1) * pageSize + i) }}</td>
-                    <td>{{ c.name }}</td>
+
+                    <td>{{ c.cityName }}</td>
+                    <td>{{ c.talukaName }}</td>
+                    <td>{{ c.districtName }}</td>
+                    <td>{{ c.stateName }}</td>
+
                     <td>
                         <button class="btn-edit" (click)="edit(c)">Edit</button>
                     </td>
                 </tr>
             </tbody>
+
         </table>
 
         <div class="pagination">

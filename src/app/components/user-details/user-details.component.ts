@@ -92,6 +92,7 @@ export class UserDetailsComponent implements OnInit {
 
   onDistrictChange(): void {
     const districtId = this.form.get('dist')?.value;
+    console.log('District changed to ID:', districtId);
 
     this.form.patchValue({ tq: '', city: '' });
     this.talukas = [];
@@ -99,9 +100,18 @@ export class UserDetailsComponent implements OnInit {
 
     if (!districtId) return;
 
-    this.locationService.getTalukas(districtId)
-      .subscribe(res => this.talukas = res);
+    this.locationService.getTalukas(districtId).subscribe({
+      next: res => {
+        console.log('Taluka API RESPONSE:', res); // ✅ correct place
+        this.talukas = res;
+        console.log('Loaded Talukas:', this.talukas); // ✅ verify data assignment
+      },
+      error: err => {
+        console.error('Taluka API ERROR:', err);
+      }
+    });
   }
+
 
 
   onTalukaChange(): void {
@@ -219,16 +229,32 @@ export class UserDetailsComponent implements OnInit {
     this.isEdit = true;
     this.editId = user.id;
 
+    // 1️⃣ Patch basic fields
     this.form.patchValue({
       username: user.username,
       rootName: user.rootName,
       gstNo: user.gstNo,
       address: user.address,
-      state: user.state,
-      dist: user.dist,
-      tq: user.tq,
-      city: user.city,
-      balance: user.balance
+      balance: user.balance,
+      state: user.state
+    });
+
+    // 2️⃣ Load districts
+    this.locationService.getDistricts(user.state).subscribe(dists => {
+      this.districts = dists;
+      this.form.patchValue({ dist: user.dist });
+
+      // 3️⃣ Load talukas
+      this.locationService.getTalukas(user.dist).subscribe(tqs => {
+        this.talukas = tqs;
+        this.form.patchValue({ tq: user.tq });
+
+        // 4️⃣ Load cities
+        this.locationService.getCities(user.tq).subscribe(cities => {
+          this.cities = cities;
+          this.form.patchValue({ city: user.city });
+        });
+      });
     });
   }
 

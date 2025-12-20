@@ -33,7 +33,7 @@ export class TalukaMasterComponent implements OnInit {
     });
 
     this.loadDistricts();
-    this.loadTalukas();
+    // this.loadTalukas();
   }
 
   // ================= LOAD =================
@@ -59,13 +59,14 @@ export class TalukaMasterComponent implements OnInit {
     const payload: any = {
       name: this.form.value.name.trim()
     };
+    console.log('Submitting Taluka:', payload, 'for District ID:', this.form.value.districtId);
 
     this.service
       .addTaluka(payload, this.form.value.districtId)
       .subscribe(() => {
         alert(this.isEdit ? 'Taluka Updated' : 'Taluka Saved');
         this.reset();
-        this.loadTalukas();
+        // this.loadTalukas();
       });
   }
 
@@ -98,4 +99,15 @@ export class TalukaMasterComponent implements OnInit {
   totalPages(): number {
     return Math.ceil(this.talukas.length / this.pageSize);
   }
+
+  onDistrictChange(): void {
+    const districtId = this.form.get('districtId')?.value;
+    if (!districtId) return;
+
+    this.service.getTalukas(districtId).subscribe(res => {
+      this.talukas = res;
+      this.setPage(1);
+    });
+  }
+
 }
