@@ -1,3 +1,7 @@
+/* =================================================
+   DESKTOP / LAPTOP (DEFAULT — UNCHANGED)
+================================================= */
+
 .root-master-container {
     max-width: 100%;
     margin: 25px 100px;
@@ -99,8 +103,72 @@ td {
     cursor: pointer;
 }
 
-.note {
-    margin-top: 12px;
-    font-size: 13px;
-    color: #666;
+/* =================================================
+   MOBILE VIEW (≤ 767px) — RESPONSIVE ONLY
+================================================= */
+
+@media (max-width: 767px) {
+
+    .root-master-container {
+        margin: 15px;
+        padding: 16px;
+    }
+
+    .title {
+        margin-bottom: 15px;
+    }
+
+    /* STACK FORM */
+    .root-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    /* FULL WIDTH BUTTON */
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* TABLE SCROLL */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 500px;
+    }
+
+    th,
+    td {
+        font-size: 13px;
+        padding: 10px;
+    }
+}
+
+/* =================================================
+   TABLET VIEW (768px – 992px) — RESPONSIVE ONLY
+================================================= */
+
+@media (min-width: 768px) and (max-width: 992px) {
+
+    .root-master-container {
+        margin: 20px 40px;
+    }
+
+    /* FORM WRAP */
+    .root-form {
+        flex-wrap: wrap;
+    }
+
+    /* TABLE SCROLL */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 600px;
+    }
 }

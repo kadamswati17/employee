@@ -1,4 +1,7 @@
-/* MAIN CONTAINER */
+/* ==================================================
+   DESKTOP / LAPTOP (DEFAULT – UNCHANGED)
+================================================== */
+
 .receipt-container {
     max-width: 1100px;
     margin: 20px auto;
@@ -42,7 +45,7 @@
     grid-column: span 4;
 }
 
-/* FLOAT FIELD */
+/* FIELD */
 .field {
     position: relative;
 }
@@ -72,7 +75,7 @@
     pointer-events: none;
 }
 
-/* FLOAT WHEN FILLED */
+/* FLOAT */
 .field.filled label,
 .field input:focus+label,
 .field textarea:focus+label,
@@ -82,25 +85,7 @@
     color: #3f51b5;
 }
 
-/* FILE BOX */
-.file-box {
-    padding: 12px;
-    border: 1.5px solid #cfcfcf;
-    border-radius: 10px;
-    background: #f8f8f8;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.file-box i {
-    font-size: 18px;
-    color: #3f51b5;
-}
-
-/* SUBMIT BUTTON */
+/* SUBMIT */
 .submit-btn {
     width: 180px;
     margin: 25px auto 0;
@@ -119,13 +104,216 @@
     background: #2e3fa0;
 }
 
-/* GRID FIX */
+/* GRID SPACER */
 .grid-spacer {
     visibility: hidden;
 }
 
-/* Force 4-column alignment consistency */
 .row-1,
 .row-2 {
     grid-column: span 1;
+}
+
+/* ==================================================
+   TABLET VIEW (768px – 992px)
+================================================== */
+
+@media (min-width: 768px) and (max-width: 992px) {
+
+    .receipt-container {
+        padding: 24px;
+        margin: 16px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+
+    /* GRID → 2 COLUMNS */
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .full {
+        grid-column: span 2;
+    }
+
+    .grid-spacer {
+        display: none;
+    }
+}
+
+/* ==================================================
+   MOBILE VIEW (≤ 767px)
+================================================== */
+
+@media (max-width: 767px) {
+
+    .receipt-container {
+        padding: 20px;
+        margin: 12px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    /* GRID → 1 COLUMN */
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .full {
+        grid-column: span 1;
+    }
+
+    .grid-spacer {
+        display: none;
+    }
+
+    /* BUTTON FULL WIDTH */
+    .submit-btn {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    /* CLOSE BUTTON SLIGHTLY SMALLER */
+    .close-btn {
+        padding: 6px 10px;
+        font-size: 16px;
+    }
+
+
+
+
+}
+
+.custom-select {
+    position: relative;
+    width: 100%;
+}
+
+.selected-value {
+    height: 46px;
+    padding: 12px;
+    border: 1px solid #cfcfcf;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* DROPDOWN LIST */
+.dropdown-list {
+    position: absolute;
+    top: 52px;
+    left: 0;
+    width: 100%;
+    /* 🔥 FULL CONTROL */
+    max-height: 220px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    z-index: 9999;
+}
+
+/* ITEMS */
+.dropdown-item {
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background: #f0f0ff;
+}
+
+/* MOBILE FIX */
+@media (max-width: 767px) {
+    .dropdown-list {
+        width: 100% !important;
+        /* 🔥 FIXED WIDTH */
+        max-height: 180px;
+    }
+}
+
+.custom-select {
+    position: relative;
+}
+
+.select-box {
+    height: 46px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.options {
+    position: absolute;
+    width: 100%;
+    /* 🔥 FIXED WIDTH */
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    z-index: 9999;
+}
+
+.option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #f2f2ff;
+}
+
+/* FORCE PARENTS TO ALLOW DROPDOWN */
+.receipt-container,
+.form-grid,
+.field {
+    overflow: visible !important;
+}
+
+/* SELECT BOX */
+.select-box {
+    height: 46px;
+    padding: 12px;
+    border: 1.5px solid #cfcfcf;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* DROPDOWN */
+.options {
+    position: fixed;
+    /* 🔥 KEY FIX */
+    left: 5%;
+    right: 5%;
+    max-height: 220px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    z-index: 99999;
+}
+
+/* ITEM */
+.option {
+    padding: 12px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #f2f2ff;
+}
+
+/* FLOAT LABEL FIX */
+.force-float {
+    top: -7px !important;
+    font-size: 12px !important;
+    color: #3f51b5 !important;
 }

@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit {
   selectedMaster: string = "";
   selectedTransaction: string = "";
 
+  isMenuOpen: boolean = false;
   constructor(
     private authService: AuthService,
     private router: Router

@@ -6,8 +6,8 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-0">Sale Orders</h2>
 
-            <button class="btn btn-primary" (click)="showOrderForm = !showOrderForm">
-                {{ showOrderForm ? '← Back to Orders' : '+ Sale Order' }}
+            <button class="btn btn-primary" (click)="showOrderForm = true">
+                + Sale Order
             </button>
         </div>
 
@@ -38,7 +38,6 @@
                         <td>{{ order.userName || 'N/A' }}</td>
                         <td>{{ order.orderDescription }}</td>
                         <td class="text-end">{{ order.amount | currency:'INR' }}</td>
-
                     </tr>
 
                     <tr *ngIf="myOrders.length === 0">
@@ -47,7 +46,6 @@
                         </td>
                     </tr>
                 </tbody>
-
             </table>
 
             <!-- PAGINATION -->
@@ -71,12 +69,20 @@
 
                 </ul>
             </nav>
-
         </div>
     </div>
 
     <!-- ================= SELL FORM ================= -->
     <div *ngIf="showOrderForm">
+
+        <!-- BACK HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">Create Sale Order</h2>
+
+            <button class="btn btn-outline-secondary" (click)="showOrderForm = false">
+                ← Back to Sale Orders
+            </button>
+        </div>
 
         <div class="row g-3 mb-3">
             <div class="col-md-4">
@@ -114,7 +120,7 @@
                 <div class="col-md-2">
                     <label class="form-label">Price</label>
                     <input type="number" class="form-control" [(ngModel)]="productPrice"
-                        [ngModelOptions]="{ standalone: true }" />
+                        [ngModelOptions]="{ standalone: true }">
                 </div>
 
                 <div class="col-md-2">
@@ -155,7 +161,6 @@
                         <span *ngIf="!it.isEditing">
                             {{ it.price | currency:'INR' }}
                         </span>
-
                         <input *ngIf="it.isEditing" type="number" class="form-control form-control-sm"
                             [(ngModel)]="it.tempPrice" [ngModelOptions]="{ standalone: true }">
                     </td>
@@ -164,7 +169,6 @@
                         <span *ngIf="!it.isEditing">
                             {{ it.quantity }}
                         </span>
-
                         <input *ngIf="it.isEditing" type="number" class="form-control form-control-sm"
                             [(ngModel)]="it.tempQty" [ngModelOptions]="{ standalone: true }">
                     </td>
@@ -207,7 +211,6 @@
 
                 <div class="modal-body">
 
-                    <!-- HEADER INFO (EXACT SAME AS PURCHASE) -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <p><b>Customer ID:</b> {{ selectedOrder?.userId }}</p>
@@ -220,7 +223,6 @@
                         </div>
                     </div>
 
-                    <!-- ITEMS TABLE -->
                     <table class="table table-bordered">
                         <thead class="table-dark">
                             <tr>
@@ -242,7 +244,6 @@
                             </tr>
                         </tbody>
 
-                        <!-- GRAND TOTAL -->
                         <tfoot>
                             <tr>
                                 <th colspan="3" class="text-end">Grand Total</th>
@@ -257,3 +258,5 @@
             </div>
         </div>
     </div>
+
+</div>

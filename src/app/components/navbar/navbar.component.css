@@ -1,104 +1,225 @@
-/* ============================
-   NAVBAR WRAPPER
-============================= */
+/* ==================================================
+   DESKTOP / LAPTOP (DEFAULT ≥ 993px)
+   (UNCHANGED LAYOUT)
+================================================== */
+
 .navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 15px 20px;
-  color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 14px 20px;
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-/* ============================
-   CONTAINER
-============================= */
 .navbar-container {
   max-width: 1200px;
   margin: auto;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
-/* Add spacing between dropdowns */
-.nav-select:not(:first-child) {
-  margin-left: 20px;
-}
-
-/* ============================
-   BRAND
-============================= */
+/* BRAND */
 .navbar-brand a {
   color: white;
   font-size: 22px;
   font-weight: bold;
   text-decoration: none;
-  letter-spacing: 0.5px;
-  padding-right: 600px;
+  margin-right: 520px;
+  /* DESKTOP spacing */
 }
 
-/* ============================
-   DROPDOWN FIX — CLEAN UI
-============================= */
+/* DESKTOP NAV */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+/* DROPDOWNS */
 .nav-select {
   padding: 8px 14px;
   border-radius: 6px;
   border: none;
-  font-size: 15px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
+  font-size: 14px;
   cursor: pointer;
   outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: 0.2s ease-in-out;
-
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
-/* Proper white dropdown menu */
+/* OPTIONS */
 .nav-select option {
-  background: white !important;
-  color: #222 !important;
+  background: #ffffff;
+  color: #333;
   padding: 10px;
 }
 
-/* ============================
-   USER INFO
-============================= */
+.nav-select option:checked {
+  background: #667eea;
+  color: white;
+}
+
+/* USER INFO */
 .user-info {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   border-left: 1px solid rgba(255, 255, 255, 0.4);
-  padding-left: 20px;
+  padding-left: 16px;
 }
 
 .username {
   color: white;
-  font-size: 14px;
-  font-weight: 500;
+  cursor: pointer;
 }
 
-/* ============================
-   LOGOUT BUTTON
-============================= */
+/* LOGOUT */
 .btn-logout {
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 6px 14px;
+  color: white;
   border-radius: 6px;
-  font-size: 14px;
+  cursor: pointer;
+}
+
+/* HAMBURGER (HIDDEN ON DESKTOP) */
+.menu-toggle {
+  display: none;
+  font-size: 30px;
+  background: none;
+  border: none;
   color: white;
   cursor: pointer;
-  transition: 0.25s ease-in-out;
-  backdrop-filter: blur(3px);
 }
 
-.btn-logout:hover {
-  background: rgba(255, 255, 255, 0.28);
-  border-color: rgba(255, 255, 255, 0.5);
+
+/* ==================================================
+   MOBILE MENU (USED BY MOBILE & TABLET)
+================================================== */
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 80px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: left 0.3s ease;
+  z-index: 1200;
+}
+
+.mobile-menu.open {
+  left: 0;
+}
+
+/* Mobile dropdown look */
+.mobile-menu .nav-select {
+  background: white;
+  color: #333;
+}
+
+.mobile-menu .nav-select option {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.mobile-menu .nav-select option:checked {
+  background: #667eea;
+  color: white;
+}
+
+/* OVERLAY */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1100;
+}
+
+
+/* ==================================================
+   MOBILE VIEW (≤ 767px)
+================================================== */
+
+@media (max-width: 767px) {
+
+  /* RESET DESKTOP SPACING */
+  .navbar-brand a {
+    margin-right: 0;
+    font-size: 20px;
+  }
+
+  .menu-toggle {
+    display: block;
+    margin-right: 0;
+  }
+
+  .navbar-container {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-menu {
+    width: 240px;
+  }
+
+  /* Prevent horizontal scroll */
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
+
+/* ==================================================
+   TABLET VIEW (768px – 992px)
+================================================== */
+
+@media (min-width: 768px) and (max-width: 992px) {
+
+  /* RESET DESKTOP SPACING */
+  .navbar-brand a {
+    margin-right: 0;
+    font-size: 24px;
+  }
+
+  .menu-toggle {
+    display: block;
+    margin-right: 0;
+  }
+
+  .navbar-container {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Title on RIGHT */
+  .navbar-brand {
+    margin-left: auto;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-menu {
+    width: 260px;
+  }
+
+  /* Prevent horizontal scroll */
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }

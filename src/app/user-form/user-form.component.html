@@ -25,14 +25,27 @@
                 <label>Password *</label>
             </div>
 
-            <!-- Role -->
-            <div class="floating-group">
-                <select formControlName="role" required>
-                    <option value="" disabled selected></option>
-                    <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
-                </select>
+            <!-- Role (FIXED DROPDOWN) -->
+            <!-- Role (CUSTOM DROPDOWN – FIXED WIDTH) -->
+            <div class="floating-group custom-select">
+
+                <div class="select-input" (click)="toggleRoleDropdown()" [class.open]="roleDropdownOpen">
+
+                    {{ form.get('role')?.value || ' ' }}
+                </div>
+
                 <label>Role *</label>
+
+                <div class="select-options" *ngIf="roleDropdownOpen">
+                    <div class="option" *ngFor="let r of roles" (click)="selectRole(r)">
+                        {{ r }}
+                    </div>
+                </div>
+
             </div>
+
+
+
 
             <!-- Mobile -->
             <div class="floating-group">
@@ -40,7 +53,7 @@
                 <label>Mobile</label>
             </div>
 
-            <!-- Profile Image (ONLY FILE NAME SHOWN) -->
+            <!-- Profile Image -->
             <div class="floating-group">
                 <input type="file" accept="image/*" (change)="onImageSelected($event)">
                 <label>Profile Image</label>

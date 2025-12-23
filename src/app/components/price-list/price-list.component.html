@@ -7,25 +7,37 @@
         <div class="form-row">
 
             <!-- PARTY -->
-            <div class="field">
-                <select formControlName="party">
-                    <option value="" disabled>Select Party</option>
-                    <option *ngFor="let p of parties" [ngValue]="p">
-                        {{ p.username }}
-                    </option>
-                </select>
+            <div class="field custom-select">
+
+                <div class="select-input" (click)="togglePartyDropdown()" [class.open]="partyOpen">
+                    {{ form.get('party')?.value?.username || '' }}
+                </div>
+
                 <label>Party Name</label>
+
+                <div class="select-options" *ngIf="partyOpen">
+                    <div class="option" *ngFor="let p of parties" (click)="selectParty(p)">
+                        {{ p.username }}
+                    </div>
+                </div>
+
             </div>
 
             <!-- PRODUCT -->
-            <div class="field">
-                <select formControlName="product">
-                    <option value="" disabled>Select Product</option>
-                    <option *ngFor="let prod of products" [ngValue]="prod">
-                        {{ prod.name }}
-                    </option>
-                </select>
+            <div class="field custom-select">
+
+                <div class="select-input" (click)="toggleProductDropdown()" [class.open]="productOpen">
+                    {{ form.get('product')?.value?.name || '' }}
+                </div>
+
                 <label>Product Name</label>
+
+                <div class="select-options" *ngIf="productOpen">
+                    <div class="option" *ngFor="let prod of products" (click)="selectProduct(prod)">
+                        {{ prod.name }}
+                    </div>
+                </div>
+
             </div>
 
             <!-- PRICE -->
@@ -65,17 +77,8 @@
                         <button class="btn-edit" (click)="edit(item)">Edit</button>
                     </td>
                 </tr>
-
             </tbody>
         </table>
-
-        <!-- PAGINATION -->
-        <div style="margin-top:15px; text-align:center;">
-            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
-                [disabled]="page === i + 1" style="margin: 0 5px; padding: 5px 10px;">
-                {{ i + 1 }}
-            </button>
-        </div>
     </div>
 
 </div>

@@ -99,7 +99,7 @@
         <div class="modal-content premium-modal">
 
             <div class="modal-header premium-header d-flex align-items-center">
-                <h4 class="modal-title">Customer Ledger Report</h4>
+                <h4 class="modal-title">Customer Report</h4>
 
                 <!-- FIXED BUTTON -->
                 <button class="btn btn-outline-primary pdf-btn" (click)="downloadLedgerPDF()">
@@ -143,7 +143,7 @@
                         <tr>
                             <th>Sr</th>
                             <th>Date</th>
-                            <th class="numeric">Txn ID</th>
+                            <!-- <th class="numeric">Txn ID</th> -->
                             <th>Type</th>
                             <th>Mode</th>
                             <th class="numeric">Amount</th>
@@ -154,7 +154,7 @@
                         <tr *ngFor="let row of ledger">
                             <td>{{ row.srNo }}</td>
                             <td>{{ row.receiptDate | date: 'dd-MM-yyyy' }}</td>
-                            <td class="numeric">{{ row.transactionId }}</td>
+                            <!-- <td class="numeric">{{ row.transactionId }}</td> -->
                             <td>{{ row.transactionTypeLabel }}</td>
                             <td>{{ row.paymentModeLabel }}</td>
                             <td class="numeric">₹{{ row.amount }}</td>

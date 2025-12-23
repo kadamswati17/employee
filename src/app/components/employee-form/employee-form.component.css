@@ -18,14 +18,13 @@
 }
 
 /* ---------------------------- */
-/* GRID – 4 fields per row */
+/* GRID – DESKTOP (UNCHANGED) */
 /* ---------------------------- */
 .form-row-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 22px;
   margin-bottom: 25px;
-
 }
 
 /* ---------------------------- */
@@ -36,7 +35,6 @@
   width: 100%;
 }
 
-/* INPUT */
 .floating-group input {
   width: 100%;
   padding: 18px 14px 8px;
@@ -48,13 +46,11 @@
   outline: none;
 }
 
-/* FOCUS EFFECT */
 .floating-group input:focus {
   border-color: #8a5cff;
   box-shadow: 0 0 8px rgba(138, 92, 255, 0.35);
 }
 
-/* LABEL (default position) */
 .floating-group label {
   position: absolute;
   top: 16px;
@@ -62,23 +58,21 @@
   padding: 0 6px;
   font-size: 16px;
   background: #ffffff;
-  /** IMPORTANT FIX **/
   color: #7a7a7a;
   transition: 0.25s ease;
   pointer-events: none;
 }
 
-/* FLOATING STATE */
 .floating-group input:focus+label,
 .floating-group input:not(:placeholder-shown)+label {
   top: -10px;
   left: 14px;
-  font-size: 20px;
+  font-size: 13px;
   color: #8a5cff;
 }
 
 /* ---------------------------- */
-/* BUTTONS */
+/* BUTTONS (DESKTOP) */
 /* ---------------------------- */
 .form-actions {
   display: flex;
@@ -99,38 +93,58 @@
   width: 220px;
 }
 
-/* PURPLE SUBMIT BUTTON */
 .btn-primary {
   background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
   color: #fff;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(140, 100, 255, 0.4);
-}
-
-/* GRAY CANCEL BUTTON */
 .btn-secondary {
   background: #d4d4d4;
   color: #333;
 }
 
-.btn-secondary:hover {
-  background: #c3c3c3;
-}
-
-/* ---------------------------- */
-/* RESPONSIVE */
-/* ---------------------------- */
+/* ================================================= */
+/* TABLET VIEW (601px – 992px) */
+/* ================================================= */
 @media (max-width: 992px) {
+
   .form-row-4 {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .form-card {
+    padding: 30px;
+  }
 }
 
+/* ================================================= */
+/* MOBILE VIEW (≤ 600px) */
+/* ================================================= */
 @media (max-width: 600px) {
+
+  /* Form fields → single column */
   .form-row-4 {
     grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .form-card {
+    padding: 22px;
+  }
+
+  /* Buttons stay in one row */
+  .form-actions {
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: auto;
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 14px;
+    white-space: nowrap;
+    /* ✅ text in one line */
   }
 }

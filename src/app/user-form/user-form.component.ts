@@ -16,9 +16,17 @@ export class UserFormComponent implements OnInit {
 
   imagePreview: string | null = null;
 
+  openRoleDropdown = false; // ✅ FIX FLAG
+
   roles = [
-    'ROLE_ADMIN', 'ROLE_USER',
-    'ROLE_L1', 'ROLE_L2', 'ROLE_L3', 'ROLE_L4', 'ROLE_L5', 'ROLE_PARTY_NAME'
+    'ROLE_ADMIN',
+    'ROLE_USER',
+    'ROLE_L1',
+    'ROLE_L2',
+    'ROLE_L3',
+    'ROLE_L4',
+    'ROLE_L5',
+    'ROLE_PARTY_NAME'
   ];
 
   constructor(
@@ -32,7 +40,7 @@ export class UserFormComponent implements OnInit {
     this.form = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: [''],               // 🔧 not required by default
+      password: [''],
       role: ['', Validators.required],
       mobile: [''],
       profileImage: ['']
@@ -44,7 +52,6 @@ export class UserFormComponent implements OnInit {
       this.userId = +id;
       this.loadUser(this.userId);
     } else {
-      // password required ONLY when creating
       this.form.get('password')?.setValidators(Validators.required);
     }
   }
@@ -56,7 +63,6 @@ export class UserFormComponent implements OnInit {
         email: user.email,
         role: user.role,
         mobile: user.mobile
-        // ❌ do NOT patch profileImage blindly
       });
 
       this.imagePreview = user.profileImage || null;
@@ -76,19 +82,25 @@ export class UserFormComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  roleDropdownOpen = false;
+
+  toggleRoleDropdown() {
+    this.roleDropdownOpen = !this.roleDropdownOpen;
+  }
+
+  selectRole(role: string) {
+    this.form.get('role')?.setValue(role);
+    this.roleDropdownOpen = false;
+  }
+
+
   onSubmit() {
     if (this.form.invalid) return;
 
     const payload = { ...this.form.value };
 
-    // 🔥 prevent empty overwrite
-    if (!payload.profileImage) {
-      delete payload.profileImage;
-    }
-
-    if (!payload.password) {
-      delete payload.password;
-    }
+    if (!payload.profileImage) delete payload.profileImage;
+    if (!payload.password) delete payload.password;
 
     if (this.isEdit) {
       this.userService.updateUser(this.userId!, payload)

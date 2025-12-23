@@ -14,22 +14,22 @@ export class PriceListComponent implements OnInit {
   parties: any[] = [];
   products: any[] = [];
 
-  // 🔹 FULL DATA FROM BACKEND
   priceList: any[] = [];
-
-  // 🔹 PAGINATED DATA (DISPLAY)
   paginatedPriceList: any[] = [];
 
-  // 🔹 PAGINATION
   page = 1;
   pageSize = 5;
 
-  // 🔹 EDIT STATE
-  isEdit: boolean = false;
+  isEdit = false;
   editId: number | null = null;
 
-  // 🔹 PARTY FILTER
   selectedPartyId: number | null = null;
+
+  /* =========================
+     🔽 DROPDOWN STATE (FIX)
+  ========================= */
+  partyOpen = false;
+  productOpen = false;
 
   constructor(
     private fb: FormBuilder,
@@ -48,7 +48,7 @@ export class PriceListComponent implements OnInit {
     this.loadProducts();
     this.loadPriceList();
 
-    // ✅ FILTER TABLE WHEN PARTY CHANGES
+    // PARTY CHANGE FILTER
     this.form.get('party')?.valueChanges.subscribe(party => {
       this.selectedPartyId = party ? party.id : null;
       this.page = 1;
@@ -56,10 +56,34 @@ export class PriceListComponent implements OnInit {
     });
   }
 
+  /* =========================
+     🔽 DROPDOWN METHODS (FIX)
+  ========================= */
+
+  togglePartyDropdown(): void {
+    this.partyOpen = !this.partyOpen;
+    this.productOpen = false;
+  }
+
+  toggleProductDropdown(): void {
+    this.productOpen = !this.productOpen;
+    this.partyOpen = false;
+  }
+
+  selectParty(party: any): void {
+    this.form.get('party')?.setValue(party);
+    this.partyOpen = false;
+  }
+
+  selectProduct(product: any): void {
+    this.form.get('product')?.setValue(product);
+    this.productOpen = false;
+  }
+
   // ================= LOAD PARTIES =================
   loadParties(): void {
     this.priceService.getParties().subscribe({
-      next: (data) => this.parties = data,
+      next: data => this.parties = data,
       error: () => alert('Failed to load parties')
     });
   }
@@ -67,7 +91,7 @@ export class PriceListComponent implements OnInit {
   // ================= LOAD PRODUCTS =================
   loadProducts(): void {
     this.priceService.getProducts().subscribe({
-      next: (data) => this.products = data,
+      next: data => this.products = data,
       error: () => alert('Failed to load products')
     });
   }
@@ -75,10 +99,8 @@ export class PriceListComponent implements OnInit {
   // ================= LOAD PRICE LIST =================
   loadPriceList(): void {
     this.priceService.getAllPartyPrices().subscribe({
-      next: (data) => {
-        // ✅ LATEST FIRST
+      next: data => {
         this.priceList = data.sort((a: any, b: any) => b.id - a.id);
-        this.page = 1;
         this.applyPartyFilter();
       },
       error: () => alert('Failed to load price list')
@@ -88,13 +110,11 @@ export class PriceListComponent implements OnInit {
   // ================= APPLY PARTY FILTER =================
   applyPartyFilter(): void {
 
-    // ❌ NO PARTY SELECTED → SHOW NOTHING
     if (!this.selectedPartyId) {
       this.paginatedPriceList = [];
       return;
     }
 
-    // ✅ PARTY SELECTED → FILTER
     const filtered = this.priceList.filter(
       item => item.partyId === this.selectedPartyId
     );
@@ -105,23 +125,21 @@ export class PriceListComponent implements OnInit {
     this.paginatedPriceList = filtered.slice(start, end);
   }
 
-
-  // ================= SUBMIT / UPDATE =================
+  // ================= SUBMIT =================
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    const formValue = this.form.value;
+    const v = this.form.value;
 
     const payload: any = {
-      partyId: formValue.party.id,
-      productId: formValue.product.id,
-      price: formValue.price
+      partyId: v.party.id,
+      productId: v.product.id,
+      price: v.price
     };
 
-    // ✅ UPDATE MODE
     if (this.isEdit && this.editId !== null) {
       payload.id = this.editId;
     }
@@ -132,21 +150,7 @@ export class PriceListComponent implements OnInit {
         this.resetForm();
         this.loadPriceList();
       },
-      error: (err) => {
-
-        // 🔐 HANDLE DUPLICATE / AUTH / VALIDATION
-        if (err.status === 401) {
-          alert('Duplicate entry not allowed');
-          return;
-        }
-
-        if (err?.error?.message) {
-          alert(err.error.message);
-          return;
-        }
-
-        alert('Error saving price');
-      }
+      error: () => alert('Error saving price')
     });
   }
 
@@ -177,11 +181,9 @@ export class PriceListComponent implements OnInit {
     this.page = page;
     this.applyPartyFilter();
   }
-  totalPages(): number {
 
-    if (!this.selectedPartyId) {
-      return 0;
-    }
+  totalPages(): number {
+    if (!this.selectedPartyId) return 0;
 
     const filtered = this.priceList.filter(
       item => item.partyId === this.selectedPartyId
@@ -189,16 +191,4 @@ export class PriceListComponent implements OnInit {
 
     return Math.ceil(filtered.length / this.pageSize);
   }
-
-  getSerialNo(i: number): number {
-    if (!this.selectedPartyId) return 0;
-
-    const filteredCount = this.priceList.filter(
-      item => item.partyId === this.selectedPartyId
-    ).length;
-
-    return filteredCount - ((this.page - 1) * this.pageSize + i);
-  }
-
-
 }

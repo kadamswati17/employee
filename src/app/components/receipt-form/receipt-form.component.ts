@@ -21,6 +21,7 @@ export class ReceiptFormComponent implements OnInit {
 
   today = new Date().toISOString().split("T")[0];
 
+
   constructor(
     private fb: FormBuilder,
     private receiptService: ReceiptService,

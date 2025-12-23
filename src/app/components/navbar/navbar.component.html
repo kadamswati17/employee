@@ -1,56 +1,103 @@
+<!-- NAVBAR (DESKTOP VIEW UNCHANGED) -->
 <nav class="navbar">
   <div class="navbar-container">
 
-    <!-- Brand -->
+    <!-- HAMBURGER (MOBILE/TABLET ONLY) -->
+    <button class="menu-toggle" (click)="isMenuOpen = true">
+      ☰
+    </button>
+
+    <!-- BRAND -->
     <div class="navbar-brand">
       <a routerLink="/employees">Digital Data System</a>
     </div>
 
-    <!-- SIMPLE SELECT DROPDOWN -->
-    <!-- MASTER DROPDOWN → Only for ADMIN -->
-    <select class="nav-select" (change)="navigate($event)" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+    <!-- DESKTOP NAV (UNCHANGED) -->
+    <div class="desktop-nav">
 
-      <option value="" disabled selected hidden>Master</option>
-      <option value="/employees">Employees</option>
-      <option value="/users">Users</option>
-      <option value="/price-list">Price List</option>
-      <option value="/root-master">Root Master</option>
-      <option value="/user-details">User Details</option>
+      <!-- MASTER -->
+      <select class="nav-select" (change)="navigate($event)" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+        <option value="" disabled selected hidden>Master</option>
+        <option value="/employees">Employees</option>
+        <option value="/users">Users</option>
+        <option value="/price-list">Price List</option>
+        <option value="/root-master">Root Master</option>
+        <option value="/user-details">User Details</option>
+      </select>
 
-    </select>
+      <!-- TRANSACTION -->
+      <select class="nav-select" (change)="navigate($event)">
+        <option value="" disabled selected hidden>Transaction details</option>
+        <option value="/km-list">Travel Details</option>
+        <option value="/customers">Batch</option>
+        <option value="/products">Products</option>
+        <option value="/receipts">Receipt</option>
+        <option value="/purchase-orders">Purchase</option>
+        <option value="/sell-orders">Sale</option>
+      </select>
 
+      <!-- SETTINGS -->
+      <select class="nav-select" (change)="navigate($event)" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+        <option value="" disabled selected hidden>Settings</option>
+        <option value="/state-master">State</option>
+        <option value="/district-master">Dist</option>
+        <option value="/taluka-master">Taluka</option>
+        <option value="/city-master">City</option>
+      </select>
 
-    <!-- TRANSACTION DETAILS → Visible to ALL ROLES -->
-    <select class="nav-select" (change)="navigate($event)">
-      <option value="" disabled selected hidden>Transaction details</option>
-      <option value="/km-list">Travel Details</option>
-      <option value="/customers">Batch</option>
-      <option value="/products">Products</option>
-      <option value="/receipts">Receipt</option>
+      <!-- USER INFO -->
+      <div class="user-info" *ngIf="isLoggedIn">
+        <span class="username" (click)="openProfile()">
+          {{ currentUser?.username }}
+        </span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
 
-      <option value="/purchase-orders">Purchase </option>
-      <option value="/sell-orders">Sale </option>
-
-
-    </select>
-
-    <select class="nav-select" (change)="navigate($event)" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
-
-      <option value="" disabled selected hidden>Settings</option>
-      <option value="/state-master">State</option>
-      <option value="/district-master">Dist</option>
-      <option value="/taluka-master">Taluka</option>
-      <option value="/city-master">City</option>
-    </select>
-
-
-
-
-    <!-- USER INFO + LOGOUT -->
-    <div class="user-info" *ngIf="isLoggedIn">
-      <span (click)="openProfile()" class="username">{{ currentUser?.username }}</span>
-      <button class="btn-logout" (click)="logout()">Logout</button>
     </div>
-
   </div>
 </nav>
+
+<!-- MOBILE OVERLAY -->
+<div class="overlay" *ngIf="isMenuOpen" (click)="isMenuOpen = false">
+</div>
+
+<!-- MOBILE SIDE MENU -->
+<div class="mobile-menu" [class.open]="isMenuOpen">
+
+  <!-- MASTER -->
+  <select class="nav-select" (change)="navigate($event); isMenuOpen = false" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+    <option value="" disabled selected hidden>Master</option>
+    <option value="/employees">Employees</option>
+    <option value="/users">Users</option>
+    <option value="/price-list">Price List</option>
+    <option value="/root-master">Root Master</option>
+    <option value="/user-details">User Details</option>
+  </select>
+
+  <!-- TRANSACTION -->
+  <select class="nav-select" (change)="navigate($event); isMenuOpen = false">
+    <option value="" disabled selected hidden>Transaction details</option>
+    <option value="/km-list">Travel Details</option>
+    <option value="/customers">Batch</option>
+    <option value="/products">Products</option>
+    <option value="/receipts">Receipt</option>
+    <option value="/purchase-orders">Purchase</option>
+    <option value="/sell-orders">Sale</option>
+  </select>
+
+  <!-- SETTINGS -->
+  <select class="nav-select" (change)="navigate($event); isMenuOpen = false" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+    <option value="" disabled selected hidden>Settings</option>
+    <option value="/state-master">State</option>
+    <option value="/district-master">Dist</option>
+    <option value="/taluka-master">Taluka</option>
+    <option value="/city-master">City</option>
+  </select>
+
+  <!-- USER INFO -->
+  <div class="user-info" *ngIf="isLoggedIn">
+    <span class="username">{{ currentUser?.username }}</span>
+    <button class="btn-logout" (click)="logout()">Logout</button>
+  </div>
+
+</div>

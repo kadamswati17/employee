@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserRoleDetailsService } from 'src/app/services/UserRoleDetailsService';
 import { LocationService } from 'src/app/services/LocationService';
 
+type LocationKey = 'state' | 'dist' | 'tq' | 'city';
+
 @Component({
   selector: 'app-user-details',
   templateUrl: './user-details.component.html',
@@ -12,28 +14,33 @@ export class UserDetailsComponent implements OnInit {
 
   form!: FormGroup;
 
-  // 🔹 ORIGINAL DATA (FROM DB)
   allUsers: any[] = [];
-
-  // 🔹 FILTERED + UNIQUE DATA (FOR TABLE)
   users: any[] = [];
 
-  partyUsers: any[] = [];   // ROLE_PARTY_NAME
-  roots: any[] = [];        // ROOT MASTER
+  partyUsers: any[] = [];
+  roots: any[] = [];
 
-  // 🔹 LOCATION DATA
   states: any[] = [];
   districts: any[] = [];
   talukas: any[] = [];
   cities: any[] = [];
 
-  isEdit: boolean = false;
+  isEdit = false;
   editId: number | null = null;
 
-  // 🔹 PAGINATION
   page = 1;
   pageSize = 3;
   paginatedUsers: any[] = [];
+
+  /* =========================
+     🔽 DROPDOWN STATE (FIXED)
+  ========================= */
+  open: Record<LocationKey, boolean> = {
+    state: false,
+    dist: false,
+    tq: false,
+    city: false
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -42,7 +49,6 @@ export class UserDetailsComponent implements OnInit {
   ) { }
 
   // ================= INIT =================
-
   ngOnInit(): void {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -61,10 +67,27 @@ export class UserDetailsComponent implements OnInit {
     this.loadRoots();
     this.loadUserDetails();
 
-    // 🔹 LIVE FILTERING
     this.form.valueChanges.subscribe(() => {
       this.applyFilter();
     });
+  }
+
+  // ================= DROPDOWN HELPERS =================
+
+  toggle(key: LocationKey): void {
+    (Object.keys(this.open) as LocationKey[])
+      .forEach(k => this.open[k] = false);
+
+    this.open[key] = true;
+  }
+
+  select(key: LocationKey, value: any): void {
+    this.form.patchValue({ [key]: value });
+    this.open[key] = false;
+  }
+
+  getName(list: any[], id: any): string {
+    return list.find(x => x.id === id)?.name || '';
   }
 
   // ================= LOCATION LOAD =================
@@ -89,10 +112,8 @@ export class UserDetailsComponent implements OnInit {
       .subscribe(res => this.districts = res);
   }
 
-
   onDistrictChange(): void {
     const districtId = this.form.get('dist')?.value;
-    console.log('District changed to ID:', districtId);
 
     this.form.patchValue({ tq: '', city: '' });
     this.talukas = [];
@@ -100,19 +121,9 @@ export class UserDetailsComponent implements OnInit {
 
     if (!districtId) return;
 
-    this.locationService.getTalukas(districtId).subscribe({
-      next: res => {
-        console.log('Taluka API RESPONSE:', res); // ✅ correct place
-        this.talukas = res;
-        console.log('Loaded Talukas:', this.talukas); // ✅ verify data assignment
-      },
-      error: err => {
-        console.error('Taluka API ERROR:', err);
-      }
-    });
+    this.locationService.getTalukas(districtId)
+      .subscribe(res => this.talukas = res);
   }
-
-
 
   onTalukaChange(): void {
     const talukaId = this.form.get('tq')?.value;
@@ -125,7 +136,6 @@ export class UserDetailsComponent implements OnInit {
     this.locationService.getCities(talukaId)
       .subscribe(res => this.cities = res);
   }
-
 
   // ================= LOAD DATA =================
 
@@ -148,7 +158,7 @@ export class UserDetailsComponent implements OnInit {
     });
   }
 
-  // ================= FILTER + REMOVE DUPLICATES =================
+  // ================= FILTER =================
 
   applyFilter(): void {
     const { username, rootName, gstNo } = this.form.value;
@@ -185,25 +195,11 @@ export class UserDetailsComponent implements OnInit {
     this.setPage(1);
   }
 
-  // ================= SUBMIT / UPDATE =================
+  // ================= SUBMIT =================
 
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      return;
-    }
-
-    const { username, rootName, gstNo } = this.form.value;
-
-    const duplicate = this.allUsers.find(u =>
-      u.username === username &&
-      u.rootName === rootName &&
-      u.gstNo === gstNo &&
-      (!this.isEdit || u.id !== this.editId)
-    );
-
-    if (duplicate) {
-      alert('Duplicate not allowed for same User Name, Root Name and GST No');
       return;
     }
 
@@ -213,13 +209,9 @@ export class UserDetailsComponent implements OnInit {
       payload.id = this.editId;
     }
 
-    this.service.save(payload).subscribe({
-      next: () => {
-        alert(this.isEdit ? 'Updated successfully' : 'Saved successfully');
-        this.resetForm();
-        this.loadUserDetails();
-      },
-      error: () => alert('Error saving record')
+    this.service.save(payload).subscribe(() => {
+      this.resetForm();
+      this.loadUserDetails();
     });
   }
 
@@ -229,7 +221,6 @@ export class UserDetailsComponent implements OnInit {
     this.isEdit = true;
     this.editId = user.id;
 
-    // 1️⃣ Patch basic fields
     this.form.patchValue({
       username: user.username,
       rootName: user.rootName,
@@ -239,17 +230,14 @@ export class UserDetailsComponent implements OnInit {
       state: user.state
     });
 
-    // 2️⃣ Load districts
     this.locationService.getDistricts(user.state).subscribe(dists => {
       this.districts = dists;
       this.form.patchValue({ dist: user.dist });
 
-      // 3️⃣ Load talukas
       this.locationService.getTalukas(user.dist).subscribe(tqs => {
         this.talukas = tqs;
         this.form.patchValue({ tq: user.tq });
 
-        // 4️⃣ Load cities
         this.locationService.getCities(user.tq).subscribe(cities => {
           this.cities = cities;
           this.form.patchValue({ city: user.city });

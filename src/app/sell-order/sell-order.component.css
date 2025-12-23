@@ -147,3 +147,64 @@ table th,
 table td {
     vertical-align: middle;
 }
+
+.modal-content {
+    margin-top: 120px;
+}
+
+/* ================= BASE ================= */
+
+table th,
+table td {
+    vertical-align: middle;
+}
+
+.modal-body p {
+    margin-bottom: 4px;
+}
+
+.modal-content {
+    margin-top: 120px;
+}
+
+/* ================= SELECT FIX ================= */
+
+/* Wrapper prevents overflow on mobile */
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Force stable select width */
+.select-wrapper select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* IMPORTANT: prevent mobile zoom + overflow */
+select.form-select {
+    font-size: 16px;
+}
+
+/* Allow dropdown to render */
+.container {
+    overflow: visible !important;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 576px) {
+
+    .select-wrapper {
+        width: 100%;
+    }
+
+    .form-label {
+        font-size: 14px;
+    }
+
+    table {
+        min-width: 600px;
+    }
+}

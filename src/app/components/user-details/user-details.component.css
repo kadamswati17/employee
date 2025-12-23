@@ -1,3 +1,7 @@
+/* =================================================
+   DESKTOP / LAPTOP (DEFAULT — UNCHANGED)
+================================================= */
+
 .user-details-container {
     max-width: 100%;
     margin: auto;
@@ -21,211 +25,22 @@
 
 .form-row {
     display: flex;
-    gap: 15px;
+    gap: 18px;
     margin-bottom: 18px;
+    flex-wrap: nowrap;
 }
 
-.field {
-    position: relative;
-    width: 100%;
-}
-
-.field.full {
-    width: 100%;
-}
-
-.field input {
-    width: 100%;
-    padding: 12px 10px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    outline: none;
-    background: transparent;
-}
-
-.field label {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    background: white;
-    padding: 0 6px;
-    color: #777;
-    font-size: 14px;
-    transform: translateY(-50%);
-    pointer-events: none;
-    transition: 0.3s;
-}
-
-/* FLOATING LABEL */
-.field input:focus+label,
-.field input:not(:placeholder-shown)+label {
-    top: -6px;
-    font-size: 12px;
-    color: #6a11cb;
-}
-
-/* BUTTON */
-.btn-submit {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-/* TABLE */
-.table-wrapper {
-    margin-top: 25px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: #6a11cb;
-    color: white;
-}
-
-th,
-td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-}
-
-.btn-edit {
-    background: #2ecc71;
-    color: white;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.user-details-container {
-    max-width: 100%;
-    margin: auto;
-    background: #ffffff;
-    padding: 55px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.title {
-    text-align: center;
-    margin-bottom: 25px;
-    font-weight: 700;
-}
-
-/* FORM */
-.user-form {
-    margin-bottom: 30px;
-}
-
-.form-row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 18px;
-}
-
-.field {
-    position: relative;
-    width: 100%;
-}
-
-.field.full {
-    width: 100%;
-}
-
-/* INPUT */
-.field input {
-    width: 100%;
-    padding: 12px 10px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    outline: none;
-    background: transparent;
-}
-
-/* LABEL */
-.field label {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    background: white;
-    padding: 0 6px;
-    color: #777;
-    font-size: 14px;
-    transform: translateY(-50%);
-    pointer-events: none;
-    transition: 0.3s;
-}
-
-/* ✅ FLOATING LABEL — FIX FOR DATALIST INPUT */
-.field input:focus+label,
-.field input:not([value=""])+label,
-.field input:not(:placeholder-shown)+label {
-    top: -6px;
-    font-size: 12px;
-    color: #6a11cb;
-}
-
-/* BUTTON */
-.btn-submit {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-/* TABLE */
-.table-wrapper {
-    margin-top: 25px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: #6a11cb;
-    color: white;
-}
-
-th,
-td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-}
-
-.btn-edit {
-    background: #2ecc71;
-    color: white;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-/* COMMON FIELD */
 .field {
     position: relative;
     flex: 1;
     min-width: 180px;
 }
 
-/* INPUT + SELECT SAME STYLE */
+.field.full {
+    width: 100%;
+}
+
+/* INPUT + SELECT */
 .field input,
 .field select {
     width: 100%;
@@ -238,7 +53,7 @@ td {
     background: #fff;
 }
 
-/* REMOVE DEFAULT SELECT ARROW (CLEAN LOOK) */
+/* REMOVE DEFAULT SELECT ARROW */
 .field select {
     appearance: none;
     -webkit-appearance: none;
@@ -246,7 +61,7 @@ td {
     cursor: pointer;
 }
 
-/* FLOATING LABEL */
+/* LABEL */
 .field label {
     position: absolute;
     left: 12px;
@@ -260,7 +75,7 @@ td {
     transition: 0.2s ease;
 }
 
-/* FLOAT LABEL WHEN VALUE EXISTS */
+/* FLOATING LABEL */
 .field input:not(:placeholder-shown)+label,
 .field select:not([value=""])+label,
 .field select:focus+label,
@@ -270,10 +85,160 @@ td {
     color: #7a42f4;
 }
 
-/* FORM ROW ALIGNMENT */
-.form-row {
-    display: flex;
-    gap: 18px;
-    margin-bottom: 18px;
-    flex-wrap: nowrap;
+/* BUTTON */
+.btn-submit {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* TABLE */
+.table-wrapper {
+    margin-top: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #6a11cb;
+    color: white;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-edit {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* =================================================
+   MOBILE VIEW (≤ 767px) — ONLY RESPONSIVE
+================================================= */
+
+@media (max-width: 767px) {
+    .title {
+        margin-bottom: 0px;
+    }
+
+    .user-form {
+        margin-bottom: 0px;
+    }
+
+    .user-details-container {
+        padding: 18px;
+    }
+
+    /* STACK FORM FIELDS */
+    .form-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .field {
+        min-width: 100%;
+    }
+
+    /* FULL WIDTH BUTTON */
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+        margin-top: 0px;
+    }
+
+    /* TABLE SCROLL */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 900px;
+    }
+
+    th,
+    td {
+        font-size: 13px;
+        padding: 10px;
+    }
+}
+
+/* =================================================
+   TABLET VIEW (768px – 992px) — ONLY RESPONSIVE
+================================================= */
+
+@media (min-width: 768px) and (max-width: 992px) {
+
+    .user-details-container {
+        padding: 35px;
+    }
+
+    /* WRAP FIELDS NICELY */
+    .form-row {
+        flex-wrap: wrap;
+    }
+
+    .field {
+        min-width: 45%;
+    }
+
+    /* TABLE SCROLL */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 1000px;
+    }
+}
+
+/* KEEP ALL YOUR EXISTING CSS UNCHANGED */
+/* ADD ONLY BELOW (SAFE) */
+
+.custom-select {
+    position: relative;
+}
+
+.select-input {
+    height: 46px;
+    padding: 12px 10px;
+    border: 1px solid #cfcfcf;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    z-index: 9999;
+}
+
+.option {
+    padding: 10px;
+}
+
+.option:hover {
+    background: #f1ecff;
 }

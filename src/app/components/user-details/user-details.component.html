@@ -2,7 +2,6 @@
 
     <h2 class="title">User Role Wise Details</h2>
 
-    <!-- FORM -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-form">
 
         <div class="form-row">
@@ -11,7 +10,6 @@
             <div class="field">
                 <input type="text" formControlName="username" list="partyUsersList" placeholder=" " />
                 <label>User Name</label>
-
                 <datalist id="partyUsersList">
                     <option *ngFor="let u of partyUsers" [value]="u.username"></option>
                 </datalist>
@@ -21,7 +19,6 @@
             <div class="field">
                 <input type="text" formControlName="rootName" list="rootList" placeholder=" " />
                 <label>Root Name</label>
-
                 <datalist id="rootList">
                     <option *ngFor="let r of roots" [value]="r.rootName"></option>
                 </datalist>
@@ -42,48 +39,58 @@
             </div>
         </div>
 
+        <!-- LOCATION (CUSTOM DROPDOWNS) -->
         <div class="form-row">
 
             <!-- STATE -->
-            <div class="field">
-                <select formControlName="state" (change)="onStateChange()">
-
-                    <option value="">Select State</option>
-                    <option *ngFor="let s of states" [value]="s.id">{{ s.name }}</option>
-                </select>
-                <label>State</label>
+            <div class="field custom-select">
+                <div class="select-input" (click)="toggle('state')" [class.open]="open.state">
+                    {{ getName(states, form.value.state) || 'Select State' }}
+                </div>
+                <div class="select-options" *ngIf="open.state">
+                    <div class="option" *ngFor="let s of states" (click)="select('state', s.id); onStateChange()">
+                        {{ s.name }}
+                    </div>
+                </div>
             </div>
 
             <!-- DISTRICT -->
-            <div class="field">
-                <select formControlName="dist" (change)="onDistrictChange()">
-
-                    <option value="">Select District</option>
-                    <option *ngFor="let d of districts" [value]="d.id">{{ d.name }}</option>
-                </select>
-                <label>District</label>
+            <div class="field custom-select">
+                <div class="select-input" (click)="toggle('dist')" [class.open]="open.dist">
+                    {{ getName(districts, form.value.dist) || 'Select District' }}
+                </div>
+                <div class="select-options" *ngIf="open.dist">
+                    <div class="option" *ngFor="let d of districts" (click)="select('dist', d.id); onDistrictChange()">
+                        {{ d.name }}
+                    </div>
+                </div>
             </div>
 
             <!-- TALUKA -->
-            <div class="field">
-                <select formControlName="tq" (change)="onTalukaChange()">
-                    <option value="">Select Taluka</option>
-                    <option *ngFor="let t of talukas" [value]="t.id">{{ t.name }}</option>
-                </select>
-                <label>Taluka</label>
+            <div class="field custom-select">
+                <div class="select-input" (click)="toggle('tq')" [class.open]="open.tq">
+                    {{ getName(talukas, form.value.tq) || 'Select Taluka' }}
+                </div>
+                <div class="select-options" *ngIf="open.tq">
+                    <div class="option" *ngFor="let t of talukas" (click)="select('tq', t.id); onTalukaChange()">
+                        {{ t.name }}
+                    </div>
+                </div>
             </div>
 
             <!-- CITY -->
-            <div class="field">
-                <select formControlName="city">
-                    <option value="">Select City</option>
-                    <option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</option>
-                </select>
-                <label>City</label>
+            <div class="field custom-select">
+                <div class="select-input" (click)="toggle('city')" [class.open]="open.city">
+                    {{ getName(cities, form.value.city) || 'Select City' }}
+                </div>
+                <div class="select-options" *ngIf="open.city">
+                    <div class="option" *ngFor="let c of cities" (click)="select('city', c.id)">
+                        {{ c.name }}
+                    </div>
+                </div>
             </div>
 
         </div>
-
 
         <button type="submit" class="btn-submit">
             {{ isEdit ? 'Update' : 'Submit' }}
@@ -91,8 +98,8 @@
 
     </form>
 
-    <!-- TABLE -->
-    <div class="table-wrapper" *ngIf="paginatedUsers.length > 0">
+    <!-- TABLE (UNCHANGED) -->
+    <div class="table-wrapper" *ngIf="paginatedUsers.length">
         <table>
             <thead>
                 <tr>
@@ -109,11 +116,9 @@
                     <th>Action</th>
                 </tr>
             </thead>
-
             <tbody>
                 <tr *ngFor="let u of paginatedUsers; let i = index">
                     <td>{{ users.length - ((page - 1) * pageSize + i) }}</td>
-
                     <td>{{ u.username }}</td>
                     <td>{{ u.rootName }}</td>
                     <td>{{ u.gstNo }}</td>
@@ -123,20 +128,10 @@
                     <td>{{ u.dist }}</td>
                     <td>{{ u.tq }}</td>
                     <td>{{ u.balance }}</td>
-                    <td>
-                        <button class="btn-edit" (click)="edit(u)">Edit</button>
-                    </td>
+                    <td><button class="btn-edit" (click)="edit(u)">Edit</button></td>
                 </tr>
             </tbody>
         </table>
-
-        <!-- PAGINATION -->
-        <div style="margin-top:15px; text-align:center;">
-            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
-                [disabled]="page === i + 1" style="margin: 0 5px; padding: 5px 10px;">
-                {{ i + 1 }}
-            </button>
-        </div>
     </div>
 
 </div>

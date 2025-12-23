@@ -29,8 +29,7 @@
     width: 100%;
 }
 
-.field input,
-.field select {
+.field input {
     width: 100%;
     padding: 12px 10px;
     font-size: 15px;
@@ -40,6 +39,7 @@
     background: transparent;
 }
 
+/* FLOATING LABEL */
 .field label {
     position: absolute;
     top: 50%;
@@ -53,14 +53,58 @@
     transition: 0.3s;
 }
 
-/* FLOATING LABEL */
 .field input:focus+label,
 .field input:not(:placeholder-shown)+label,
-.field select:focus+label,
-.field select:not([value=""])+label {
+.select-input.open+label,
+.select-input:not(:empty)+label {
     top: -6px;
-    font-size: 12px;
+    font-size: 18px;
     color: #6a11cb;
+}
+
+/* ================= CUSTOM DROPDOWN ================= */
+.custom-select {
+    position: relative;
+}
+
+.select-input {
+    width: 100%;
+
+    padding: 20px 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #fff;
+
+}
+
+.select-input.open {
+    border-color: #6a11cb;
+}
+
+/* DROPDOWN LIST FIX */
+.select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+}
+
+.option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #f1ecff;
 }
 
 /* BUTTON */
@@ -74,6 +118,15 @@
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+}
+
+.btn-edit {
+    background: #2ecc71;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 /* TABLE */
@@ -98,17 +151,29 @@ td {
     text-align: center;
 }
 
-.btn-edit {
-    background: #2ecc71;
-    border: none;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-}
+/* MOBILE */
+@media (max-width: 767px) {
 
-.note {
-    margin-top: 12px;
-    font-size: 13px;
-    color: #666;
+    .party-price-container {
+        margin: 15px;
+        padding: 15px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .btn-submit {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 600px;
+    }
 }

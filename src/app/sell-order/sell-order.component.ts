@@ -142,4 +142,34 @@ export class SellOrderComponent implements OnInit {
     );
   }
 
+  customerOpen = false;
+  productOpen = false;
+
+  toggleCustomer() {
+    this.customerOpen = !this.customerOpen;
+    this.productOpen = false;
+  }
+
+  toggleProduct() {
+    this.productOpen = !this.productOpen;
+    this.customerOpen = false;
+  }
+
+  selectCustomer(c: any) {
+    this.selectedCustomerId = c.id;
+    this.cartItems = [];
+    this.totalAmount = 0;
+    this.customerOpen = false;
+  }
+
+
+
+
+  selectProduct(p: any) {
+    this.cartForm.patchValue({ productId: p.id });
+    this.selectedProduct = p;
+    this.productPrice = p.unitPrice || 0;
+    this.productOpen = false;
+  }
+
 }
