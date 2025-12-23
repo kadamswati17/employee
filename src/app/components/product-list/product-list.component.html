@@ -1,28 +1,33 @@
-<!-- <h2 class="page-title">Products</h2> -->
-
-<!-- Dashboard Header -->
+<!-- DASHBOARD HEADER -->
 <div class="dashboard-header">
+
+    <!-- LEFT -->
     <div class="header-left">
         <button mat-raised-button color="primary" (click)="openAddProductModal()">
             <mat-icon>add</mat-icon> Add Product
         </button>
     </div>
-    <h2 class="page-title">Products</h2>
+
+    <!-- CENTER -->
     <div class="header-center">
+        <h1 class="page-title">Products</h1>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="header-right">
         <form [formGroup]="searchProductForm" class="search-form">
-            <mat-form-field class="search-input">
+            <mat-form-field class="search-input" appearance="outline">
                 <input matInput formControlName="title" placeholder="Enter product name" />
                 <button mat-icon-button matSuffix color="primary">
                     <mat-icon>search</mat-icon>
                 </button>
-
             </mat-form-field>
         </form>
-
     </div>
+
 </div>
 
-<!-- PRODUCTS (NO CATEGORY, NO GROUPING) -->
+<!-- PRODUCTS -->
 <div class="category-product-row" *ngIf="products.length">
 
     <mat-card class="product-card" *ngFor="let product of products">
@@ -36,6 +41,7 @@
 
         <div class="product-details">
             <h2 class="product-name">{{ product.name }}</h2>
+
             <p class="product-description">
                 {{ product.description || 'No description' }}
             </p>
@@ -53,6 +59,7 @@
                 <button mat-raised-button color="accent" (click)="openUpdateProductModal(product.id)">
                     Update
                 </button>
+
                 <button mat-raised-button color="warn" (click)="deleteProduct(product.id)">
                     Delete
                 </button>
@@ -60,10 +67,9 @@
         </div>
 
     </mat-card>
-
 </div>
 
 <!-- EMPTY STATE -->
 <div *ngIf="!products.length" class="empty-cart">
-    <span>No products available</span>
+    No products available
 </div>
