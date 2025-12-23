@@ -1,19 +1,21 @@
 <div class="employee-list-container">
     <div class="header-section">
         <h1>Batch Details</h1>
-        <!-- <button class="btn btn-primary" (click)="addCustomer()">+ Add Transaction</button> -->
-        <button class="btn btn-primary" (click)="addCustomer()" *ngIf="canAddTransaction()">
-            + Add Transaction
-        </button>
 
+        <div class="header-actions">
+            <button class="filter-btn" [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">
+                All
+            </button>
+
+            <button class="btn btn-primary" (click)="addCustomer()" *ngIf="canAddTransaction()">
+                + Add Transaction
+            </button>
+        </div>
     </div>
+
 
     <div class="filter-buttons">
 
-        <!-- ALWAYS visible -->
-        <button class="filter-btn" [class.active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">
-            All
-        </button>
 
         <!-- ONLY L1/L2/L3 -->
         <button class="filter-btn" *ngIf="!isAdmin()" [class.active]="activeFilter === 'PENDING'"

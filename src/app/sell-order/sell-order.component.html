@@ -26,7 +26,6 @@
 
                 <tbody>
                     <tr *ngFor="let order of paginatedOrders">
-
                         <td>
                             <a href="javascript:void(0)" (click)="getOrderDetailsById(order.id!)" data-bs-toggle="modal"
                                 data-bs-target="#orderDetailsModal">
@@ -56,7 +55,7 @@
                         <button class="page-link" (click)="prevPage()">Previous</button>
                     </li>
 
-                    <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+                    <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index"
                         [class.active]="currentPage === i + 1">
                         <button class="page-link" (click)="setPage(i + 1)">
                             {{ i + 1 }}
@@ -75,7 +74,6 @@
     <!-- ================= SELL FORM ================= -->
     <div *ngIf="showOrderForm">
 
-        <!-- BACK HEADER -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-0">Create Sale Order</h2>
 
@@ -84,50 +82,67 @@
             </button>
         </div>
 
+        <!-- ================= HEADER FIELDS ================= -->
         <div class="row g-3 mb-3">
-            <div class="col-md-4">
-                <label class="form-label">Order Date</label>
+
+            <!-- ORDER DATE -->
+            <div class="col-md-4 field" [class.filled]="dateValue">
                 <input type="date" class="form-control" [(ngModel)]="dateValue">
+                <label>Order Date</label>
             </div>
 
-            <div class="col-md-8">
-                <label class="form-label">Select Customer</label>
-                <select class="form-select" (change)="onCustomerChange($event)" [value]="selectedCustomerId"
-                    [disabled]="cartItems.length > 0">
+            <!-- CUSTOMER DROPDOWN -->
+            <div class="col-md-8 field custom-select" [class.filled]="selectedCustomer">
 
-                    <option value="">-- Select Customer --</option>
-                    <option *ngFor="let c of customers" [value]="c.id">
+                <div class="select-input" (click)="toggleCustomerDropdown()" [class.open]="customerOpen">
+                    {{ selectedCustomer?.username || selectedCustomer?.userName || ' ' }}
+                </div>
+
+                <label>Select Customer</label>
+
+                <div class="select-options" *ngIf="customerOpen">
+                    <div class="option" *ngFor="let c of customers" (click)="selectCustomer(c)">
                         {{ c.username || c.userName }}
-                    </option>
-                </select>
+                    </div>
+                </div>
             </div>
+
         </div>
 
-        <!-- PRODUCT FORM -->
+        <!-- ================= PRODUCT FORM ================= -->
         <form [formGroup]="cartForm">
             <div class="row g-3 align-items-end">
 
-                <div class="col-md-5">
-                    <label class="form-label">Product</label>
-                    <select class="form-select" formControlName="productId" (change)="onProductChange($event)">
-                        <option value="">-- Select Product --</option>
-                        <option *ngFor="let pr of products" [value]="pr.id">
+                <!-- PRODUCT DROPDOWN -->
+                <div class="col-md-5 field custom-select" [class.filled]="selectedProduct">
+
+                    <div class="select-input" (click)="toggleProductDropdown()" [class.open]="productOpen">
+                        {{ selectedProduct?.name || ' ' }}
+                    </div>
+
+                    <label>Product</label>
+
+                    <div class="select-options" *ngIf="productOpen">
+                        <div class="option" *ngFor="let pr of products" (click)="selectProduct(pr)">
                             {{ pr.name }}
-                        </option>
-                    </select>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col-md-2">
-                    <label class="form-label">Price</label>
+                <!-- PRICE -->
+                <div class="col-md-2 field" [class.filled]="productPrice">
                     <input type="number" class="form-control" [(ngModel)]="productPrice"
                         [ngModelOptions]="{ standalone: true }">
+                    <label>Price</label>
                 </div>
 
-                <div class="col-md-2">
-                    <label class="form-label">Quantity</label>
+                <!-- QUANTITY -->
+                <div class="col-md-2 field" [class.filled]="cartForm.get('quantity')?.value">
                     <input type="number" class="form-control" formControlName="quantity" min="1">
+                    <label>Quantity</label>
                 </div>
 
+                <!-- ADD BUTTON -->
                 <div class="col-md-3">
                     <button type="button" class="btn btn-primary w-100" (click)="addToCart()">
                         Add to Cart
@@ -139,7 +154,7 @@
 
         <hr>
 
-        <!-- CART -->
+        <!-- ================= CART TABLE ================= -->
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
@@ -153,40 +168,15 @@
 
             <tbody>
                 <tr *ngFor="let it of cartItems; let i = index">
-
                     <td>{{ i + 1 }}</td>
                     <td>{{ it.productName }}</td>
-
+                    <td>{{ it.price | currency:'INR' }}</td>
+                    <td>{{ it.quantity }}</td>
                     <td>
-                        <span *ngIf="!it.isEditing">
-                            {{ it.price | currency:'INR' }}
-                        </span>
-                        <input *ngIf="it.isEditing" type="number" class="form-control form-control-sm"
-                            [(ngModel)]="it.tempPrice" [ngModelOptions]="{ standalone: true }">
-                    </td>
-
-                    <td>
-                        <span *ngIf="!it.isEditing">
-                            {{ it.quantity }}
-                        </span>
-                        <input *ngIf="it.isEditing" type="number" class="form-control form-control-sm"
-                            [(ngModel)]="it.tempQty" [ngModelOptions]="{ standalone: true }">
-                    </td>
-
-                    <td>
-                        <button *ngIf="!it.isEditing" class="btn btn-warning btn-sm me-2" (click)="editItem(it)">
-                            Edit
-                        </button>
-
-                        <button *ngIf="it.isEditing" class="btn btn-success btn-sm me-2" (click)="saveItem(it)">
-                            Save
-                        </button>
-
                         <button class="btn btn-danger btn-sm" (click)="removeItem(i)">
                             Remove
                         </button>
                     </td>
-
                 </tr>
             </tbody>
         </table>
@@ -199,7 +189,7 @@
         </div>
     </div>
 
-    <!-- ================= SELL ORDER DETAILS MODAL ================= -->
+    <!-- ================= ORDER DETAILS MODAL ================= -->
     <div class="modal fade" id="orderDetailsModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

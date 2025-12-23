@@ -113,4 +113,47 @@ export class ReceiptFormComponent implements OnInit {
     this.router.navigate(['/receipts']);
   }
 
+  partyOpen = false;
+  txnTypeOpen = false;
+  paymentOpen = false;
+
+  partyLabel = '';
+  txnTypeLabel = '';
+  paymentLabel = '';
+
+  toggleParty() {
+    this.partyOpen = !this.partyOpen;
+    this.txnTypeOpen = this.paymentOpen = false;
+  }
+
+  toggleTxnType() {
+    this.txnTypeOpen = !this.txnTypeOpen;
+    this.partyOpen = this.paymentOpen = false;
+  }
+
+  togglePayment() {
+    this.paymentOpen = !this.paymentOpen;
+    this.partyOpen = this.txnTypeOpen = false;
+  }
+
+  selectParty(u: any) {
+    this.form.patchValue({ partyId: u.id });
+    this.partyLabel = u.username;
+    this.partyOpen = false;
+  }
+
+  selectTxnType(val: string, label: string) {
+    this.form.patchValue({ transactionType: val });
+    this.txnTypeLabel = label;
+    this.txnTypeOpen = false;
+  }
+
+  selectPayment(val: string, label: string) {
+    this.form.patchValue({ paymentMode: val });
+    this.paymentLabel = label;
+    this.paymentOpen = false;
+  }
+
+
+
 }

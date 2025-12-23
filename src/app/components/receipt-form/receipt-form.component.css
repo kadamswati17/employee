@@ -1,5 +1,15 @@
 /* ==================================================
-   DESKTOP / LAPTOP (DEFAULT – UNCHANGED)
+   BASE & SAFETY (DO NOT TOUCH)
+================================================== */
+
+.receipt-container,
+.form-grid,
+.field {
+    overflow: visible !important;
+}
+
+/* ==================================================
+   CONTAINER
 ================================================== */
 
 .receipt-container {
@@ -34,7 +44,10 @@
     margin-bottom: 25px;
 }
 
-/* GRID */
+/* ==================================================
+   GRID
+================================================== */
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -45,13 +58,19 @@
     grid-column: span 4;
 }
 
-/* FIELD */
+.grid-spacer {
+    visibility: hidden;
+}
+
+/* ==================================================
+   FIELD & FLOAT LABEL
+================================================== */
+
 .field {
     position: relative;
 }
 
 .field input,
-.field select,
 .field textarea {
     width: 100%;
     padding: 12px;
@@ -71,21 +90,73 @@
     color: #777;
     background: white;
     padding: 0 6px;
-    transition: .25s;
     pointer-events: none;
+    transition: .25s;
 }
 
-/* FLOAT */
+/* FLOAT LABEL */
 .field.filled label,
 .field input:focus+label,
 .field textarea:focus+label,
-.field select:focus+label {
+.custom-select .select-input.open+label {
     top: -8px;
     font-size: 12px;
     color: #3f51b5;
 }
 
-/* SUBMIT */
+/* ==================================================
+   CUSTOM DROPDOWN (🔥 FINAL FIX)
+================================================== */
+
+.custom-select {
+    position: relative;
+    width: 100%;
+}
+
+/* INPUT LOOK */
+.select-input {
+    height: 46px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1.5px solid #cfcfcf;
+    background: #fff;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.select-input.open {
+    border-color: #3f51b5;
+    box-shadow: 0 0 6px rgba(63, 81, 181, 0.35);
+}
+
+/* DROPDOWN PANEL */
+.select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    z-index: 10000;
+}
+
+/* OPTION */
+.option {
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #f2f2ff;
+}
+
+/* ==================================================
+   SUBMIT BUTTON
+================================================== */
+
 .submit-btn {
     width: 180px;
     margin: 25px auto 0;
@@ -104,16 +175,6 @@
     background: #2e3fa0;
 }
 
-/* GRID SPACER */
-.grid-spacer {
-    visibility: hidden;
-}
-
-.row-1,
-.row-2 {
-    grid-column: span 1;
-}
-
 /* ==================================================
    TABLET VIEW (768px – 992px)
 ================================================== */
@@ -129,7 +190,6 @@
         font-size: 26px;
     }
 
-    /* GRID → 2 COLUMNS */
     .form-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -158,7 +218,6 @@
         font-size: 24px;
     }
 
-    /* GRID → 1 COLUMN */
     .form-grid {
         grid-template-columns: 1fr;
         gap: 18px;
@@ -172,148 +231,18 @@
         display: none;
     }
 
-    /* BUTTON FULL WIDTH */
     .submit-btn {
         width: 100%;
         font-size: 16px;
     }
 
-    /* CLOSE BUTTON SLIGHTLY SMALLER */
     .close-btn {
         padding: 6px 10px;
         font-size: 16px;
     }
 
-
-
-
-}
-
-.custom-select {
-    position: relative;
-    width: 100%;
-}
-
-.selected-value {
-    height: 46px;
-    padding: 12px;
-    border: 1px solid #cfcfcf;
-    border-radius: 10px;
-    background: #fff;
-    cursor: pointer;
-}
-
-/* DROPDOWN LIST */
-.dropdown-list {
-    position: absolute;
-    top: 52px;
-    left: 0;
-    width: 100%;
-    /* 🔥 FULL CONTROL */
-    max-height: 220px;
-    overflow-y: auto;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    z-index: 9999;
-}
-
-/* ITEMS */
-.dropdown-item {
-    padding: 10px 12px;
-    cursor: pointer;
-}
-
-.dropdown-item:hover {
-    background: #f0f0ff;
-}
-
-/* MOBILE FIX */
-@media (max-width: 767px) {
-    .dropdown-list {
-        width: 100% !important;
-        /* 🔥 FIXED WIDTH */
+    /* 🔥 MOBILE DROPDOWN FIX */
+    .select-options {
         max-height: 180px;
     }
-}
-
-.custom-select {
-    position: relative;
-}
-
-.select-box {
-    height: 46px;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background: #fff;
-}
-
-.options {
-    position: absolute;
-    width: 100%;
-    /* 🔥 FIXED WIDTH */
-    max-height: 200px;
-    overflow-y: auto;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    z-index: 9999;
-}
-
-.option {
-    padding: 10px;
-    cursor: pointer;
-}
-
-.option:hover {
-    background: #f2f2ff;
-}
-
-/* FORCE PARENTS TO ALLOW DROPDOWN */
-.receipt-container,
-.form-grid,
-.field {
-    overflow: visible !important;
-}
-
-/* SELECT BOX */
-.select-box {
-    height: 46px;
-    padding: 12px;
-    border: 1.5px solid #cfcfcf;
-    border-radius: 10px;
-    background: #fff;
-    cursor: pointer;
-}
-
-/* DROPDOWN */
-.options {
-    position: fixed;
-    /* 🔥 KEY FIX */
-    left: 5%;
-    right: 5%;
-    max-height: 220px;
-    overflow-y: auto;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    z-index: 99999;
-}
-
-/* ITEM */
-.option {
-    padding: 12px;
-    cursor: pointer;
-}
-
-.option:hover {
-    background: #f2f2ff;
-}
-
-/* FLOAT LABEL FIX */
-.force-float {
-    top: -7px !important;
-    font-size: 12px !important;
-    color: #3f51b5 !important;
 }

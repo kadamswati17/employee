@@ -238,4 +238,37 @@ export class PurchaseOrderComponent implements OnInit {
       this.setPage(this.currentPage - 1);
     }
   }
+
+  parentOpen = false;
+  productOpen = false;
+
+  selectedParent: any = null;
+
+  /* SUPPLIER DROPDOWN */
+  toggleParentDropdown() {
+    this.parentOpen = !this.parentOpen;
+    this.productOpen = false;
+  }
+
+  selectParent(p: any) {
+    this.selectedParent = p;
+    this.selectedParentId = p.id;
+    this.parentOpen = false;
+
+    this.cartItems = [];
+    this.totalAmount = 0;
+  }
+
+  /* PRODUCT DROPDOWN */
+  toggleProductDropdown() {
+    this.productOpen = !this.productOpen;
+    this.parentOpen = false;
+  }
+
+  selectProduct(pr: any) {
+    this.selectedProduct = pr;
+    this.productPrice = pr.unitPrice || 0;
+    this.productOpen = false;
+  }
+
 }

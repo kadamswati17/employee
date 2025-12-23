@@ -1,78 +1,94 @@
 <div class="receipt-container">
 
-    <!-- CLOSE BUTTON -->
     <button class="close-btn" (click)="close()">✖</button>
 
     <h2 class="title">{{ isEdit ? "Edit Receipt" : "Add Receipt" }}</h2>
 
-    <form [formGroup]="form" (ngSubmit)="submit()" enctype="multipart/form-data">
+    <form [formGroup]="form" (ngSubmit)="submit()">
 
-        <!-- GRID 4 COLUMNS -->
         <div class="form-grid">
 
-            <!-- ROW 1 -->
-            <div class="field row-1" [class.filled]="form.get('receiptDate')?.value">
-                <input type="date" formControlName="receiptDate" placeholder=" " />
+            <!-- DATE -->
+            <div class="field" [class.filled]="form.get('receiptDate')?.value">
+                <input type="date" formControlName="receiptDate" />
                 <label>Date</label>
             </div>
 
-            <div class="field row-1" [class.filled]="form.get('transactionType')?.value">
-                <select formControlName="transactionType">
-                    <option value="1">Receive</option>
-                    <option value="2">Payment</option>
-                </select>
+            <!-- 🔥 TRANSACTION TYPE -->
+            <div class="field custom-select" [class.filled]="form.get('transactionType')?.value">
+
+                <div class="select-input" (click)="toggleTxnType()" [class.open]="txnTypeOpen">
+                    {{ txnTypeLabel || ' ' }}
+                </div>
+
                 <label>Transaction Type</label>
+
+                <div class="select-options" *ngIf="txnTypeOpen">
+                    <div class="option" (click)="selectTxnType('1','Receive')">Receive</div>
+                    <div class="option" (click)="selectTxnType('2','Payment')">Payment</div>
+                </div>
             </div>
 
-            <div class="field row-1" [class.filled]="form.get('partyId')?.value">
-                <select formControlName="partyId" (change)="onPartyChange($event)">
-                    <option value="">Select Party</option>
-                    <option *ngFor="let u of users" [value]="u.id">{{ u.username }}</option>
-                </select>
+            <!-- 🔥 PARTY NAME -->
+            <div class="field custom-select" [class.filled]="form.get('partyId')?.value">
+
+                <div class="select-input" (click)="toggleParty()" [class.open]="partyOpen">
+                    {{ partyLabel || ' ' }}
+                </div>
+
                 <label>Party Name</label>
+
+                <div class="select-options" *ngIf="partyOpen">
+                    <div class="option" *ngFor="let u of users" (click)="selectParty(u)">
+                        {{ u.username }}
+                    </div>
+                </div>
             </div>
 
-            <!-- EMPTY SLOT TO KEEP GRID CLEAN -->
             <div class="grid-spacer"></div>
 
-            <!-- ROW 2 -->
-            <div class="field row-2" [class.filled]="form.get('amount')?.value">
-                <input type="number" formControlName="amount" placeholder=" " />
+            <!-- AMOUNT -->
+            <div class="field" [class.filled]="form.get('amount')?.value">
+                <input type="number" formControlName="amount" />
                 <label>Amount</label>
             </div>
 
-            <div class="field row-2" [class.filled]="form.get('paymentMode')?.value">
-                <select formControlName="paymentMode">
-                    <option value="0">Cash</option>
-                    <option value="1">UPI</option>
-                    <option value="2">Bank Transfer</option>
-                    <option value="3">Card</option>
-                </select>
+            <!-- 🔥 PAYMENT MODE -->
+            <div class="field custom-select" [class.filled]="form.get('paymentMode')?.value">
+
+                <div class="select-input" (click)="togglePayment()" [class.open]="paymentOpen">
+                    {{ paymentLabel || ' ' }}
+                </div>
+
                 <label>Payment Mode</label>
+
+                <div class="select-options" *ngIf="paymentOpen">
+                    <div class="option" (click)="selectPayment('0','Cash')">Cash</div>
+                    <div class="option" (click)="selectPayment('1','UPI')">UPI</div>
+                    <div class="option" (click)="selectPayment('2','Bank Transfer')">Bank Transfer</div>
+                    <div class="option" (click)="selectPayment('3','Card')">Card</div>
+                </div>
             </div>
 
-            <div class="field row-2" [class.filled]="form.get('transactionId')?.value">
-                <input type="text" formControlName="transactionId" placeholder=" " />
+            <!-- TXN ID -->
+            <div class="field" [class.filled]="form.get('transactionId')?.value">
+                <input type="text" formControlName="transactionId" />
                 <label>Transaction ID</label>
             </div>
 
-            <!-- EMPTY SLOT -->
             <div class="grid-spacer"></div>
 
             <!-- DESCRIPTION -->
             <div class="field full" [class.filled]="form.get('description')?.value">
-                <textarea formControlName="description" rows="3" placeholder=" "></textarea>
+                <textarea formControlName="description" rows="3"></textarea>
                 <label>Description</label>
             </div>
 
         </div>
 
-
-        <!-- SUBMIT BUTTON -->
         <button class="submit-btn" type="submit">
             {{ isEdit ? "Update" : "Save" }}
         </button>
 
     </form>
-
 </div>
