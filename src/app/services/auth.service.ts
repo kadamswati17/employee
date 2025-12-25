@@ -4,16 +4,16 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginRequest } from '../models/auth.model';
 import { TokenStorageService } from './token-storage.service';
 import { UserService } from './UserService';
-
-const AUTH_API = 'http://localhost:8080/api/auth';
-const API_URL = 'http://localhost:8080/api';
-
-const BASIC_URL = 'http://localhost:8080/';
+import { APP_CONFIG } from '../config/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  // ================= BASE URLs =================
+  private AUTH_API = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.AUTH}`;
+  private API_BASE = `${APP_CONFIG.BASE_URL}`;
 
   private loginStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
   loginStatus$ = this.loginStatus.asObservable();
@@ -28,21 +28,22 @@ export class AuthService {
   // 🔐 LOGIN
   // =======================================
   login(credentials: LoginRequest): Observable<any> {
-    return this.http.post<any>(`${AUTH_API}/signin`, credentials).pipe(
+    return this.http.post<any>(`${this.AUTH_API}/signin`, credentials).pipe(
       tap(response => {
         if (response.token) {
 
           // Save token
           this.tokenStorage.saveToken(response.token);
 
-          // Save user
+          // Save user (session)
           this.tokenStorage.saveUser({
             id: response.id,
             username: response.username,
             email: response.email,
-            role: response.role  // role is string from backend
+            role: response.role
           });
 
+          // Save user (local)
           UserService.saveUser({
             id: response.id,
             username: response.username,
@@ -60,7 +61,7 @@ export class AuthService {
   // 🆕 REGISTER USER (ADMIN ONLY)
   // =======================================
   register(user: { username: string; email: string; password: string; role: string }): Observable<any> {
-    return this.http.post(`${AUTH_API}/signup`, user);
+    return this.http.post(`${this.AUTH_API}/signup`, user);
   }
 
   // =======================================
@@ -86,36 +87,59 @@ export class AuthService {
   // OTHER APIS (BATCH + CUSTOMER)
   // =======================================
   createBatch(batch: any): Observable<any> {
-    return this.http.post(`${API_URL}/batch`, batch);
+    return this.http.post(
+      `${this.API_BASE}${APP_CONFIG.API.BATCH}`,
+      batch
+    );
   }
 
   createCustomerTransaction(bactno: number, customer: any): Observable<any> {
-    return this.http.post(`${API_URL}/customer-trn/${bactno}`, customer);
+    return this.http.post(
+      `${this.API_BASE}${APP_CONFIG.API.CUSTOMER_TRN}/${bactno}`,
+      customer
+    );
   }
 
   getCurrentUserFromAPI(): Observable<any> {
-    return this.http.get(`${AUTH_API}/me`);
+    return this.http.get(`${this.AUTH_API}/me`);
   }
 
-  // ⭐ REQUIRED BY PROFILE COMPONENT
+  // =======================================
+  // ⭐ PROFILE APIs
+  // =======================================
   getUserInfo(id: number): Observable<any> {
-    return this.http.get(`${API_URL}/users/${id}/info`);
+    return this.http.get(
+      `${this.API_BASE}${APP_CONFIG.API.USERS}/${id}/info`
+    );
   }
 
   updateUserProfile(id: number, data: any): Observable<any> {
-    return this.http.put(`${API_URL}/users/${id}/profile`, data);
+    return this.http.put(
+      `${this.API_BASE}${APP_CONFIG.API.USERS}/${id}/profile`,
+      data
+    );
   }
 
+  // =======================================
+  // 👥 USERS (ADMIN)
+  // =======================================
   getAllUsers(): Observable<any[]> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenStorage.getToken()}`
     });
-    return this.http.get<any[]>(BASIC_URL + 'api/user/all', { headers });
+
+    return this.http.get<any[]>(
+      `${this.API_BASE}${APP_CONFIG.API.USERS}/all`,
+      { headers }
+    );
   }
 
+  // =======================================
+  // 🏭 SUPPLIERS
+  // =======================================
   getSuppliers(): Observable<any[]> {
     return this.http.get<any[]>(
-      'http://localhost:8080/api/users/parties',
+      `${this.API_BASE}${APP_CONFIG.API.USERS}/parties`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -123,6 +147,4 @@ export class AuthService {
       }
     );
   }
-
-
 }

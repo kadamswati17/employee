@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { APP_CONFIG } from '../config/config';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class UserRoleDetailsService {
 
-    private baseUrl = 'http://localhost:8080/api';
+    private baseUrl = `${APP_CONFIG.BASE_URL}`;
 
     constructor(private http: HttpClient) { }
 
+    // ================= AUTH HEADERS =================
     private authHeaders() {
         return {
             headers: new HttpHeaders({
@@ -21,7 +25,7 @@ export class UserRoleDetailsService {
 
     save(data: any): Observable<any> {
         return this.http.post(
-            `${this.baseUrl}/user-role-details`,
+            `${this.baseUrl}/api/user-role-details`,
             data,
             this.authHeaders()
         );
@@ -29,14 +33,14 @@ export class UserRoleDetailsService {
 
     getAll(): Observable<any[]> {
         return this.http.get<any[]>(
-            `${this.baseUrl}/user-role-details`,
+            `${this.baseUrl}/api/user-role-details`,
             this.authHeaders()
         );
     }
 
     delete(id: number): Observable<any> {
         return this.http.delete(
-            `${this.baseUrl}/user-role-details/${id}`,
+            `${this.baseUrl}/api/user-role-details/${id}`,
             this.authHeaders()
         );
     }
@@ -46,7 +50,7 @@ export class UserRoleDetailsService {
     // ✅ ONLY ROLE_PARTY_NAME
     getPartyUsers(): Observable<any[]> {
         return this.http.get<any[]>(
-            `${this.baseUrl}/users/parties`,
+            `${this.baseUrl}${APP_CONFIG.API.USERS}/parties`,
             this.authHeaders()
         );
     }
@@ -54,7 +58,7 @@ export class UserRoleDetailsService {
     // ✅ ROOT MASTER
     getRoots(): Observable<any[]> {
         return this.http.get<any[]>(
-            `${this.baseUrl}/roots`,
+            `${this.baseUrl}${APP_CONFIG.API.ROOTS}`,
             this.authHeaders()
         );
     }

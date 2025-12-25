@@ -1,0 +1,22 @@
+// src/app/core/config/config.ts
+
+export const APP_CONFIG = {
+    BASE_URL: 'http://localhost:8080/emperp',
+
+    API: {
+        AUTH: '/api/auth',
+        USERS: '/api/users',
+        ADMIN: '/api/admin',
+        PRODUCTS: '/api/products',
+        EMPLOYEES: '/api/employees',
+        CUSTOMER_TRN: '/api/customer-trn',
+        BATCH: '/api/batch',
+        KM_BATCH: '/api/km-batch',
+        KM_ENTRY: '/api/km-entry',
+        LOCATION: '/api/location',
+        ROOTS: '/api/roots',
+        RECEIPTS: '/api/receipts',
+        PARTY_PRICES: '/api/party-prices',
+        FILE_UPLOAD: '/api/files/upload'
+    }
+};

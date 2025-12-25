@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
+import { APP_CONFIG } from '../config/config';
 
-const ADMIN_API = 'http://localhost:8080/api/admin';
-const PRODUCT_API = 'http://localhost:8080/api/products';
+// ================= BASE URLs =================
+const ADMIN_API = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.ADMIN}`;
+const PRODUCT_API = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.PRODUCTS}`;
+const USER_API = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.USERS}`;
 
 export interface CartItem {
     productId: number;
@@ -26,7 +29,9 @@ export interface PlaceSellOrderDto {
     cartItems?: CartItem[];
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class SellService {
 
     constructor(
@@ -34,7 +39,8 @@ export class SellService {
         private tokenStorage: TokenStorageService
     ) { }
 
-    headers() {
+    // ================= AUTH HEADERS =================
+    private headers() {
         return {
             headers: new HttpHeaders({
                 Authorization: `Bearer ${this.tokenStorage.getToken()}`
@@ -42,24 +48,36 @@ export class SellService {
         };
     }
 
-    getCustomers() {
+    // ================= CUSTOMERS =================
+    getCustomers(): Observable<any[]> {
         return this.http.get<any[]>(
-            `http://localhost:8080/api/users/parties`,
+            `${USER_API}/parties`,
             this.headers()
         );
     }
 
-
-    getAllProducts() {
-        return this.http.get<any[]>(`${PRODUCT_API}`, this.headers());
+    // ================= PRODUCTS =================
+    getAllProducts(): Observable<any[]> {
+        return this.http.get<any[]>(
+            PRODUCT_API,
+            this.headers()
+        );
     }
 
+    // ================= SELL ORDER =================
     placeOrder(dto: PlaceSellOrderDto) {
-        return this.http.post(`${ADMIN_API}/sell-order/place`, dto, this.headers());
+        return this.http.post(
+            `${ADMIN_API}/sell-order/place`,
+            dto,
+            this.headers()
+        );
     }
 
     getSellOrders(): Observable<PlaceSellOrderDto[]> {
-        return this.http.get<PlaceSellOrderDto[]>(`${ADMIN_API}/sell-orders`, this.headers());
+        return this.http.get<PlaceSellOrderDto[]>(
+            `${ADMIN_API}/sell-orders`,
+            this.headers()
+        );
     }
 
     getSellOrderDetails(id: number): Observable<PlaceSellOrderDto> {

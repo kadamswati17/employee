@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CustomerTrn } from '../models/customer.model';
+import { APP_CONFIG } from '../config/config';
 
-const API_URL = 'http://localhost:8080/api/customer-trn';
-const BATCH_API_URL = 'http://localhost:8080/api/batch';
+// ================= BASE URLs =================
+const CUSTOMER_API_URL = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.CUSTOMER_TRN}`;
+const BATCH_API_URL = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.BATCH}`;
 
 @Injectable({
     providedIn: 'root'
@@ -13,28 +15,34 @@ export class CustomerService {
 
     constructor(private http: HttpClient) { }
 
-    // Customers CRUD
+    // =========================================
+    // ============== CUSTOMER CRUD ============
+    // =========================================
+
     getAllCustomers(): Observable<CustomerTrn[]> {
-        return this.http.get<CustomerTrn[]>(API_URL);
+        return this.http.get<CustomerTrn[]>(CUSTOMER_API_URL);
     }
 
     getCustomerById(id: number): Observable<CustomerTrn> {
-        return this.http.get<CustomerTrn>(`${API_URL}/${id}`);
+        return this.http.get<CustomerTrn>(`${CUSTOMER_API_URL}/${id}`);
     }
 
     createCustomer(customer: CustomerTrn): Observable<CustomerTrn> {
-        return this.http.post<CustomerTrn>(API_URL, customer);
+        return this.http.post<CustomerTrn>(CUSTOMER_API_URL, customer);
     }
 
     updateCustomer(id: number, customer: CustomerTrn): Observable<CustomerTrn> {
-        return this.http.put<CustomerTrn>(`${API_URL}/${id}`, customer);
+        return this.http.put<CustomerTrn>(`${CUSTOMER_API_URL}/${id}`, customer);
     }
 
     deleteCustomer(id: number): Observable<void> {
-        return this.http.delete<void>(`${API_URL}/${id}`);
+        return this.http.delete<void>(`${CUSTOMER_API_URL}/${id}`);
     }
 
-    // Batch APIs
+    // =========================================
+    // ============== BATCH APIs ===============
+    // =========================================
+
     getAllBatches(): Observable<any[]> {
         return this.http.get<any[]>(BATCH_API_URL);
     }
@@ -43,43 +51,69 @@ export class CustomerService {
         return this.http.post<any>(BATCH_API_URL, batch);
     }
 
-    createTransactionWithBatch(bactno: number, customer: CustomerTrn): Observable<CustomerTrn> {
-        return this.http.post<CustomerTrn>(`${API_URL}/${bactno}`, customer);
+    createTransactionWithBatch(
+        bactno: number,
+        customer: CustomerTrn
+    ): Observable<CustomerTrn> {
+        return this.http.post<CustomerTrn>(
+            `${CUSTOMER_API_URL}/${bactno}`,
+            customer
+        );
     }
 
     getCustomersByBatch(bactno: number): Observable<CustomerTrn[]> {
-        return this.http.get<CustomerTrn[]>(`${API_URL}/batch/${bactno}`);
+        return this.http.get<CustomerTrn[]>(
+            `${CUSTOMER_API_URL}/batch/${bactno}`
+        );
     }
 
     approveCustomer(id: number): Observable<CustomerTrn> {
-        return this.http.post<CustomerTrn>(`${API_URL}/${id}/approve`, {});
+        return this.http.post<CustomerTrn>(
+            `${CUSTOMER_API_URL}/${id}/approve`,
+            {}
+        );
     }
 
-    // Approve batch (returns updated batch)
+    // =========================================
+    // ============ BATCH ACTIONS ===============
+    // =========================================
+
     approveBatch(bactno: number): Observable<any> {
-        return this.http.post<any>(`${BATCH_API_URL}/${bactno}/approve`, {});
+        return this.http.post<any>(
+            `${BATCH_API_URL}/${bactno}/approve`,
+            {}
+        );
     }
 
-    // Reject batch (optionally pass reason)
     rejectBatch(bactno: number, reason?: string): Observable<any> {
-        const url = `${BATCH_API_URL}/${bactno}/reject` + (reason ? `?reason=${encodeURIComponent(reason)}` : '');
+        const url =
+            `${BATCH_API_URL}/${bactno}/reject` +
+            (reason ? `?reason=${encodeURIComponent(reason)}` : '');
+
         return this.http.post<any>(url, {});
     }
 
-    // Update batch (Admin + L1)
     updateBatch(bactno: number, payload: any): Observable<any> {
-        return this.http.put<any>(`${BATCH_API_URL}/${bactno}`, payload);
+        return this.http.put<any>(
+            `${BATCH_API_URL}/${bactno}`,
+            payload
+        );
     }
 
-    // Delete batch (Admin + L1)
     deleteBatch(bactno: number): Observable<void> {
-        return this.http.delete<void>(`${BATCH_API_URL}/${bactno}`);
+        return this.http.delete<void>(
+            `${BATCH_API_URL}/${bactno}`
+        );
     }
 
-    // Download pdf
+    // =========================================
+    // ============== DOWNLOAD =================
+    // =========================================
+
     downloadBatch(bactno: number) {
-        return this.http.get(`${BATCH_API_URL}/${bactno}/download`, {
-            responseType: 'blob'
-        });
+        return this.http.get(
+            `${BATCH_API_URL}/${bactno}/download`,
+            { responseType: 'blob' }
+        );
     }
 }

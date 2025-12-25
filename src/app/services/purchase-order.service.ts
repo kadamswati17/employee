@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
+import { APP_CONFIG } from '../config/config';
 
 /* ================= BASE URLs ================= */
-const ADMIN_API = 'http://localhost:8080/api/admin';
-const PRODUCT_API = 'http://localhost:8080/api/products';
+const ADMIN_API = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.ADMIN}`;
+const PRODUCT_API = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.PRODUCTS}`;
 
 /* ================= MODELS ================= */
 
@@ -18,12 +19,11 @@ export interface CartItem {
     productImg?: string;
     totalAmount?: number;
 
-    // 🔥 UI edit helpers
+    // UI helpers
     isEditing?: boolean;
     tempQty?: number;
-    tempPrice?: number;   // ✅ ADD THIS LINE
+    tempPrice?: number;
 }
-
 
 export interface PlacePurchaseOrderDto {
     id?: number;
@@ -41,7 +41,9 @@ export interface PlacePurchaseOrderDto {
     cartItems?: CartItem[];
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class PurchaseService {
 
     constructor(
@@ -49,6 +51,7 @@ export class PurchaseService {
         private tokenStorage: TokenStorageService
     ) { }
 
+    // ================= AUTH HEADERS =================
     private headers() {
         return {
             headers: new HttpHeaders({
@@ -57,7 +60,7 @@ export class PurchaseService {
         };
     }
 
-    /* ================= PRODUCTS ================= */
+    // ================= PRODUCTS =================
     getAllProductsByUserId(userId: number): Observable<any[]> {
         return this.http.get<any[]>(
             `${PRODUCT_API}/user/${userId}`,
@@ -65,7 +68,14 @@ export class PurchaseService {
         );
     }
 
-    /* ================= CART ================= */
+    getAllProducts(): Observable<any[]> {
+        return this.http.get<any[]>(
+            PRODUCT_API,
+            this.headers()
+        );
+    }
+
+    // ================= CART =================
     saveCartItem(item: CartItem) {
         return this.http.post(
             `${ADMIN_API}/purchase-cart`,
@@ -81,7 +91,7 @@ export class PurchaseService {
         );
     }
 
-    /* ================= ORDER ================= */
+    // ================= ORDER =================
     placeOrder(dto: PlacePurchaseOrderDto) {
         return this.http.post(
             `${ADMIN_API}/purchase-order/place`,
@@ -111,13 +121,4 @@ export class PurchaseService {
             this.headers()
         );
     }
-
-    /* ================= PRODUCTS ================= */
-    getAllProducts(): Observable<any[]> {
-        return this.http.get<any[]>(
-            `${PRODUCT_API}`,
-            this.headers()
-        );
-    }
-
 }

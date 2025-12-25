@@ -2,14 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product.model';
+import { APP_CONFIG } from '../config/config';
 
-const API_URL = 'http://localhost:8080/api/products';
+// ================= BASE URL =================
+const PRODUCT_API_URL = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.PRODUCTS}`;
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class ProductService {
 
     constructor(private http: HttpClient) { }
 
+    // ================= AUTH HEADERS =================
     private authHeaders() {
         return {
             headers: new HttpHeaders({
@@ -18,67 +23,54 @@ export class ProductService {
         };
     }
 
-    // CREATE
-    create(product: Product, userId: number) {
+    // ================= CREATE =================
+    create(product: Product, userId: number): Observable<Product> {
         return this.http.post<Product>(
-            `${API_URL}/${userId}`,
+            `${PRODUCT_API_URL}/${userId}`,
             product,
             this.authHeaders()
         );
     }
 
-    // READ ALL
+    // ================= READ ALL =================
     getAll(): Observable<Product[]> {
-        return this.http.get<Product[]>(API_URL, this.authHeaders());
+        return this.http.get<Product[]>(
+            PRODUCT_API_URL,
+            this.authHeaders()
+        );
     }
 
-    // READ BY ID
+    // ================= READ BY ID =================
     getById(id: number): Observable<Product> {
         return this.http.get<Product>(
-            `${API_URL}/${id}`,
+            `${PRODUCT_API_URL}/${id}`,
             this.authHeaders()
         );
     }
 
-    // UPDATE
-    update(id: number, product: Product) {
+    // ================= UPDATE =================
+    update(id: number, product: Product): Observable<Product> {
         return this.http.put<Product>(
-            `${API_URL}/${id}`,
+            `${PRODUCT_API_URL}/${id}`,
             product,
             this.authHeaders()
         );
     }
 
-    // DELETE
-    delete(id: number) {
-        return this.http.delete<any>(
-            `${API_URL}/${id}`,
-            {
-                headers: new HttpHeaders({
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                })
-            }
+    // ================= DELETE =================
+    delete(id: number): Observable<any> {
+        return this.http.delete(
+            `${PRODUCT_API_URL}/${id}`,
+            this.authHeaders()
         );
     }
 
-    // add(product: Product, userId: number) {
-    //     return this.http.post<Product>(`${API_URL}/${userId}`, product);
-    // }
-
-    // create(product: Product, userId: number) {
-    //     return this.http.post<Product>(
-    //         `${API_URL}/${userId}`,
-    //         product,
-    //         this.authHeaders()
-    //     );
-    // }
-
+    // ================= CREATE (LOGGED-IN USER) =================
     createForLoggedInUser(product: Product): Observable<Product> {
         return this.http.post<Product>(
-            `${API_URL}/addProduct`,
+            `${PRODUCT_API_URL}/addProduct`,
             product,
             this.authHeaders()
         );
     }
-
 }
