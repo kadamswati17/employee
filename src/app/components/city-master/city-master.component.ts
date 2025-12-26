@@ -33,7 +33,7 @@ export class CityMasterComponent implements OnInit {
     });
 
     this.loadTalukas();
-    this.loadCities();
+    // ❌ DO NOT load cities here
   }
 
   // ================= LOAD =================
@@ -44,9 +44,13 @@ export class CityMasterComponent implements OnInit {
     });
   }
 
-  loadCities(): void {
-    this.service.getAllCities().subscribe((res: any[]) => {
-      this.cities = res.sort((a, b) => b.id - a.id);
+  // ✅ LOAD CITIES ONLY AFTER TALUKA SELECT
+  onTalukaChange(): void {
+    const talukaId = this.form.get('talukaId')?.value;
+    if (!talukaId) return;
+
+    this.service.getCitiesByTaluka(talukaId).subscribe((res: any[]) => {
+      this.cities = res;
       this.setPage(1);
     });
   }
@@ -56,30 +60,25 @@ export class CityMasterComponent implements OnInit {
   onSubmit(): void {
     if (this.form.invalid) return;
 
-    const payload: any = {
+    const payload = {
       name: this.form.value.name.trim()
     };
 
-    this.service
-      .addCity(payload, this.form.value.talukaId)
-      .subscribe(() => {
-        alert('City Saved');
-        this.reset();
-        this.loadCities();
-      });
+    const talukaId = this.form.value.talukaId;
+
+    this.service.addCity(payload, talukaId).subscribe(() => {
+      alert(this.isEdit ? 'City Updated' : 'City Saved');
+
+      this.reset();
+
+      // reload same taluka cities
+      this.form.patchValue({ talukaId });
+      this.onTalukaChange();
+    });
   }
 
   // ================= EDIT =================
 
-  // edit(c: any): void {
-  //   this.isEdit = true;
-  //   this.editId = c.id;
-
-  //   this.form.patchValue({
-  //     name: c.name,
-  //     talukaId: c.taluka?.id
-  //   });
-  // }
   edit(c: any): void {
     this.isEdit = true;
     this.editId = c.cityId;
@@ -88,8 +87,9 @@ export class CityMasterComponent implements OnInit {
       name: c.cityName,
       talukaId: c.talukaId
     });
-  }
 
+    this.onTalukaChange();
+  }
 
   // ================= UTILS =================
 

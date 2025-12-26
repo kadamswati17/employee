@@ -1,7 +1,7 @@
 // src/app/core/config/config.ts
 
 export const APP_CONFIG = {
-    BASE_URL: 'http://localhost:8080/emperp',
+    BASE_URL: 'http://localhost:8080',
 
     API: {
         AUTH: '/api/auth',

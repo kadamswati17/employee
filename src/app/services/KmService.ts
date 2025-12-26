@@ -49,12 +49,12 @@ export class KmService {
         );
     }
 
-    downloadBatch(kmBatchNo: number) {
-        return this.http.get(
-            `${KM_BATCH_API_URL}/${kmBatchNo}/download`,
-            { responseType: 'blob' }
-        );
-    }
+    // downloadBatch(kmBatchNo: number) {
+    //     return this.http.get(
+    //         `${KM_BATCH_API_URL}/${kmBatchNo}/download`,
+    //         { responseType: 'blob' }
+    //     );
+    // }
 
     // =========================================
     // ============== ENTRY APIs ===============

@@ -86,12 +86,13 @@ export class LocationService {
         );
     }
 
-    getAllCities(): Observable<any[]> {
+    getCitiesByTaluka(talukaId: number): Observable<any[]> {
         return this.http.get<any[]>(
-            `${this.baseUrl}/cities`,
-            this.authHeaders()
+            `${this.baseUrl}/cities/by-taluka/${talukaId}`,
+            this.publicHeaders()
         );
     }
+
 
     // =================================================
     // ================== POST / SAVE ==================

@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { KmService } from 'src/app/services/KmService';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+
 
 declare var bootstrap: any;
 
@@ -301,17 +305,76 @@ export class KmListComponent implements OnInit {
 
 
   download(batchNo?: number) {
-    if (!batchNo) return;
+    if (!batchNo || !this.selectedBatch) return;
 
-    this.kmService.downloadBatch(batchNo).subscribe(file => {
-      const url = window.URL.createObjectURL(file);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `KM-Batch-${batchNo}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
+    const doc = new jsPDF('p', 'mm', 'a4');
+
+    // ================= TITLE =================
+    doc.setFontSize(18);
+    doc.text('Demo Auto Limited', 105, 15, { align: 'center' });
+
+    doc.setFontSize(11);
+    doc.text(`KM Batch No: ${batchNo}`, 14, 25);
+    doc.text(
+      `Date: ${new Date(this.selectedBatch.trndate || '').toLocaleDateString()}`,
+      150,
+      25
+    );
+
+    doc.text(`Created By: ${this.selectedBatch.createdby || '-'}`, 14, 32);
+
+    // ================= TABLE DATA =================
+    const tableBody = this.entries.map((e, i) => [
+      i + 1,
+      e.salesperson || '',
+      e.startKm ?? '',
+      e.endKm ?? '',
+      e.visitedPlace || '',
+      e.trnDate ? new Date(e.trnDate).toLocaleDateString() : ''
+    ]);
+
+    autoTable(doc, {
+      startY: 40,
+      head: [[
+        'ID',
+        'Salesperson',
+        'Start KM',
+        'End KM',
+        'Visited Place',
+        'Date'
+      ]],
+      body: tableBody,
+      styles: {
+        fontSize: 9,
+        halign: 'center',
+        valign: 'middle'
+      },
+      headStyles: {
+        fillColor: [79, 70, 229],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      theme: 'grid'
     });
+
+    // ================= APPROVAL FOOTER =================
+    const finalY = (doc as any).lastAutoTable.finalY + 15;
+
+    doc.setFontSize(11);
+    doc.text('CHECKED BY', 30, finalY);
+    doc.text('REVIEWED BY', 95, finalY);
+    doc.text('APPROVED BY', 160, finalY);
+
+    doc.setFontSize(10);
+    doc.text(this.selectedBatch.approval1Name || '—', 30, finalY + 8, { align: 'center' });
+    doc.text(this.selectedBatch.approval2Name || '—', 95, finalY + 8, { align: 'center' });
+    doc.text(this.selectedBatch.approval3Name || '—', 160, finalY + 8, { align: 'center' });
+
+    // ================= SAVE =================
+    doc.save(`KM-Batch-${batchNo}.pdf`);
   }
+
+
   canEditDelete(): boolean {
     return (
       this.currentUserRole === 'ROLE_ADMIN' ||

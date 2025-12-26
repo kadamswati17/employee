@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { CustomerService } from '../services/customer.service';
 import { CustomerTrn } from '../models/customer.model';
 import { AuthService } from '../services/auth.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 
 declare var bootstrap: any;
 
@@ -308,17 +311,94 @@ export class CustomerListComponent implements OnInit {
   // DOWNLOAD
   // ============================================================
   downloadBatch(bactno: number) {
-    this.customerService.downloadBatch(bactno).subscribe({
-      next: (file) => {
-        const url = window.URL.createObjectURL(file);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Batch-${bactno}.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
+    if (!this.selectedBatch || this.batchTransactions.length === 0) {
+      alert('No data to download');
+      return;
+    }
+
+    const doc = new jsPDF('l', 'mm', 'a4'); // landscape for wide table
+
+    /* ================= HEADER ================= */
+    doc.setFontSize(18);
+    doc.text('Demo Auto Limited', 148, 15, { align: 'center' });
+
+    doc.setFontSize(11);
+    doc.text(`Batch No: ${bactno}`, 14, 25);
+    doc.text(
+      `Transaction Date: ${this.batchTransactions[0]?.trndate
+        ? new Date(this.batchTransactions[0].trndate).toLocaleDateString()
+        : ''
+      }`,
+      14,
+      32
+    );
+
+    doc.text(
+      `Created By: ${this.selectedBatch.createdby || this.selectedBatch.createdByName || '—'
+      }`,
+      14,
+      39
+    );
+
+    /* ================= TABLE ================= */
+    const tableBody = this.batchTransactions.map((t, i) => [
+      i + 1,
+      t.customerName || '',
+      t.toolingdrawingpartno || '',
+      t.partdrawingname || '',
+      t.partdrawingno || '',
+      t.descriptionoftooling || '',
+      t.cmworkorderno || '',
+      t.toolingassetno || ''
+    ]);
+
+    autoTable(doc, {
+      startY: 45,
+      head: [[
+        'TRN ID',
+        'Customer Name',
+        'Tooling Drawing Part No',
+        'Part Drawing Name',
+        'Part Drawing No',
+        'Description of Tooling',
+        'Work Order No',
+        'Tooling Asset No'
+      ]],
+      body: tableBody,
+      styles: {
+        fontSize: 8,
+        halign: 'center',
+        valign: 'middle'
       },
-      error: () => alert('Download failed')
+      headStyles: {
+        fillColor: [79, 70, 229],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      theme: 'grid'
     });
+
+    /* ================= FOOTER (APPROVALS) ================= */
+    const finalY = (doc as any).lastAutoTable.finalY + 12;
+
+    const approvals = this.getApprovalLevels(this.selectedBatch);
+
+    doc.setFontSize(11);
+    doc.text('CHECKED BY', 60, finalY, { align: 'center' });
+    doc.text('REVIEWED BY', 148, finalY, { align: 'center' });
+    doc.text('APPROVED BY', 235, finalY, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.text(approvals.checkedBy.name || '—', 60, finalY + 8, { align: 'center' });
+    doc.text(approvals.reviewedBy.name || '—', 148, finalY + 8, { align: 'center' });
+    doc.text(approvals.approvedBy.name || '—', 235, finalY + 8, { align: 'center' });
+
+    doc.text(approvals.checkedBy.level || '', 60, finalY + 14, { align: 'center' });
+    doc.text(approvals.reviewedBy.level || '', 148, finalY + 14, { align: 'center' });
+    doc.text(approvals.approvedBy.level || '', 235, finalY + 14, { align: 'center' });
+
+    /* ================= SAVE ================= */
+    doc.save(`Batch-${bactno}.pdf`);
   }
 
   // ============================================================

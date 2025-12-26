@@ -110,10 +110,10 @@ export class CustomerService {
     // ============== DOWNLOAD =================
     // =========================================
 
-    downloadBatch(bactno: number) {
-        return this.http.get(
-            `${BATCH_API_URL}/${bactno}/download`,
-            { responseType: 'blob' }
-        );
-    }
+    // downloadBatch(bactno: number) {
+    //     return this.http.get(
+    //         `${BATCH_API_URL}/${bactno}/download`,
+    //         { responseType: 'blob' }
+    //     );
+    // }
 }

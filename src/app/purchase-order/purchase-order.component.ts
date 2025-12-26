@@ -6,6 +6,10 @@ import {
   CartItem,
   PlacePurchaseOrderDto
 } from '../services/purchase-order.service';
+import * as bootstrap from 'bootstrap';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 
 @Component({
   selector: 'app-purchase-order',
@@ -32,6 +36,7 @@ export class PurchaseOrderComponent implements OnInit {
   totalAmount = 0;
   dateValue = '';
   showOrderForm = false;
+
 
   /* ================= PAGINATION ================= */
   currentPage = 1;
@@ -270,5 +275,97 @@ export class PurchaseOrderComponent implements OnInit {
     this.productPrice = pr.unitPrice || 0;
     this.productOpen = false;
   }
+
+  openOrderModal(orderId: number): void {
+    this.purchaseService.getPurchaseOrderDetails(orderId).subscribe({
+      next: res => {
+        this.selectedOrder = res;
+
+        // ⏳ wait for Angular to render modal content
+        setTimeout(() => {
+          const modalEl = document.getElementById('orderDetailsModal');
+          if (modalEl) {
+            const modal = new bootstrap.Modal(modalEl, {
+              backdrop: 'static',
+              keyboard: true
+            });
+            modal.show();
+          }
+        }, 0);
+      },
+      error: err => console.error(err)
+    });
+  }
+
+  downloadOrderPDF(): void {
+    if (!this.selectedOrder) {
+      alert('No order selected');
+      return;
+    }
+
+    const doc = new jsPDF('p', 'mm', 'a4');
+
+    /* ================= TITLE ================= */
+    doc.setFontSize(18);
+    doc.text('Purchase Order', 105, 15, { align: 'center' });
+
+    doc.setFontSize(11);
+
+    /* ================= HEADER ROW 1 ================= */
+    doc.text(`Order ID: ${this.selectedOrder.id}`, 14, 30);
+    doc.text(`Party ID: ${this.selectedOrder.userId ?? ''}`, 140, 30);
+
+    /* ================= HEADER ROW 2 ================= */
+    doc.text(`Party Name: ${this.selectedOrder.userName}`, 14, 38);
+    doc.text(
+      `Date: ${new Date(this.selectedOrder.date || '').toLocaleDateString('en-GB')}`,
+      140,
+      38
+    );
+
+    /* ================= TABLE ================= */
+    const tableBody = (this.selectedOrder.cartItems || []).map((item, i) => [
+      i + 1,
+      item.productName,
+      item.quantity,
+      `Rs. ${item.price}`,
+      `Rs. ${item.price * item.quantity}`
+    ]);
+
+    autoTable(doc, {
+      startY: 50,
+      head: [['#', 'Product', 'Qty', 'Price', 'Total']],
+      body: tableBody,
+      theme: 'grid',
+      headStyles: {
+        fillColor: [33, 37, 41],
+        textColor: 255,
+        halign: 'center'
+      },
+      styles: {
+        fontSize: 10,
+        halign: 'center'
+      },
+      columnStyles: {
+        1: { halign: 'left' }
+      }
+    });
+
+    /* ================= GRAND TOTAL ================= */
+    const finalY = (doc as any).lastAutoTable.finalY + 10;
+
+    doc.setFontSize(12);
+    doc.text(
+      `Grand Total: Rs. ${this.calculateGrandTotal(this.selectedOrder.cartItems)}`,
+      140,
+      finalY
+    );
+
+    /* ================= SAVE ================= */
+    doc.save(`Purchase_Order_${this.selectedOrder.id}.pdf`);
+  }
+
+
+
 
 }

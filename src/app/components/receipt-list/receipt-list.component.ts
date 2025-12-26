@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Receipt } from 'src/app/models/receipt.model';
 import { ReceiptService } from 'src/app/services/receiptService';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+// import html2canvas from 'html2canvas';
+// import jsPDF from 'jspdf';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/UserService';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 
 @Component({
   selector: 'app-receipt-list',
@@ -129,85 +132,137 @@ export class ReceiptListComponent implements OnInit {
 
 
 
-  handlePDF(customerId?: number | string) {
-    if (customerId) {
-      this.selectedCustomerId = customerId;
+  // handlePDF(customerId?: number | string) {
+  //   if (customerId) {
+  //     this.selectedCustomerId = customerId;
 
-      this.receiptService.getLedger(customerId).subscribe({
-        next: (res: any) => {
-          this.customerInfo = res.customerInfo || {};
-          this.ledger = res.ledger || [];
-          // Ensure the loggedInUser is updated so the PDF shows the profile data
-          this.loggedInUser = res.loggedInUser || this.loggedInUser;
+  //     this.receiptService.getLedger(customerId).subscribe({
+  //       next: (res: any) => {
+  //         this.customerInfo = res.customerInfo || {};
+  //         this.ledger = res.ledger || [];
+  //         // Ensure the loggedInUser is updated so the PDF shows the profile data
+  //         this.loggedInUser = res.loggedInUser || this.loggedInUser;
 
-          // Normalize the image if present
-          if (this.loggedInUser?.profileImage)
-            this.loggedInUser.profileImage = this.normalizeImageForView(this.loggedInUser.profileImage);
+  //         // Normalize the image if present
+  //         if (this.loggedInUser?.profileImage)
+  //           this.loggedInUser.profileImage = this.normalizeImageForView(this.loggedInUser.profileImage);
 
-          // ⭐ Wait for Angular + DOM to finish rendering, then generate PDF
-          setTimeout(() => this.generatePDF(), 800);
-        }
-      });
+  //         // ⭐ Wait for Angular + DOM to finish rendering, then generate PDF
+  //         setTimeout(() => this.generatePDF(), 800);
+  //       }
+  //     });
 
-      return;
-    }
+  //     return;
+  //   }
 
-    setTimeout(() => this.generatePDF(), 800);
-  }
+  //   setTimeout(() => this.generatePDF(), 800);
+  // }
 
+  getBase64Image(image: string | undefined): string | null {
+    if (!image) return null;
 
-  generatePDF() {
-    const source = document.getElementById("ledger-content");
-    if (!source) return;
+    // already data url
+    if (image.startsWith('data:image')) return image;
 
-    // ⭐ Clone DOM to avoid Bootstrap fade issues
-    const clone = source.cloneNode(true) as HTMLElement;
-    clone.style.position = "absolute";
-    clone.style.left = "-9999px";
-    document.body.appendChild(clone);
-
-    html2canvas(clone, { scale: 3 }).then(canvas => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF('p', 'mm', 'a4');
-
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const padding = 8;
-      const usableWidth = pageWidth - padding * 2;
-      const imgHeight = (canvas.height * usableWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = padding;
-
-      pdf.addImage(imgData, 'PNG', padding, position, usableWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        pdf.addPage();
-        position = heightLeft - imgHeight + padding;
-        pdf.addImage(imgData, 'PNG', padding, position, usableWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      pdf.save(`ledger_${this.selectedCustomerId}.pdf`);
-    })
-      .finally(() => document.body.removeChild(clone));
+    // backend sends only base64 string
+    return `data:image/jpeg;base64,${image}`;
   }
 
 
 
   downloadLedgerPDF() {
-    if (!this.selectedCustomerId) {
-      alert("Please select a customer first");
+    if (!this.selectedCustomerId || this.ledger.length === 0) {
+      alert('No ledger data available');
       return;
     }
 
-    // ⭐ Wait 600–800ms ALWAYS before generating PDF
-    setTimeout(() => {
-      this.handlePDF(this.selectedCustomerId!);
-    }, 800);
+    const doc = new jsPDF('p', 'mm', 'a4');
+
+    /* ================= HEADER ================= */
+    doc.setFontSize(18);
+    doc.text('Customer Ledger Report', 105, 15, { align: 'center' });
+
+    /* ================= USER IMAGE ================= */
+    const imgBase64 = this.getBase64Image(this.loggedInUser?.profileImage);
+
+    if (imgBase64) {
+      doc.addImage(imgBase64, 'JPEG', 14, 22, 25, 25);
+    }
+
+    /* ================= USER INFO ================= */
+    doc.setFontSize(11);
+
+    doc.text(`ID: ${this.customerInfo.id || ''}`, 45, 28);
+    doc.text(`Name: ${this.customerInfo.name || ''}`, 45, 35);
+
+    doc.text(`Mobile: ${this.customerInfo.mobile || ''}`, 140, 28);
+    doc.text(`Email: ${this.customerInfo.email || ''}`, 140, 35);
+
+    doc.text(`Generated By: ${this.loggedInUser?.name || 'User'}`, 14, 55);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 160, 55);
+
+    /* ================= TABLE ================= */
+    const tableBody = this.ledger.map((r, i) => [
+      r.srNo || i + 1,
+      new Date(r.receiptDate).toLocaleDateString(),
+      r.transactionTypeLabel,
+      r.paymentModeLabel,
+      `₹${r.amount}`,
+      `₹${r.closingBalance}`
+    ]);
+
+    autoTable(doc, {
+      startY: 62,
+      head: [[
+        'Sr No',
+        'Date',
+        'Type',
+        'Mode',
+        'Amount',
+        'Closing Balance'
+      ]],
+      body: tableBody,
+      styles: {
+        fontSize: 10,
+        halign: 'center'
+      },
+      headStyles: {
+        fillColor: [79, 70, 229],
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      theme: 'grid'
+    });
+
+    /* ================= FOOTER ================= */
+    const finalY = (doc as any).lastAutoTable.finalY + 15;
+    doc.setFontSize(10);
+    doc.text(
+      'This is a system generated ledger report.',
+      105,
+      finalY,
+      { align: 'center' }
+    );
+
+    /* ================= SAVE ================= */
+    doc.save(`Ledger_${this.customerInfo.id}.pdf`);
   }
+
+
+
+
+
+  // downloadLedgerPDF() {
+  //   if (!this.selectedCustomerId) {
+  //     alert("Please select a customer first");
+  //     return;
+  //   }
+
+  //   // ⭐ Wait 600–800ms ALWAYS before generating PDF
+  //   setTimeout(() => {
+  //     this.handlePDF(this.selectedCustomerId!);
+  //   }, 800);
+  // }
 
 
 

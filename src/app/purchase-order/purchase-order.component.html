@@ -180,3 +180,70 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="orderDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" id="order-pdf-content">
+
+            <!-- HEADER -->
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h5 class="modal-title fw-semibold">Purchase Details</h5>
+
+                <div class="d-flex align-items-center gap-2 pdf-hide">
+                    <button class="btn btn-outline-primary btn-sm" (click)="downloadOrderPDF()">
+                        Download PDF
+                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body" *ngIf="selectedOrder">
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Order ID:</strong> {{ selectedOrder.id }}</p>
+                        <p><strong>Party ID:</strong> {{ selectedOrder.userId }}</p>
+                    </div>
+
+                    <div class="col-md-6 text-md-end">
+                        <p><strong>Date:</strong> {{ selectedOrder.date | date:'dd / MM / yyyy' }}</p>
+                        <p><strong>Party:</strong> {{ selectedOrder.userName }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let item of selectedOrder.cartItems; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ item.productName }}</td>
+                            <td class="text-end">{{ item.price | currency:'INR' }}</td>
+                            <td class="text-center">{{ item.quantity }}</td>
+                            <td class="text-end">
+                                {{ item.price * item.quantity | currency:'INR' }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="text-end fw-bold fs-5 mt-3">
+                    Grand Total:
+                    {{ calculateGrandTotal(selectedOrder.cartItems) | currency:'INR' }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

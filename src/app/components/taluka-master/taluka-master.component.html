@@ -50,8 +50,8 @@
                     <td>{{ talukas.length - ((page - 1) * pageSize + i) }}</td>
 
                     <td>{{ t.name }}</td>
-                    <td>{{ t.district?.name }}</td>
-                    <td>{{ t.district?.state?.name }}</td>
+                    <td>{{ t.districtName }}</td>
+                    <td>{{ t.stateName }}</td>
 
                     <td>
                         <button class="btn-edit" (click)="edit(t)">Edit</button>

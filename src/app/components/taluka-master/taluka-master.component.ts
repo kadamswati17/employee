@@ -72,15 +72,26 @@ export class TalukaMasterComponent implements OnInit {
 
   // ================= EDIT =================
 
+  // edit(t: any): void {
+  //   this.isEdit = true;
+  //   this.editId = t.id;
+
+  //   this.form.patchValue({
+  //     name: t.name,
+  //     districtId: t.district?.id
+  //   });
+  // }
+
   edit(t: any): void {
     this.isEdit = true;
     this.editId = t.id;
 
     this.form.patchValue({
       name: t.name,
-      districtId: t.district?.id
+      districtId: t.districtId
     });
   }
+
 
   // ================= UTILS =================
 

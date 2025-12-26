@@ -6,7 +6,7 @@
 
         <!-- TALUKA SELECT -->
         <div class="field">
-            <select formControlName="talukaId" required>
+            <select formControlName="talukaId" required (change)="onTalukaChange()">
                 <option value="" disabled hidden></option>
                 <option *ngFor="let t of talukas" [value]="t.id">
                     {{ t.name }}
@@ -27,6 +27,7 @@
 
     </form>
 
+    <!-- TABLE -->
     <div class="table-wrapper" *ngIf="paginatedCities.length">
         <table>
             <thead>
@@ -40,24 +41,21 @@
                 </tr>
             </thead>
 
-
             <tbody>
                 <tr *ngFor="let c of paginatedCities; let i = index">
                     <td>{{ cities.length - ((page - 1) * pageSize + i) }}</td>
-
                     <td>{{ c.cityName }}</td>
                     <td>{{ c.talukaName }}</td>
                     <td>{{ c.districtName }}</td>
                     <td>{{ c.stateName }}</td>
-
                     <td>
                         <button class="btn-edit" (click)="edit(c)">Edit</button>
                     </td>
                 </tr>
             </tbody>
-
         </table>
 
+        <!-- PAGINATION -->
         <div class="pagination">
             <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
                 [disabled]="page === i + 1">
