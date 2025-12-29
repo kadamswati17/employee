@@ -30,6 +30,9 @@ import { CityMasterComponent } from './components/city-master/city-master.compon
 import { DistrictMasterComponent } from './components/district-master/district-master.component';
 import { StateMasterComponent } from './components/state-master/state-master.component';
 import { TalukaMasterComponent } from './components/taluka-master/taluka-master.component';
+import { ProjectComponent } from './project/project.component';
+import { LeadComponent } from './lead/lead.component';
+import { InquiryComponent } from './inquiry/inquiry.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -72,6 +75,9 @@ const routes: Routes = [
   { path: 'price-list', component: PriceListComponent, canActivate: [AuthGuard] },
   { path: 'root-master', component: RootMasterComponent, canActivate: [AuthGuard] },
   { path: 'user-details', component: UserDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'projects', component: ProjectComponent },
+  { path: 'leads', component: LeadComponent },
+  { path: 'inquiries', component: InquiryComponent },
 
   { path: 'state-master', component: StateMasterComponent },
   { path: 'district-master', component: DistrictMasterComponent },

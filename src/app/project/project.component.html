@@ -1,0 +1,105 @@
+<div class="project-wrapper">
+    <div class="project-card">
+
+        <div class="header">
+            <h2>Create Project</h2>
+            <p>Enter complete project details</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+
+            <div class="grid">
+
+                <!-- Row 1 -->
+                <div class="field">
+                    <label>Project Name *</label>
+                    <input formControlName="projectName" placeholder="Enter project name">
+                </div>
+
+                <div class="field">
+                    <label>Sanction Date *</label>
+                    <input type="date" formControlName="sanctionDate">
+                </div>
+
+                <div class="field">
+                    <label>Start Date *</label>
+                    <input type="date" formControlName="startDate">
+                </div>
+
+                <div class="field">
+                    <label>End Date *</label>
+                    <input type="date" formControlName="endDate">
+                </div>
+
+                <!-- Row 2 -->
+                <div class="field">
+                    <label>SRV / GUT No</label>
+                    <input formControlName="srvGutNo">
+                </div>
+
+                <div class="field">
+                    <label>Previous Land Owner</label>
+                    <input formControlName="previousLandOwner">
+                </div>
+
+                <div class="field">
+                    <label>Current Land Owner</label>
+                    <input formControlName="landOwner">
+                </div>
+
+                <div class="field">
+                    <label>Builder Name</label>
+                    <input formControlName="builderName">
+                </div>
+
+                <!-- Row 3 -->
+                <div class="field">
+                    <label>RERA No</label>
+                    <input type="number" formControlName="reraNo">
+                </div>
+
+                <div class="field">
+                    <label>Budget Amount *</label>
+                    <input type="number" formControlName="budgetAmt">
+                </div>
+
+                <div class="field">
+                    <label>Organization ID</label>
+                    <input type="number" formControlName="orgId">
+                </div>
+
+                <div class="field">
+                    <label>Branch ID</label>
+                    <input type="number" formControlName="branchId">
+                </div>
+
+                <!-- Row 4 -->
+                <div class="field">
+                    <label>User ID</label>
+                    <input type="number" formControlName="userId">
+                </div>
+
+                <div class="field">
+                    <label>Status</label>
+                    <select formControlName="isActive">
+                        <option [value]="1">Active</option>
+                        <option [value]="0">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="field full">
+                    <label>Address</label>
+                    <textarea rows="2" formControlName="address"></textarea>
+                </div>
+
+            </div>
+
+            <div class="actions">
+                <button type="submit" [disabled]="loading">
+                    {{ loading ? 'Saving...' : 'Save Project' }}
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>

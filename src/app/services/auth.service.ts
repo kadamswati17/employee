@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginRequest } from '../models/auth.model';
 import { TokenStorageService } from './token-storage.service';
 import { UserService } from './UserService';
+// import { APP_CONFIG } from '../config/config';
 import { APP_CONFIG } from '../config/config';
 
 @Injectable({
@@ -30,23 +31,32 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<any> {
     return this.http.post<any>(`${this.AUTH_API}/signin`, credentials).pipe(
       tap(response => {
+        if (response.token) {
 
-        // ✅ SAVE USER (NO JWT YET)
-        this.tokenStorage.saveUser({
-          id: response.id,
-          username: response.username,
-          email: response.email,
-          role: response.role
-        });
+          // Save token
+          this.tokenStorage.saveToken(response.token);
 
-        // ❌ DO NOT save token now
-        // this.tokenStorage.saveToken(response.token);
+          // Save user (session)
+          this.tokenStorage.saveUser({
+            id: response.id,
+            username: response.username,
+            email: response.email,
+            role: response.role
+          });
 
-        this.loginStatus.next(true);
+          // Save user (local)
+          UserService.saveUser({
+            id: response.id,
+            username: response.username,
+            email: response.email,
+            role: response.role
+          });
+
+          this.loginStatus.next(true);
+        }
       })
     );
   }
-
 
   // =======================================
   // 🆕 REGISTER USER (ADMIN ONLY)

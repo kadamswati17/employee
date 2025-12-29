@@ -1,0 +1,88 @@
+<div class="inquiry-container">
+    <h2>Create Inquiry</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <div class="grid">
+
+            <div class="field">
+                <label>Status ID</label>
+                <input type="number" formControlName="inqStatusId">
+            </div>
+
+            <div class="field">
+                <label>Inquiry Date</label>
+                <input type="date" formControlName="inqueryDate">
+            </div>
+
+            <div class="field">
+                <label>Lead Account ID</label>
+                <input type="number" formControlName="leadAccountId">
+            </div>
+
+            <div class="field">
+                <label>Project Code</label>
+                <input type="number" formControlName="projectCode">
+            </div>
+
+            <div class="field">
+                <label>Unit Code</label>
+                <input type="number" formControlName="unitCode">
+            </div>
+
+            <div class="field">
+                <label>Rate</label>
+                <input type="number" formControlName="rate">
+            </div>
+
+            <div class="field">
+                <label>Quantity</label>
+                <input type="number" formControlName="quantity">
+            </div>
+
+            <div class="field">
+                <label>Amount</label>
+                <input type="number" formControlName="amount">
+            </div>
+
+            <div class="field">
+                <label>Total</label>
+                <input type="number" formControlName="total">
+            </div>
+
+            <div class="field full">
+                <label>Particulars</label>
+                <textarea rows="2" formControlName="particulars"></textarea>
+            </div>
+
+            <div class="field">
+                <label>Org ID</label>
+                <input type="number" formControlName="orgId">
+            </div>
+
+            <div class="field">
+                <label>Branch ID</label>
+                <input type="number" formControlName="branchId">
+            </div>
+
+            <div class="field">
+                <label>User ID</label>
+                <input type="number" formControlName="userId">
+            </div>
+
+            <div class="field">
+                <label>Status</label>
+                <select formControlName="isActive">
+                    <option [value]="1">Active</option>
+                    <option [value]="0">Inactive</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button type="submit" [disabled]="loading">
+            {{ loading ? 'Saving...' : 'Save Inquiry' }}
+        </button>
+
+    </form>
+</div>

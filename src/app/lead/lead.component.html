@@ -1,0 +1,52 @@
+<div class="lead-container">
+    <h2>Create Lead</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <div class="grid">
+
+            <input formControlName="date" type="date" placeholder="Date">
+
+            <input formControlName="cName" placeholder="Customer Name *">
+            <input formControlName="contactNo" placeholder="Contact No *">
+            <input formControlName="email" placeholder="Email">
+            <input formControlName="website" placeholder="Website">
+
+            <input formControlName="panNo" placeholder="PAN No">
+            <input formControlName="gstNo" placeholder="GST No">
+
+            <input formControlName="phone" placeholder="Phone">
+            <input formControlName="fax" placeholder="Fax">
+
+            <input formControlName="income" placeholder="Income">
+            <input formControlName="incomeSource" placeholder="Income Source">
+            <input formControlName="otherIncome" placeholder="Other Income">
+            <input formControlName="otherIncomeSource" placeholder="Other Income Source">
+
+            <input formControlName="budget" placeholder="Budget *">
+            <input formControlName="area" placeholder="Area">
+
+            <input formControlName="stateId" placeholder="State ID *">
+            <input formControlName="distId" placeholder="District ID">
+            <input formControlName="cityId" placeholder="City ID *">
+
+            <input formControlName="userId" placeholder="User ID">
+            <input formControlName="branchId" placeholder="Branch ID">
+            <input formControlName="orgId" placeholder="Organization ID">
+
+            <textarea formControlName="invoiceAddress" placeholder="Invoice Address"></textarea>
+            <textarea formControlName="notes" placeholder="Notes"></textarea>
+
+            <select formControlName="isActive">
+                <option [value]="1">Active</option>
+                <option [value]="0">Inactive</option>
+            </select>
+
+        </div>
+
+        <button type="submit" [disabled]="loading">
+            {{ loading ? 'Saving...' : 'Save Lead' }}
+        </button>
+
+    </form>
+</div>

@@ -77,6 +77,9 @@ import { StateMasterComponent } from './components/state-master/state-master.com
 import { DistrictMasterComponent } from './components/district-master/district-master.component';
 import { TalukaMasterComponent } from './components/taluka-master/taluka-master.component';
 import { CityMasterComponent } from './components/city-master/city-master.component';
+import { ProjectComponent } from './project/project.component';
+import { LeadComponent } from './lead/lead.component';
+import { InquiryComponent } from './inquiry/inquiry.component';
 
 @NgModule({
   declarations: [
@@ -132,7 +135,10 @@ import { CityMasterComponent } from './components/city-master/city-master.compon
     StateMasterComponent,
     DistrictMasterComponent,
     TalukaMasterComponent,
-    CityMasterComponent
+    CityMasterComponent,
+    ProjectComponent,
+    LeadComponent,
+    InquiryComponent
   ],
   imports: [
     BrowserModule,
