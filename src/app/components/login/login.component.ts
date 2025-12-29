@@ -54,15 +54,12 @@ export class LoginComponent implements OnInit {
         if (!user) return;
 
         // ROLE-BASED REDIRECT
-        if (user.role === 'ROLE_ADMIN') {
+        if (user.role === 'ADMIN') {
           this.router.navigate(['/employees']);
-        } else if (
-          user.role === 'ROLE_L1' ||
-          user.role === 'ROLE_L2' ||
-          user.role === 'ROLE_L3'
-        ) {
-          this.router.navigate(['/customers']);   // or '/km-list' if you prefer
+        } else if (user.role === 'USER') {
+          this.router.navigate(['/customers']);
         }
+
       }
       ,
       error: (err) => {

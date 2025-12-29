@@ -40,6 +40,7 @@ export class EmployeeListComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
+        this.employees = [];
         this.errorMessage = 'Failed to load employees. Please try again.';
         this.isLoading = false;
         console.error('Error loading employees:', err);

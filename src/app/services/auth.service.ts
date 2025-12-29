@@ -30,32 +30,23 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<any> {
     return this.http.post<any>(`${this.AUTH_API}/signin`, credentials).pipe(
       tap(response => {
-        if (response.token) {
 
-          // Save token
-          this.tokenStorage.saveToken(response.token);
+        // ✅ SAVE USER (NO JWT YET)
+        this.tokenStorage.saveUser({
+          id: response.id,
+          username: response.username,
+          email: response.email,
+          role: response.role
+        });
 
-          // Save user (session)
-          this.tokenStorage.saveUser({
-            id: response.id,
-            username: response.username,
-            email: response.email,
-            role: response.role
-          });
+        // ❌ DO NOT save token now
+        // this.tokenStorage.saveToken(response.token);
 
-          // Save user (local)
-          UserService.saveUser({
-            id: response.id,
-            username: response.username,
-            email: response.email,
-            role: response.role
-          });
-
-          this.loginStatus.next(true);
-        }
+        this.loginStatus.next(true);
       })
     );
   }
+
 
   // =======================================
   // 🆕 REGISTER USER (ADMIN ONLY)
