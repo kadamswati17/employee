@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProjectService {
 
     private API_URL = 'http://localhost:8080/api/projects';
@@ -19,12 +17,10 @@ export class ProjectService {
         };
     }
 
-    // CREATE
     create(project: any): Observable<any> {
         return this.http.post(this.API_URL, project, this.authHeaders());
     }
 
-    // GET ALL ✅ FIXED
     getAll(): Observable<any[]> {
         return this.http.get<any[]>(this.API_URL, this.authHeaders());
     }

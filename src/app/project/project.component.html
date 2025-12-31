@@ -1,14 +1,13 @@
 <div class="project-wrapper">
 
-    <!-- ================= CREATE PROJECT ================= -->
-    <div class="project-card">
+    <!-- ================= CREATE / EDIT PROJECT ================= -->
+    <div class="project-card" *ngIf="!showProjects">
 
         <div class="header">
-            <h2>Create Project</h2>
+            <h2>{{ isEditMode ? 'Edit Project' : 'Create Project' }}</h2>
 
-            <!-- TOGGLE BUTTON -->
             <button class="toggle-btn" (click)="toggleProjects()">
-                {{ showProjects ? 'Hide Project List' : 'Show Project List' }}
+                Show Project List
             </button>
         </div>
 
@@ -16,28 +15,26 @@
 
             <div class="grid">
 
-                <!-- ROW 1 -->
                 <div class="field floating">
                     <input formControlName="projectName" placeholder=" " />
                     <label>Project Name *</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="date" formControlName="sanctionDate" placeholder=" " />
+                    <input type="date" formControlName="sanctionDate" />
                     <label>Sanction Date *</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="date" formControlName="startDate" placeholder=" " />
-                    <label>Start Date *</label>
+                    <input type="date" formControlName="startDate" />
+                    <label>From Date *</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="date" formControlName="endDate" placeholder=" " />
-                    <label>End Date *</label>
+                    <input type="date" formControlName="endDate" />
+                    <label>To Date *</label>
                 </div>
 
-                <!-- ROW 2 -->
                 <div class="field floating">
                     <input formControlName="srvGutNo" placeholder=" " />
                     <label>SRV / GUT No</label>
@@ -58,18 +55,16 @@
                     <label>Builder Name</label>
                 </div>
 
-                <!-- ROW 3 -->
                 <div class="field floating">
-                    <input type="number" formControlName="reraNo" placeholder=" " />
+                    <input type="number" formControlName="reraNo" />
                     <label>RERA No</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="budgetAmt" placeholder=" " />
+                    <input type="number" formControlName="budgetAmt" />
                     <label>Budget Amount *</label>
                 </div>
 
-                <!-- ROW 4 -->
                 <div class="field floating">
                     <input type="number" formControlName="userId" readonly />
                     <label>User ID</label>
@@ -92,7 +87,7 @@
 
             <div class="actions">
                 <button type="submit" [disabled]="loading">
-                    {{ loading ? 'Saving...' : 'Save Project' }}
+                    {{ loading ? 'Saving...' : (isEditMode ? 'Update Project' : 'Save Project') }}
                 </button>
             </div>
 
@@ -100,26 +95,49 @@
 
     </div>
 
-
     <!-- ================= PROJECT LIST ================= -->
     <div class="project-card mt" *ngIf="showProjects">
 
-        <h3 class="list-title">Project List</h3>
+        <div class="header header-flex">
+            <h2>Project List</h2>
 
-        <table class="project-table" *ngIf="projects.length; else noData">
+            <!-- FILTERS -->
+            <div class="filters">
+
+                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+
+                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+
+                <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+                    <option value="">All</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+
+                <button class="clear-btn" (click)="clearFilters()">Clear</button>
+
+                <button class="toggle-btn" (click)="toggleProjects()">
+                    Back
+                </button>
+
+            </div>
+        </div>
+
+        <table class="project-table" *ngIf="filteredProjects.length; else noData">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>#</th>
                     <th>Project Name</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+                    <th>Start</th>
+                    <th>End</th>
                     <th>Budget</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr *ngFor="let p of projects; let i = index">
+                <tr *ngFor="let p of filteredProjects; let i = index">
                     <td>{{ i + 1 }}</td>
                     <td>{{ p.projectName }}</td>
                     <td>{{ p.startDate | date }}</td>
@@ -129,6 +147,9 @@
                         <span class="badge" [ngClass]="p.isActive ? 'active' : 'inactive'">
                             {{ p.isActive ? 'Active' : 'Inactive' }}
                         </span>
+                    </td>
+                    <td>
+                        <button class="edit-btn" (click)="editProject(p)">Edit</button>
                     </td>
                 </tr>
             </tbody>
