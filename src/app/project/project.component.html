@@ -1,95 +1,91 @@
 <div class="project-wrapper">
+
+    <!-- ================= CREATE PROJECT ================= -->
     <div class="project-card">
 
         <div class="header">
             <h2>Create Project</h2>
-            <p>Enter complete project details</p>
+
+            <!-- TOGGLE BUTTON -->
+            <button class="toggle-btn" (click)="toggleProjects()">
+                {{ showProjects ? 'Hide Project List' : 'Show Project List' }}
+            </button>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="submit()">
 
             <div class="grid">
 
-                <!-- Row 1 -->
-                <div class="field">
+                <!-- ROW 1 -->
+                <div class="field floating">
+                    <input formControlName="projectName" placeholder=" " />
                     <label>Project Name *</label>
-                    <input formControlName="projectName" placeholder="Enter project name">
                 </div>
 
-                <div class="field">
+                <div class="field floating">
+                    <input type="date" formControlName="sanctionDate" placeholder=" " />
                     <label>Sanction Date *</label>
-                    <input type="date" formControlName="sanctionDate">
                 </div>
 
-                <div class="field">
+                <div class="field floating">
+                    <input type="date" formControlName="startDate" placeholder=" " />
                     <label>Start Date *</label>
-                    <input type="date" formControlName="startDate">
                 </div>
 
-                <div class="field">
+                <div class="field floating">
+                    <input type="date" formControlName="endDate" placeholder=" " />
                     <label>End Date *</label>
-                    <input type="date" formControlName="endDate">
                 </div>
 
-                <!-- Row 2 -->
-                <div class="field">
+                <!-- ROW 2 -->
+                <div class="field floating">
+                    <input formControlName="srvGutNo" placeholder=" " />
                     <label>SRV / GUT No</label>
-                    <input formControlName="srvGutNo">
                 </div>
 
-                <div class="field">
+                <div class="field floating">
+                    <input formControlName="previousLandOwner" placeholder=" " />
                     <label>Previous Land Owner</label>
-                    <input formControlName="previousLandOwner">
                 </div>
 
-                <div class="field">
+                <div class="field floating">
+                    <input formControlName="landOwner" placeholder=" " />
                     <label>Current Land Owner</label>
-                    <input formControlName="landOwner">
                 </div>
 
-                <div class="field">
+                <div class="field floating">
+                    <input formControlName="builderName" placeholder=" " />
                     <label>Builder Name</label>
-                    <input formControlName="builderName">
                 </div>
 
-                <!-- Row 3 -->
-                <div class="field">
+                <!-- ROW 3 -->
+                <div class="field floating">
+                    <input type="number" formControlName="reraNo" placeholder=" " />
                     <label>RERA No</label>
-                    <input type="number" formControlName="reraNo">
                 </div>
 
-                <div class="field">
+                <div class="field floating">
+                    <input type="number" formControlName="budgetAmt" placeholder=" " />
                     <label>Budget Amount *</label>
-                    <input type="number" formControlName="budgetAmt">
                 </div>
 
-                <div class="field">
-                    <label>Organization ID</label>
-                    <input type="number" formControlName="orgId">
-                </div>
-
-                <div class="field">
-                    <label>Branch ID</label>
-                    <input type="number" formControlName="branchId">
-                </div>
-
-                <!-- Row 4 -->
-                <div class="field">
+                <!-- ROW 4 -->
+                <div class="field floating">
+                    <input type="number" formControlName="userId" readonly />
                     <label>User ID</label>
-                    <input type="number" formControlName="userId">
                 </div>
 
-                <div class="field">
-                    <label>Status</label>
+                <div class="field floating">
                     <select formControlName="isActive">
                         <option [value]="1">Active</option>
                         <option [value]="0">Inactive</option>
                     </select>
+                    <label>Status</label>
                 </div>
 
-                <div class="field full">
+                <div class="field floating full">
+                    <textarea rows="2" formControlName="address" placeholder=" "></textarea>
                     <label>Address</label>
-                    <textarea rows="2" formControlName="address"></textarea>
                 </div>
 
             </div>
@@ -101,5 +97,47 @@
             </div>
 
         </form>
+
     </div>
+
+
+    <!-- ================= PROJECT LIST ================= -->
+    <div class="project-card mt" *ngIf="showProjects">
+
+        <h3 class="list-title">Project List</h3>
+
+        <table class="project-table" *ngIf="projects.length; else noData">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Project Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let p of projects; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ p.projectName }}</td>
+                    <td>{{ p.startDate | date }}</td>
+                    <td>{{ p.endDate | date }}</td>
+                    <td>₹ {{ p.budgetAmt | number }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="p.isActive ? 'active' : 'inactive'">
+                            {{ p.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ng-template #noData>
+            <p class="no-data">No projects found</p>
+        </ng-template>
+
+    </div>
+
 </div>

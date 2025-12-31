@@ -1,88 +1,142 @@
-<div class="inquiry-container">
-    <h2>Create Inquiry</h2>
+<div class="inquiry-wrapper">
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- ================= CREATE INQUIRY CARD ================= -->
+    <div class="inquiry-card">
 
-        <div class="grid">
+        <!-- HEADER -->
+        <div class="header">
+            <h2>Create Inquiry</h2>
 
-            <div class="field">
-                <label>Status ID</label>
-                <input type="number" formControlName="inqStatusId">
-            </div>
-
-            <div class="field">
-                <label>Inquiry Date</label>
-                <input type="date" formControlName="inqueryDate">
-            </div>
-
-            <div class="field">
-                <label>Lead Account ID</label>
-                <input type="number" formControlName="leadAccountId">
-            </div>
-
-            <div class="field">
-                <label>Project Code</label>
-                <input type="number" formControlName="projectCode">
-            </div>
-
-            <div class="field">
-                <label>Unit Code</label>
-                <input type="number" formControlName="unitCode">
-            </div>
-
-            <div class="field">
-                <label>Rate</label>
-                <input type="number" formControlName="rate">
-            </div>
-
-            <div class="field">
-                <label>Quantity</label>
-                <input type="number" formControlName="quantity">
-            </div>
-
-            <div class="field">
-                <label>Amount</label>
-                <input type="number" formControlName="amount">
-            </div>
-
-            <div class="field">
-                <label>Total</label>
-                <input type="number" formControlName="total">
-            </div>
-
-            <div class="field full">
-                <label>Particulars</label>
-                <textarea rows="2" formControlName="particulars"></textarea>
-            </div>
-
-            <div class="field">
-                <label>Org ID</label>
-                <input type="number" formControlName="orgId">
-            </div>
-
-            <div class="field">
-                <label>Branch ID</label>
-                <input type="number" formControlName="branchId">
-            </div>
-
-            <div class="field">
-                <label>User ID</label>
-                <input type="number" formControlName="userId">
-            </div>
-
-            <div class="field">
-                <label>Status</label>
-                <select formControlName="isActive">
-                    <option [value]="1">Active</option>
-                    <option [value]="0">Inactive</option>
-                </select>
-            </div>
-
+            <button class="toggle-btn" (click)="toggleInquiries()">
+                {{ showInquiries ? 'Hide Inquiry List' : 'Show Inquiry List' }}
+            </button>
         </div>
 
-        <button type="submit" [disabled]="loading">
-            {{ loading ? 'Saving...' : 'Save Inquiry' }}
-        </button>
+        <!-- ================= FORM (UNCHANGED) ================= -->
+        <form [formGroup]="form" (ngSubmit)="submit()">
 
-    </form>
+            <div class="grid">
+
+                <div class="field floating">
+                    <input type="date" formControlName="inqueryDate" />
+                    <label>Inquiry Date</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="inqStatusId">
+                        <option value="" disabled></option>
+                        <option *ngFor="let s of statusList" [value]="s.id">
+                            {{ s.name }}
+                        </option>
+                    </select>
+                    <label>Inquiry Status</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="leadAccountId">
+                        <option value="" disabled>Select Lead</option>
+                        <option *ngFor="let l of leads" [value]="l.leadId">
+                            {{ l.leadId }} - {{ l.cname }}
+                        </option>
+                    </select>
+                    <label>Lead Account</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="projectCode">
+                        <option value="" disabled>Select Project</option>
+                        <option *ngFor="let p of projects" [value]="p.projectId">
+                            {{ p.projectName }}
+                        </option>
+                    </select>
+                    <label>Project</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="unitCode" />
+                    <label>Unit Code</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="rate" />
+                    <label>Rate</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="quantity" />
+                    <label>Quantity</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="total" />
+                    <label>Total</label>
+                </div>
+
+                <div class="field floating span-3">
+                    <textarea rows="1" formControlName="particulars"></textarea>
+                    <label>Particulars</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="isActive">
+                        <option [value]="1">Active</option>
+                        <option [value]="0">Inactive</option>
+                    </select>
+                    <label>Status</label>
+                </div>
+
+            </div>
+
+            <div class="actions">
+                <button type="submit" [disabled]="loading">
+                    {{ loading ? 'Saving...' : 'Save Inquiry' }}
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- ================= INQUIRY LIST ================= -->
+    <div class="inquiry-card mt" *ngIf="showInquiries">
+
+        <h3 class="list-title">Inquiry List</h3>
+
+        <table class="inquiry-table" *ngIf="inquiries.length; else noData">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Lead</th>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let i of inquiries; let idx = index">
+                    <td>{{ idx + 1 }}</td>
+                    <td>{{ i.inqueryDate | date }}</td>
+
+                    <td>{{ getLeadName(i.leadAccountId) }}</td>
+                    <td>{{ getProjectName(i.projectCode) }}</td>
+
+                    <td>
+                        <span class="badge" [ngClass]="i.isActive ? 'active' : 'inactive'">
+                            {{ i.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+
+                    <td>₹ {{ i.total | number }}</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+        <ng-template #noData>
+            <p class="no-data">No inquiries found</p>
+        </ng-template>
+
+    </div>
+
 </div>

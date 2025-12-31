@@ -1,52 +1,195 @@
-<div class="lead-container">
-    <h2>Create Lead</h2>
+<div class="lead-wrapper">
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
+    <!-- ================= CREATE LEAD CARD ================= -->
+    <div class="lead-card">
 
-        <div class="grid">
+        <!-- HEADER -->
+        <div class="header">
+            <h2>Create Lead</h2>
 
-            <input formControlName="date" type="date" placeholder="Date">
-
-            <input formControlName="cName" placeholder="Customer Name *">
-            <input formControlName="contactNo" placeholder="Contact No *">
-            <input formControlName="email" placeholder="Email">
-            <input formControlName="website" placeholder="Website">
-
-            <input formControlName="panNo" placeholder="PAN No">
-            <input formControlName="gstNo" placeholder="GST No">
-
-            <input formControlName="phone" placeholder="Phone">
-            <input formControlName="fax" placeholder="Fax">
-
-            <input formControlName="income" placeholder="Income">
-            <input formControlName="incomeSource" placeholder="Income Source">
-            <input formControlName="otherIncome" placeholder="Other Income">
-            <input formControlName="otherIncomeSource" placeholder="Other Income Source">
-
-            <input formControlName="budget" placeholder="Budget *">
-            <input formControlName="area" placeholder="Area">
-
-            <input formControlName="stateId" placeholder="State ID *">
-            <input formControlName="distId" placeholder="District ID">
-            <input formControlName="cityId" placeholder="City ID *">
-
-            <input formControlName="userId" placeholder="User ID">
-            <input formControlName="branchId" placeholder="Branch ID">
-            <input formControlName="orgId" placeholder="Organization ID">
-
-            <textarea formControlName="invoiceAddress" placeholder="Invoice Address"></textarea>
-            <textarea formControlName="notes" placeholder="Notes"></textarea>
-
-            <select formControlName="isActive">
-                <option [value]="1">Active</option>
-                <option [value]="0">Inactive</option>
-            </select>
-
+            <button class="toggle-btn" (click)="toggleLeads()">
+                {{ showLeads ? 'Hide Lead List' : 'Show Lead List' }}
+            </button>
         </div>
 
-        <button type="submit" [disabled]="loading">
-            {{ loading ? 'Saving...' : 'Save Lead' }}
-        </button>
+        <!-- FORM -->
+        <form [formGroup]="form" (ngSubmit)="submit()">
 
-    </form>
+            <div class="grid">
+
+                <div class="field floating">
+                    <input type="date" formControlName="date" />
+                    <label>Date</label>
+                </div>
+
+                <div class="field floating">
+                    <input formControlName="cName" />
+                    <label>Customer Name *</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="contactNo" />
+                    <label>Contact No *</label>
+                </div>
+
+                <div class="field floating">
+                    <input formControlName="email" />
+                    <label>Email</label>
+                </div>
+
+                <div class="field floating">
+                    <input formControlName="website" />
+                    <label>Website</label>
+                </div>
+
+                <div class="field floating">
+                    <input formControlName="panNo" />
+                    <label>PAN No *</label>
+
+                    <small class="error" *ngIf="form.get('panNo')?.hasError('invalidPan')">
+                        Invalid PAN format
+                    </small>
+
+                    <small class="error" *ngIf="form.get('panNo')?.hasError('duplicate')">
+                        PAN already exists
+                    </small>
+                </div>
+
+                <div class="field floating">
+                    <input formControlName="gstNo" />
+                    <label>GST No</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="phone" />
+                    <label>Phone</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="fax" />
+                    <label>Fax</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="income" />
+                    <label>Income</label>
+                </div>
+
+                <div class="field floating">
+                    <input formControlName="incomeSource" />
+                    <label>Income Source</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="otherIncome" />
+                    <label>Other Income</label>
+                </div>
+
+                <div class="field floating">
+                    <input formControlName="otherIncomeSource" />
+                    <label>Other Income Source</label>
+                </div>
+
+                <div class="field floating">
+                    <input type="number" formControlName="budget" />
+                    <label>Budget *</label>
+                </div>
+
+                <div class="field floating">
+                    <input formControlName="area" />
+                    <label>Area</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="stateId" (change)="onStateChange()">
+                        <option [ngValue]="null" disabled>Select State</option>
+                        <option *ngFor="let s of states" [ngValue]="s.id">{{ s.name }}</option>
+                    </select>
+                    <label>State *</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="distId" (change)="onDistrictChange()">
+                        <option [ngValue]="null" disabled>Select District</option>
+                        <option *ngFor="let d of districts" [ngValue]="d.id">{{ d.name }}</option>
+                    </select>
+                    <label>District *</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="cityId">
+                        <option [ngValue]="null" disabled>Select City</option>
+                        <option *ngFor="let c of cities" [ngValue]="c.id">{{ c.name }}</option>
+                    </select>
+                    <label>City *</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="isActive">
+                        <option [ngValue]="1">Active</option>
+                        <option [ngValue]="0">Inactive</option>
+                    </select>
+                    <label>Status</label>
+                </div>
+
+                <div class="field floating full">
+                    <textarea rows="2" formControlName="invoiceAddress"></textarea>
+                    <label>Invoice Address</label>
+                </div>
+
+                <div class="field floating full">
+                    <textarea rows="2" formControlName="notes"></textarea>
+                    <label>Notes</label>
+                </div>
+
+            </div>
+
+            <div class="actions">
+                <button type="submit" [disabled]="loading">
+                    {{ loading ? 'Saving...' : 'Save Lead' }}
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- ================= LEAD LIST TABLE ================= -->
+    <div class="lead-card mt" *ngIf="showLeads">
+
+        <h3 class="list-title">Lead List</h3>
+
+        <table class="lead-table" *ngIf="leads.length; else noData">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let l of leads; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ l.cName }}</td>
+                    <td>{{ l.contactNo }}</td>
+                    <td>{{ l.email }}</td>
+                    <td>₹ {{ l.budget | number }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="l.isActive ? 'active' : 'inactive'">
+                            {{ l.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ng-template #noData>
+            <p class="no-data">No leads found</p>
+        </ng-template>
+
+    </div>
+
 </div>
