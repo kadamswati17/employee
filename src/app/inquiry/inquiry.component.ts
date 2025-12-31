@@ -108,19 +108,20 @@ export class InquiryComponent implements OnInit {
       }
     });
   }
-
   getLeadName(leadId: number): string {
     if (!leadId || !this.leads?.length) return '-';
 
     const lead = this.leads.find(l => l.leadId === leadId);
-    return lead?.cName || '-';
+    return lead?.cname ?? '-';   // ✅ FIX HERE
   }
 
   getProjectName(projectId: number): string {
     if (!projectId || !this.projects?.length) return '-';
 
     const project = this.projects.find(p => p.projectId === projectId);
-    return project?.projectName || '-';
+    return project?.projectName ?? '-';
   }
+
+
 
 }

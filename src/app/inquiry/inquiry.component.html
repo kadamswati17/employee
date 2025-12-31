@@ -116,9 +116,13 @@
             <tbody>
                 <tr *ngFor="let i of inquiries; let idx = index">
                     <td>{{ idx + 1 }}</td>
-                    <td>{{ i.inqueryDate | date }}</td>
 
+                    <td>{{ i.inqueryDate | date:'MMM dd, yyyy' }}</td>
+
+                    <!-- LEAD NAME -->
                     <td>{{ getLeadName(i.leadAccountId) }}</td>
+
+                    <!-- PROJECT NAME -->
                     <td>{{ getProjectName(i.projectCode) }}</td>
 
                     <td>
@@ -130,6 +134,7 @@
                     <td>₹ {{ i.total | number }}</td>
                 </tr>
             </tbody>
+
 
         </table>
 
