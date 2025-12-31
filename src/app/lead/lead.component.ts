@@ -18,7 +18,18 @@ export class LeadComponent implements OnInit {
   cities: any[] = [];
 
   showLeads = false;
+
   leads: any[] = [];
+  filteredLeads: any[] = [];
+
+  isEditMode = false;
+  editLeadId: number | null = null;
+
+  // ✅ FIX: MISSING VARIABLE
+  filterStatus: string = '';
+
+  filterFromDate = '';
+  filterToDate = '';
 
   constructor(
     private fb: FormBuilder,
@@ -33,29 +44,18 @@ export class LeadComponent implements OnInit {
     this.form = this.fb.group({
       date: [today],
       cName: ['', Validators.required],
-      contactNo: [null, Validators.required],
+      contactNo: ['', Validators.required],
       panNo: ['', [Validators.required, this.panValidator]],
-      gstNo: [''],
-      email: ['', Validators.email],
-      website: [''],
-      phone: [null],
-      fax: [null],
-      invoiceAddress: [''],
-      income: [null],
-      incomeSource: [''],
-      otherIncome: [null],
-      otherIncomeSource: [''],
-      budget: [null, Validators.required],
-      notes: [''],
-      area: [''],
+      budget: ['', Validators.required],
       stateId: [null, Validators.required],
       distId: [null, Validators.required],
       cityId: [null, Validators.required],
-      userId: [0],
-      branchId: [0],
-      orgId: [0],
       isActive: [1]
     });
+
+    // default filter dates = today
+    this.filterFromDate = today;
+    this.filterToDate = today;
 
     this.loadStates();
   }
@@ -73,19 +73,25 @@ export class LeadComponent implements OnInit {
 
   onStateChange() {
     const stateId = this.form.value.stateId;
+    if (!stateId) return;
+
     this.districts = [];
     this.cities = [];
     this.form.patchValue({ distId: null, cityId: null });
 
-    this.locationService.getDistricts(stateId).subscribe(res => this.districts = res);
+    this.locationService.getDistricts(stateId)
+      .subscribe(res => this.districts = res);
   }
 
   onDistrictChange() {
-    const districtId = this.form.value.distId;
+    const distId = this.form.value.distId;
+    if (!distId) return;
+
     this.cities = [];
     this.form.patchValue({ cityId: null });
 
-    this.locationService.getCities(districtId).subscribe(res => this.cities = res);
+    this.locationService.getCities(distId)
+      .subscribe(res => this.cities = res);
   }
 
   toggleLeads() {
@@ -94,35 +100,121 @@ export class LeadComponent implements OnInit {
   }
 
   loadLeads() {
-    this.leadService.getAll().subscribe({
-      next: (res) => this.leads = res,
-      error: () => alert('❌ Failed to load leads')
+    this.leadService.getAll().subscribe(res => {
+      this.leads = res;
+      this.filteredLeads = [...res];
+      this.applyFilters(); // apply default today filter
+    });
+  }
+
+  editLead(lead: any) {
+
+    this.isEditMode = true;
+    this.editLeadId = lead.leadId;
+    this.showLeads = false;
+
+    this.form.patchValue({
+      date: lead.date?.split('T')[0],
+      cName: lead.cname,
+      contactNo: lead.contactNo,
+      panNo: lead.panNo,
+      budget: lead.budget,
+      stateId: lead.stateId,
+      distId: lead.distId,
+      cityId: lead.cityId,
+      isActive: lead.isActive
+    });
+
+    this.locationService.getDistricts(lead.stateId).subscribe(d => {
+      this.districts = d;
+      this.locationService.getCities(lead.distId).subscribe(c => {
+        this.cities = c;
+      });
     });
   }
 
   submit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+
+    if (this.form.invalid) return;
+    this.loading = true;
+
+    const payload = {
+      ...this.form.value,
+      leadId: this.editLeadId
+    };
+
+    if (this.isEditMode && this.editLeadId) {
+      this.leadService.update(this.editLeadId, payload).subscribe(() => {
+        alert('Lead Updated');
+        this.resetForm();
+      });
+    } else {
+      this.leadService.create(payload).subscribe(() => {
+        alert('Lead Created');
+        this.resetForm();
+      });
+    }
+  }
+
+  resetForm() {
+    this.form.reset({
+      date: new Date().toISOString().split('T')[0],
+      isActive: 1
+    });
+
+    this.isEditMode = false;
+    this.editLeadId = null;
+    this.loading = false;
+    this.showLeads = true;
+
+    this.loadLeads();
+  }
+
+  applyFilters() {
+
+    // ❌ Invalid range guard
+    if (
+      this.filterFromDate &&
+      this.filterToDate &&
+      new Date(this.filterToDate) < new Date(this.filterFromDate)
+    ) {
+      alert('To Date cannot be earlier than From Date');
       return;
     }
 
-    this.loading = true;
+    const fromDate = this.filterFromDate
+      ? new Date(this.filterFromDate).setHours(0, 0, 0, 0)
+      : null;
 
-    this.leadService.create(this.form.value).subscribe({
-      next: () => {
-        alert('✅ Lead Saved Successfully');
-        this.form.reset({ isActive: 1, date: new Date().toISOString().split('T')[0] });
-        this.loading = false;
-        if (this.showLeads) this.loadLeads();
-      },
-      error: (err) => {
-        this.loading = false;
-        if (err.error === 'PAN number already exists') {
-          this.form.get('panNo')?.setErrors({ duplicate: true });
-        } else {
-          alert(err.error || '❌ Failed to save lead');
-        }
-      }
+    // ✅ include full day for To Date
+    const toDate = this.filterToDate
+      ? new Date(this.filterToDate).setHours(23, 59, 59, 999)
+      : null;
+
+    this.filteredLeads = this.leads.filter(l => {
+
+      const leadDate = new Date(l.date).getTime();
+
+      // ✅ STRICT RANGE CHECK (NO OVERLAP)
+      const dateOk =
+        (!fromDate || leadDate >= fromDate) &&
+        (!toDate || leadDate <= toDate);
+
+      const statusOk =
+        this.filterStatus !== ''
+          ? String(l.isActive) === this.filterStatus
+          : true;
+
+      return dateOk && statusOk;
     });
   }
+
+  clearFilters() {
+    this.filterFromDate = '';
+    this.filterToDate = '';
+    this.filterStatus = '';
+    this.filteredLeads = [...this.leads];
+  }
+
+
 }

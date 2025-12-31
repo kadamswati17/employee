@@ -1,14 +1,14 @@
 <div class="lead-wrapper">
 
-    <!-- ================= CREATE LEAD CARD ================= -->
-    <div class="lead-card">
+    <!-- ================= CREATE / EDIT LEAD ================= -->
+    <div class="lead-card" *ngIf="!showLeads">
 
         <!-- HEADER -->
         <div class="header">
-            <h2>Create Lead</h2>
+            <h2>{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h2>
 
             <button class="toggle-btn" (click)="toggleLeads()">
-                {{ showLeads ? 'Hide Lead List' : 'Show Lead List' }}
+                Show Lead List
             </button>
         </div>
 
@@ -132,8 +132,8 @@
                     <label>Status</label>
                 </div>
 
-                <div class="field floating full">
-                    <textarea rows="2" formControlName="invoiceAddress"></textarea>
+                <div class="field floating ">
+                    <textarea rows="1" formControlName="invoiceAddress"></textarea>
                     <label>Invoice Address</label>
                 </div>
 
@@ -146,41 +146,71 @@
 
             <div class="actions">
                 <button type="submit" [disabled]="loading">
-                    {{ loading ? 'Saving...' : 'Save Lead' }}
+                    {{ isEditMode ? 'Update Lead' : 'Save Lead' }}
                 </button>
             </div>
 
         </form>
     </div>
 
-    <!-- ================= LEAD LIST TABLE ================= -->
+    <!-- ================= LEAD LIST ================= -->
     <div class="lead-card mt" *ngIf="showLeads">
 
-        <h3 class="list-title">Lead List</h3>
+        <div class="header header-flex">
+            <h3 class="list-title">Lead List</h3>
 
-        <table class="lead-table" *ngIf="leads.length; else noData">
+            <div class="filters">
+                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+
+                <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+                    <option value="">All</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+
+                <button class="clear-btn" (click)="clearFilters()">Clear</button>
+                <button class="toggle-btn" (click)="toggleLeads()">Back</button>
+            </div>
+        </div>
+
+        <table class="lead-table" *ngIf="filteredLeads.length; else noData">
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Date</th>
                     <th>Customer</th>
                     <th>Contact</th>
-                    <th>Email</th>
+                    <!-- <th>Email</th> -->
+                    <th>PAN</th>
                     <th>Budget</th>
+                    <!-- <th>State</th> -->
+                    <!-- <th>District</th> -->
+                    <!-- <th>City</th> -->
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr *ngFor="let l of leads; let i = index">
+                <tr *ngFor="let l of filteredLeads; let i = index">
                     <td>{{ i + 1 }}</td>
+                    <td>{{ l.date | date }}</td>
                     <td>{{ l.cname }}</td>
                     <td>{{ l.contactNo }}</td>
-                    <td>{{ l.email }}</td>
+                    <!-- <td>{{ l.email }}</td> -->
+                    <td>{{ l.panNo }}</td>
                     <td>₹ {{ l.budget | number }}</td>
+                    <!-- <td>{{ l.stateName }}</td> -->
+                    <!-- <td>{{ l.districtName }}</td> -->
+                    <!-- <td>{{ l.cityName }}</td> -->
                     <td>
                         <span class="badge" [ngClass]="l.isActive ? 'active' : 'inactive'">
                             {{ l.isActive ? 'Active' : 'Inactive' }}
                         </span>
+                    </td>
+                    <td>
+                        <button class="edit-btn" (click)="editLead(l)">Edit</button>
                     </td>
                 </tr>
             </tbody>
