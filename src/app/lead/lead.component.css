@@ -94,21 +94,9 @@ select {
     color: #4f46e5;
 }
 
-/* BUTTON */
-.actions {
-    margin-top: 16px;
-    display: flex;
-    justify-content: center;
-}
 
-button {
-    padding: 14px 48px;
-    border-radius: 999px;
-    border: none;
-    font-weight: 600;
-    color: white;
-    background: linear-gradient(135deg, #4f46e5, #4338ca);
-}
+/* MAIN BUTTON */
+
 
 /* TABLE */
 .list-title {
@@ -206,4 +194,70 @@ button {
     color: white;
     background: linear-gradient(135deg, #4f46e5, #4338ca);
     cursor: pointer;
+}
+
+.actions {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+}
+
+/* MAIN ACTION BUTTON */
+.actions button {
+    min-width: 220px;
+    height: 52px;
+    padding: 0 48px;
+
+    /* 🔥 IMPORTANT FIX */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    border-radius: 999px;
+    border: none;
+
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px rgba(79, 70, 229, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+    transition: all 0.25s ease;
+}
+
+/* HOVER */
+.actions button:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 14px 32px rgba(79, 70, 229, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* ACTIVE */
+.actions button:active {
+    transform: translateY(0);
+    box-shadow: 0 8px 18px rgba(79, 70, 229, 0.35);
+}
+
+/* DISABLED */
+.actions button:disabled {
+    background: linear-gradient(135deg, #a5b4fc, #818cf8);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.75;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    .actions button {
+        width: 100%;
+        min-width: unset;
+    }
 }

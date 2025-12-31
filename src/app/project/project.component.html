@@ -109,7 +109,7 @@
                 <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
 
                 <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-                    <option value="">All</option>
+                    <option value="">Status</option>
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                 </select>
@@ -126,7 +126,7 @@
         <table class="project-table" *ngIf="filteredProjects.length; else noData">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Project Name</th>
                     <th>Start</th>
                     <th>End</th>

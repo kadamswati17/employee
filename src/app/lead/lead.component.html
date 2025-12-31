@@ -164,7 +164,7 @@
                 <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
 
                 <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-                    <option value="">All</option>
+                    <option value="">Status</option>
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
                 </select>
@@ -177,7 +177,7 @@
         <table class="lead-table" *ngIf="filteredLeads.length; else noData">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Date</th>
                     <th>Customer</th>
                     <th>Contact</th>

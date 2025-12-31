@@ -17,8 +17,17 @@ export class InquiryComponent implements OnInit {
   leads: any[] = [];
   projects: any[] = [];
   inquiries: any[] = [];
+  filteredInquiries: any[] = [];
 
   showInquiries = false;
+  isEditMode = false;
+  editInquiryId: number | null = null;
+
+  // FILTERS
+  filterFromDate = '';
+  filterToDate = '';
+  filterStatus = '';
+  filterInquiryStatus = '';
 
   statusList = [
     { id: 1, name: 'Open' },
@@ -39,29 +48,32 @@ export class InquiryComponent implements OnInit {
     const today = new Date().toISOString().split('T')[0];
 
     this.form = this.fb.group({
-      inqStatusId: ['', Validators.required],
       inqueryDate: [today, Validators.required],
-
+      inqStatusId: ['', Validators.required],
       leadAccountId: ['', Validators.required],
       projectCode: ['', Validators.required],
       unitCode: ['', Validators.required],
-
-      particulars: [''],
       rate: [0, Validators.required],
       quantity: [1, Validators.required],
       total: [0],
-
-      orgId: [0],
-      branchId: [0],
-      userId: [0],
-
+      particulars: [''],
       isActive: [1]
     });
+
+    this.filterFromDate = today;
+    this.filterToDate = today;
 
     this.loadLeads();
     this.loadProjects();
     this.loadInquiries();
-    this.calculateTotal();
+
+    // auto calculate total
+    this.form.valueChanges.subscribe(v => {
+      this.form.patchValue(
+        { total: (v.rate || 0) * (v.quantity || 0) },
+        { emitEvent: false }
+      );
+    });
   }
 
   toggleInquiries() {
@@ -77,51 +89,112 @@ export class InquiryComponent implements OnInit {
   }
 
   loadInquiries() {
-    this.inquiryService.getAll().subscribe(res => this.inquiries = res);
-  }
-
-  calculateTotal() {
-    this.form.valueChanges.subscribe(v => {
-      const total = (v.rate || 0) * (v.quantity || 0);
-      this.form.patchValue({ total }, { emitEvent: false });
+    this.inquiryService.getAll().subscribe(res => {
+      this.inquiries = res;
+      this.filteredInquiries = [...res];
+      this.applyFilters();
     });
   }
 
+  // ✅ FIXED EDIT METHOD (THIS IS THE KEY)
+  editInquiry(i: any) {
+    this.isEditMode = true;
+
+    // ✅ FIXED ID
+    this.editInquiryId = i.inqueryId;
+
+    this.showInquiries = false;
+
+    this.form.patchValue({
+      inqueryDate: i.inqueryDate?.split('T')[0],
+      inqStatusId: i.inqStatusId,
+      leadAccountId: i.leadAccountId,
+      projectCode: i.projectCode,
+      unitCode: i.unitCode,
+      rate: i.rate,
+      quantity: i.quantity,
+      total: i.total,
+      particulars: i.particulars,
+      isActive: i.isActive
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+
   submit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (this.form.invalid) return;
+
+    this.loading = true;
+    const payload = { ...this.form.value, inquiryId: this.editInquiryId };
+
+    const req = this.isEditMode
+      ? this.inquiryService.update(this.editInquiryId!, payload)
+      : this.inquiryService.create(payload);
+
+    req.subscribe(() => {
+      alert(this.isEditMode ? 'Inquiry Updated' : 'Inquiry Created');
+      this.resetForm();
+    });
+  }
+
+  resetForm() {
+    const today = new Date().toISOString().split('T')[0];
+    this.form.reset({ inqueryDate: today, isActive: 1 });
+    this.isEditMode = false;
+    this.editInquiryId = null;
+    this.loading = false;
+    this.showInquiries = true;
+    this.loadInquiries();
+  }
+
+  applyFilters() {
+
+    if (
+      this.filterFromDate &&
+      this.filterToDate &&
+      new Date(this.filterToDate) < new Date(this.filterFromDate)
+    ) {
+      alert('To Date cannot be earlier than From Date');
       return;
     }
 
-    this.loading = true;
+    const from = this.filterFromDate
+      ? new Date(this.filterFromDate).setHours(0, 0, 0, 0)
+      : null;
 
-    this.inquiryService.create(this.form.value).subscribe({
-      next: () => {
-        alert('✅ Inquiry Saved Successfully');
-        this.form.reset({ isActive: 1 });
-        this.loadInquiries();
-        this.loading = false;
-      },
-      error: () => {
-        alert('❌ Failed to save inquiry');
-        this.loading = false;
-      }
+    const to = this.filterToDate
+      ? new Date(this.filterToDate).setHours(23, 59, 59, 999)
+      : null;
+
+    this.filteredInquiries = this.inquiries.filter(i => {
+      const d = new Date(i.inqueryDate).getTime();
+
+      const dateOk = (!from || d >= from) && (!to || d <= to);
+      const activeOk = this.filterStatus !== '' ? String(i.isActive) === this.filterStatus : true;
+      const inquiryOk = this.filterInquiryStatus !== '' ? String(i.inqStatusId) === this.filterInquiryStatus : true;
+
+      return dateOk && activeOk && inquiryOk;
     });
   }
-  getLeadName(leadId: number): string {
-    if (!leadId || !this.leads?.length) return '-';
 
-    const lead = this.leads.find(l => l.leadId === leadId);
-    return lead?.cname ?? '-';   // ✅ FIX HERE
+  clearFilters() {
+    this.filterFromDate = '';
+    this.filterToDate = '';
+    this.filterStatus = '';
+    this.filterInquiryStatus = '';
+    this.applyFilters();
   }
 
-  getProjectName(projectId: number): string {
-    if (!projectId || !this.projects?.length) return '-';
-
-    const project = this.projects.find(p => p.projectId === projectId);
-    return project?.projectName ?? '-';
+  getLeadName(id: number) {
+    return this.leads.find(l => l.leadId === id)?.cname ?? '-';
   }
 
+  getProjectName(id: number) {
+    return this.projects.find(p => p.projectId === id)?.projectName ?? '-';
+  }
 
-
+  getInquiryStatusName(id: number): string {
+    return this.statusList.find(s => s.id === id)?.name ?? '-';
+  }
 }

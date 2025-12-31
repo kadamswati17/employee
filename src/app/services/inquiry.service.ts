@@ -10,11 +10,18 @@ export class InquiryService {
 
     constructor(private http: HttpClient) { }
 
+    // CREATE
     create(data: Inquiry): Observable<Inquiry> {
         return this.http.post<Inquiry>(this.API, data);
     }
 
+    // GET ALL
     getAll(): Observable<Inquiry[]> {
         return this.http.get<Inquiry[]>(this.API);
+    }
+
+    // ✅ UPDATE (FIX FOR YOUR ERROR)
+    update(id: number, data: Inquiry): Observable<Inquiry> {
+        return this.http.put<Inquiry>(`${this.API}/${id}`, data);
     }
 }
