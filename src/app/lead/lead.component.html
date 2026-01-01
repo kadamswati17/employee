@@ -13,8 +13,16 @@
 
         <!-- FILTERS -->
         <div class="filters">
-            <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
-            <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+
+            <div class="date-field">
+                <!-- <label>From Date</label> -->
+                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+            </div>
+
+            <div class="date-field">
+                <!-- <label>To Date</label> -->
+                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+            </div>
 
             <select [(ngModel)]="filterStatus" (change)="applyFilters()">
                 <option value="">Status</option>
@@ -22,9 +30,17 @@
                 <option value="0">Inactive</option>
             </select>
 
+            <!-- EXPORT -->
+            <select #exportSel (change)="exportData(exportSel.value)">
+                <option value="">Export</option>
+                <option value="pdf">Export PDF</option>
+                <option value="excel">Export Excel</option>
+            </select>
+
             <button type="button" class="clear-btn" (click)="clearFilters()">Clear</button>
         </div>
 
+        <!-- TABLE -->
         <table class="lead-table" *ngIf="paginatedLeads.length; else noData">
             <thead>
                 <tr>
@@ -57,6 +73,7 @@
             </tbody>
         </table>
 
+        <!-- PAGINATION -->
         <div class="pagination" *ngIf="totalPages > 1">
             <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
             <span>Page {{ currentPage }} of {{ totalPages }}</span>
@@ -111,14 +128,6 @@
                 <div class="field floating">
                     <input formControlName="panNo" placeholder=" " />
                     <label>PAN No *</label>
-
-                    <small class="error" *ngIf="form.get('panNo')?.hasError('invalidPan')">
-                        Invalid PAN format
-                    </small>
-
-                    <small class="error" *ngIf="form.get('panNo')?.hasError('duplicate')">
-                        PAN already exists
-                    </small>
                 </div>
 
                 <div class="field floating">

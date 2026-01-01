@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProjectService } from '../services/project.service';
 import { AuthService } from '../services/auth.service';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -13,11 +17,10 @@ export class ProjectComponent implements OnInit {
   form!: FormGroup;
   loading = false;
 
-  showProjects = true; // ✅ LIST FIRST
+  showProjects = true;
   projects: any[] = [];
   filteredProjects: any[] = [];
 
-  // PAGINATION
   currentPage = 1;
   pageSize = 5;
   totalPages = 0;
@@ -67,14 +70,22 @@ export class ProjectComponent implements OnInit {
     this.projectService.getAll().subscribe({
       next: res => {
         this.projects = res;
-        this.filteredProjects = [...res];
+
+        // ✅ DEFAULT CURRENT MONTH
+        const now = new Date();
+        const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+        const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).getTime();
+
+        this.filteredProjects = this.projects.filter(p => {
+          const d = new Date(p.startDate).getTime();
+          return d >= start && d <= end;
+        });
+
         this.setupPagination();
       },
       error: () => alert('Failed to load projects')
     });
   }
-
-  /* ================= PAGINATION ================= */
 
   setupPagination() {
     this.totalPages = Math.ceil(this.filteredProjects.length / this.pageSize);
@@ -84,8 +95,7 @@ export class ProjectComponent implements OnInit {
 
   updatePaginatedData() {
     const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginatedProjects = this.filteredProjects.slice(start, end);
+    this.paginatedProjects = this.filteredProjects.slice(start, start + this.pageSize);
   }
 
   nextPage() {
@@ -101,8 +111,6 @@ export class ProjectComponent implements OnInit {
       this.updatePaginatedData();
     }
   }
-
-  /* ================= FORM NAV ================= */
 
   openCreateForm() {
     this.isEditMode = false;
@@ -163,8 +171,6 @@ export class ProjectComponent implements OnInit {
     this.loadProjects();
   }
 
-  /* ================= FILTER ================= */
-
   applyFilters() {
 
     if (
@@ -176,20 +182,15 @@ export class ProjectComponent implements OnInit {
       return;
     }
 
-    const fromDate = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
-    const toDate = this.filterToDate ? new Date(this.filterToDate + 'T23:59:59').getTime() : null;
+    const from = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
+    const to = this.filterToDate ? new Date(this.filterToDate + 'T23:59:59').getTime() : null;
 
     this.filteredProjects = this.projects.filter(p => {
+      const s = new Date(p.startDate).getTime();
+      const e = new Date(p.endDate).getTime();
 
-      const projectStart = new Date(p.startDate).getTime();
-      const projectEnd = new Date(p.endDate).getTime();
-
-      const dateOk =
-        (!fromDate || projectStart >= fromDate) &&
-        (!toDate || projectEnd <= toDate);
-
-      const statusOk =
-        this.filterStatus !== '' ? String(p.isActive) === this.filterStatus : true;
+      const dateOk = (!from || s >= from) && (!to || e <= to);
+      const statusOk = this.filterStatus !== '' ? String(p.isActive) === this.filterStatus : true;
 
       return dateOk && statusOk;
     });
@@ -204,21 +205,45 @@ export class ProjectComponent implements OnInit {
     this.filteredProjects = [...this.projects];
     this.setupPagination();
   }
-  dateRangeValidator(group: FormGroup) {
-    const start = group.get('startDate')?.value;
-    const end = group.get('endDate')?.value;
 
-    if (start && end && end < start) {
-      group.get('endDate')?.setErrors({ dateInvalid: true });
-    } else {
-      const errors = group.get('endDate')?.errors;
-      if (errors) {
-        delete errors['dateInvalid'];
-        if (!Object.keys(errors).length) {
-          group.get('endDate')?.setErrors(null);
-        }
-      }
-    }
+  exportData(type: string) {
+    if (type === 'pdf') this.exportPDF();
+    if (type === 'excel') this.exportExcel();
   }
 
+  exportPDF() {
+    const doc = new jsPDF();
+    doc.text('Project List', 14, 15);
+
+    autoTable(doc, {
+      head: [['#', 'Project Name', 'Start', 'End', 'Budget', 'Status']],
+      body: this.filteredProjects.map((p, i) => [
+        i + 1,
+        p.projectName,
+        new Date(p.startDate).toLocaleDateString(),
+        new Date(p.endDate).toLocaleDateString(),
+        p.budgetAmt,
+        p.isActive ? 'Active' : 'Inactive'
+      ]),
+      startY: 20
+    });
+
+    doc.save('projects.pdf');
+  }
+
+  exportExcel() {
+    const data = this.filteredProjects.map((p, i) => ({
+      'Sr No': i + 1,
+      'Project Name': p.projectName,
+      'Start Date': new Date(p.startDate).toLocaleDateString(),
+      'End Date': new Date(p.endDate).toLocaleDateString(),
+      'Budget': p.budgetAmt,
+      'Status': p.isActive ? 'Active' : 'Inactive'
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Projects');
+    XLSX.writeFile(wb, 'projects.xlsx');
+  }
 }

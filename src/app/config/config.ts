@@ -17,6 +17,9 @@ export const APP_CONFIG = {
         ROOTS: '/api/roots',
         RECEIPTS: '/api/receipts',
         PARTY_PRICES: '/api/party-prices',
-        FILE_UPLOAD: '/api/files/upload'
+        FILE_UPLOAD: '/api/files/upload',
+        PROJECTS: '/api/projects',
+        LEADS: '/api/leads',
+        INQUIRIES: '/api/inquiries'
     }
 };

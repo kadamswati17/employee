@@ -15,13 +15,29 @@
 
             <!-- FILTERS -->
             <div class="filters">
-                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
-                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+                <div class="date-field">
+                    <!-- <label>From Date</label> -->
+                    <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+                </div>
+
+                <div class="date-field">
+                    <!-- <label>To Date</label> -->
+                    <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+                </div>
+
 
                 <select [(ngModel)]="filterStatus" (change)="applyFilters()">
                     <option value="">Status</option>
                     <option value="1">Active</option>
                     <option value="0">Inactive</option>
+                </select>
+
+                <!-- EXPORT -->
+                <select (change)="exportData($any($event.target).value)">
+
+                    <option value="">Export</option>
+                    <option value="pdf">Export PDF</option>
+                    <option value="excel">Export Excel</option>
                 </select>
 
                 <button type="button" class="clear-btn" (click)="clearFilters()">Clear</button>
@@ -110,7 +126,6 @@
                         placeholder=" " />
                     <label>To Date *</label>
                 </div>
-
 
                 <div class="field floating">
                     <input formControlName="srvGutNo" placeholder=" " />

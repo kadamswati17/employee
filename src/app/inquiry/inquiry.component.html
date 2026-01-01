@@ -9,9 +9,18 @@
                 <button class="toggle-btn" (click)="toggleInquiries()">+ Add Inquiry</button>
             </div>
 
+            <!-- FILTERS -->
             <div class="filters">
-                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
-                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+
+                <div class="date-field">
+                    <!-- <label>From Date</label> -->
+                    <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+                </div>
+
+                <div class="date-field">
+                    <!-- <label>To Date</label> -->
+                    <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+                </div>
 
                 <select [(ngModel)]="filterStatus" (change)="applyFilters()">
                     <option value="">Status</option>
@@ -21,14 +30,24 @@
 
                 <select [(ngModel)]="filterInquiryStatus" (change)="applyFilters()">
                     <option value="">Inquiry Status</option>
-                    <option *ngFor="let s of statusList" [value]="s.id">{{ s.name }}</option>
+                    <option *ngFor="let s of statusList" [value]="s.id">
+                        {{ s.name }}
+                    </option>
+                </select>
+
+                <!-- EXPORT -->
+                <select #exportSel (change)="exportData(exportSel.value)">
+                    <option value="">Export</option>
+                    <option value="pdf">Export PDF</option>
+                    <option value="excel">Export Excel</option>
                 </select>
 
                 <button class="clear-btn" (click)="clearFilters()">Clear</button>
             </div>
         </div>
 
-        <table class="inquiry-table" *ngIf="paginatedInquiries.length">
+        <!-- TABLE -->
+        <table class="inquiry-table" *ngIf="paginatedInquiries.length; else noData">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -67,6 +86,10 @@
             <span>Page {{ currentPage }} of {{ totalPages }}</span>
             <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
         </div>
+
+        <ng-template #noData>
+            <p class="no-data">No inquiries found</p>
+        </ng-template>
     </div>
 
     <!-- ================= CREATE / EDIT INQUIRY ================= -->
@@ -78,7 +101,9 @@
         </div>
 
         <form [formGroup]="form" (ngSubmit)="submit()">
+
             <div class="grid">
+
                 <div class="field floating">
                     <input type="date" formControlName="inqueryDate" placeholder=" " />
                     <label>Inquiry Date *</label>
@@ -95,7 +120,9 @@
                 <div class="field floating">
                     <select formControlName="inqStatusId">
                         <option value="" disabled></option>
-                        <option *ngFor="let s of statusList" [value]="s.id">{{ s.name }}</option>
+                        <option *ngFor="let s of statusList" [value]="s.id">
+                            {{ s.name }}
+                        </option>
                     </select>
                     <label>Inquiry Status *</label>
                 </div>
@@ -103,7 +130,9 @@
                 <div class="field floating">
                     <select formControlName="leadAccountId">
                         <option value="" disabled></option>
-                        <option *ngFor="let l of leads" [value]="l.leadId">{{ l.cname }}</option>
+                        <option *ngFor="let l of leads" [value]="l.leadId">
+                            {{ l.cname }}
+                        </option>
                     </select>
                     <label>Lead *</label>
                 </div>
@@ -111,7 +140,9 @@
                 <div class="field floating">
                     <select formControlName="projectCode">
                         <option value="" disabled></option>
-                        <option *ngFor="let p of projects" [value]="p.projectId">{{ p.projectName }}</option>
+                        <option *ngFor="let p of projects" [value]="p.projectId">
+                            {{ p.projectName }}
+                        </option>
                     </select>
                     <label>Project *</label>
                 </div>
@@ -131,18 +162,15 @@
                     <label>Quantity</label>
                 </div>
 
-                <!-- TOTAL (1 column) -->
                 <div class="field floating">
                     <input type="number" formControlName="total" readonly placeholder=" " />
                     <label>Total</label>
                 </div>
 
-                <!-- PARTICULARS (remaining 3 columns) -->
                 <div class="field floating span-3">
                     <textarea rows="1" formControlName="particulars" placeholder=" "></textarea>
                     <label>Particulars</label>
                 </div>
-
 
             </div>
 
@@ -151,6 +179,8 @@
                     {{ isEditMode ? 'Update Inquiry' : 'Save Inquiry' }}
                 </button>
             </div>
+
         </form>
     </div>
+
 </div>

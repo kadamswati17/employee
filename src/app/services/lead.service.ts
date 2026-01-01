@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Lead } from '../models/lead.model';
+import { APP_CONFIG } from '../config/config';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LeadService {
 
-    private API = 'http://localhost:8080/api/leads';
+    private API = APP_CONFIG.BASE_URL + APP_CONFIG.API.LEADS;
 
     constructor(private http: HttpClient) { }
 

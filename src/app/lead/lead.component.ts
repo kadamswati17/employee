@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LeadService } from '../services/lead.service';
 import { LocationService } from '../services/LocationService';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+
 @Component({
   selector: 'app-lead',
   templateUrl: './lead.component.html',
@@ -24,12 +28,10 @@ export class LeadComponent implements OnInit {
   isEditMode = false;
   editLeadId: number | null = null;
 
-  /* ================= FILTERS ================= */
   filterFromDate = '';
   filterToDate = '';
   filterStatus = '';
 
-  /* ================= PAGINATION ================= */
   currentPage = 1;
   pageSize = 5;
   totalPages = 0;
@@ -49,7 +51,7 @@ export class LeadComponent implements OnInit {
       date: [today],
       cName: ['', Validators.required],
       contactNo: [null, Validators.required],
-      panNo: ['', [Validators.required, this.panValidator]],
+      panNo: ['', Validators.required],
       gstNo: [''],
       email: ['', Validators.email],
       website: [''],
@@ -66,7 +68,6 @@ export class LeadComponent implements OnInit {
       stateId: [null, Validators.required],
       distId: [null, Validators.required],
       cityId: [null, Validators.required],
-
       userId: [1],
       branchId: [1],
       orgId: [1],
@@ -75,13 +76,6 @@ export class LeadComponent implements OnInit {
 
     this.loadStates();
     this.loadLeads();
-  }
-
-  panValidator(control: any) {
-    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
-    return control.value && !panRegex.test(control.value)
-      ? { invalidPan: true }
-      : null;
   }
 
   loadStates() {
@@ -93,31 +87,36 @@ export class LeadComponent implements OnInit {
     this.districts = [];
     this.cities = [];
     this.form.patchValue({ distId: null, cityId: null });
-
     this.locationService.getDistricts(stateId).subscribe(res => this.districts = res);
   }
 
   onDistrictChange() {
-    const districtId = this.form.value.distId;
+    const distId = this.form.value.distId;
     this.cities = [];
     this.form.patchValue({ cityId: null });
-
-    this.locationService.getCities(districtId).subscribe(res => this.cities = res);
+    this.locationService.getCities(distId).subscribe(res => this.cities = res);
   }
 
   loadLeads() {
     this.leadService.getAll().subscribe(res => {
       this.leads = res;
-      this.filteredLeads = [...res];
+
+      // ✅ DEFAULT CURRENT MONTH
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).getTime();
+
+      this.filteredLeads = this.leads.filter(l => {
+        const d = new Date(l.date).getTime();
+        return d >= start && d <= end;
+      });
+
       this.setupPagination();
     });
   }
 
-  /* ================= FILTER LOGIC ================= */
-
   applyFilters() {
 
-    // ❌ To Date cannot be less than From Date
     if (
       this.filterFromDate &&
       this.filterToDate &&
@@ -127,27 +126,13 @@ export class LeadComponent implements OnInit {
       return;
     }
 
-    const from = this.filterFromDate
-      ? new Date(this.filterFromDate).setHours(0, 0, 0, 0)
-      : null;
-
-    const to = this.filterToDate
-      ? new Date(this.filterToDate).setHours(23, 59, 59, 999)
-      : null;
+    const from = this.filterFromDate ? new Date(this.filterFromDate).setHours(0, 0, 0, 0) : null;
+    const to = this.filterToDate ? new Date(this.filterToDate).setHours(23, 59, 59, 999) : null;
 
     this.filteredLeads = this.leads.filter(l => {
-
-      const leadDate = new Date(l.date).getTime();
-
-      const dateOk =
-        (!from || leadDate >= from) &&
-        (!to || leadDate <= to); // ✅ equal & greater allowed
-
-      const statusOk =
-        this.filterStatus !== ''
-          ? String(l.isActive) === this.filterStatus
-          : true;
-
+      const d = new Date(l.date).getTime();
+      const dateOk = (!from || d >= from) && (!to || d <= to);
+      const statusOk = this.filterStatus !== '' ? String(l.isActive) === this.filterStatus : true;
       return dateOk && statusOk;
     });
 
@@ -162,8 +147,6 @@ export class LeadComponent implements OnInit {
     this.setupPagination();
   }
 
-  /* ================= PAGINATION ================= */
-
   setupPagination() {
     this.totalPages = Math.ceil(this.filteredLeads.length / this.pageSize);
     this.currentPage = 1;
@@ -172,8 +155,7 @@ export class LeadComponent implements OnInit {
 
   updatePaginatedData() {
     const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginatedLeads = this.filteredLeads.slice(start, end);
+    this.paginatedLeads = this.filteredLeads.slice(start, start + this.pageSize);
   }
 
   nextPage() {
@@ -190,18 +172,50 @@ export class LeadComponent implements OnInit {
     }
   }
 
-  /* ================= UI ACTIONS ================= */
+  exportData(type: string) {
+    if (type === 'pdf') this.exportPDF();
+    if (type === 'excel') this.exportExcel();
+  }
+
+  exportPDF() {
+    const doc = new jsPDF();
+    doc.text('Lead List', 14, 15);
+
+    autoTable(doc, {
+      head: [['#', 'Customer', 'Contact', 'Email', 'Budget', 'Status']],
+      body: this.filteredLeads.map((l, i) => [
+        i + 1,
+        l.cname,
+        l.contactNo,
+        l.email,
+        l.budget,
+        l.isActive ? 'Active' : 'Inactive'
+      ]),
+      startY: 20
+    });
+
+    doc.save('leads.pdf');
+  }
+
+  exportExcel() {
+    const data = this.filteredLeads.map((l, i) => ({
+      'Sr No': i + 1,
+      'Customer': l.cname,
+      'Contact': l.contactNo,
+      'Email': l.email,
+      'Budget': l.budget,
+      'Status': l.isActive ? 'Active' : 'Inactive'
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Leads');
+    XLSX.writeFile(wb, 'leads.xlsx');
+  }
 
   openCreate() {
     this.isEditMode = false;
     this.editLeadId = null;
-    this.form.reset({
-      date: new Date().toISOString().split('T')[0],
-      isActive: 1,
-      userId: 1,
-      branchId: 1,
-      orgId: 1
-    });
     this.showLeads = false;
   }
 
@@ -213,34 +227,7 @@ export class LeadComponent implements OnInit {
     this.isEditMode = true;
     this.editLeadId = lead.leadId;
     this.showLeads = false;
-
-    this.form.patchValue({
-      date: lead.date?.split('T')[0],
-      cName: lead.cname,
-      contactNo: lead.contactNo,
-      panNo: lead.panNo,
-      gstNo: lead.gstNo,
-      email: lead.email,
-      website: lead.website,
-      phone: lead.phone,
-      fax: lead.fax,
-      invoiceAddress: lead.invoiceAddress,
-      income: lead.income,
-      incomeSource: lead.incomeSource,
-      otherIncome: lead.otherIncome,
-      otherIncomeSource: lead.otherIncomeSource,
-      budget: lead.budget,
-      notes: lead.notes,
-      area: lead.area,
-      stateId: lead.stateId,
-      distId: lead.distId,
-      cityId: lead.cityId,
-      isActive: lead.isActive,
-      userId: lead.userId ?? 1,
-      branchId: lead.branchId ?? 1,
-      orgId: lead.orgId ?? 1
-    });
-
+    this.form.patchValue(lead);
     this.onStateChange();
     this.onDistrictChange();
   }
@@ -249,28 +236,17 @@ export class LeadComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.loading = true;
-
-    const payload = {
-      ...this.form.value,
-      cname: this.form.value.cName,
-      leadId: this.editLeadId
-    };
+    const payload = { ...this.form.value, cname: this.form.value.cName, leadId: this.editLeadId };
 
     const req = this.isEditMode && this.editLeadId
       ? this.leadService.update(this.editLeadId, payload)
       : this.leadService.create(payload);
 
-    req.subscribe({
-      next: () => {
-        alert(this.isEditMode ? 'Lead Updated' : 'Lead Created');
-        this.loading = false;
-        this.showLeads = true;
-        this.loadLeads();
-      },
-      error: (err) => {
-        this.loading = false;
-        alert(err.error || 'Failed to save lead');
-      }
+    req.subscribe(() => {
+      alert(this.isEditMode ? 'Lead Updated' : 'Lead Created');
+      this.loading = false;
+      this.showLeads = true;
+      this.loadLeads();
     });
   }
 }

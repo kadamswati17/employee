@@ -4,6 +4,10 @@ import { InquiryService } from '../services/inquiry.service';
 import { LeadService } from '../services/lead.service';
 import { ProjectService } from '../services/project.service';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+
 @Component({
   selector: 'app-inquiry',
   templateUrl: './inquiry.component.html',
@@ -19,7 +23,6 @@ export class InquiryComponent implements OnInit {
   inquiries: any[] = [];
   filteredInquiries: any[] = [];
 
-  // ✅ PAGINATION
   currentPage = 1;
   pageSize = 5;
   totalPages = 0;
@@ -29,7 +32,6 @@ export class InquiryComponent implements OnInit {
   isEditMode = false;
   editInquiryId: number | null = null;
 
-  // FILTERS
   filterFromDate = '';
   filterToDate = '';
   filterStatus = '';
@@ -51,6 +53,7 @@ export class InquiryComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     const today = new Date().toISOString().split('T')[0];
 
     this.form = this.fb.group({
@@ -70,7 +73,6 @@ export class InquiryComponent implements OnInit {
     this.loadProjects();
     this.loadInquiries();
 
-    // auto calculate total
     this.form.valueChanges.subscribe(v => {
       this.form.patchValue(
         { total: (v.rate || 0) * (v.quantity || 0) },
@@ -94,7 +96,17 @@ export class InquiryComponent implements OnInit {
   loadInquiries() {
     this.inquiryService.getAll().subscribe(res => {
       this.inquiries = res;
-      this.filteredInquiries = [...res];
+
+      // ✅ DEFAULT CURRENT MONTH
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).getTime();
+
+      this.filteredInquiries = this.inquiries.filter(i => {
+        const d = new Date(i.inqueryDate).getTime();
+        return d >= start && d <= end;
+      });
+
       this.setupPagination();
     });
   }
@@ -109,8 +121,7 @@ export class InquiryComponent implements OnInit {
 
   updatePaginatedData() {
     const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginatedInquiries = this.filteredInquiries.slice(start, end);
+    this.paginatedInquiries = this.filteredInquiries.slice(start, start + this.pageSize);
   }
 
   nextPage() {
@@ -125,6 +136,77 @@ export class InquiryComponent implements OnInit {
       this.currentPage--;
       this.updatePaginatedData();
     }
+  }
+
+  /* ================= FILTER ================= */
+
+  applyFilters() {
+    const from = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
+    const to = this.filterToDate ? new Date(this.filterToDate + 'T23:59:59').getTime() : null;
+
+    this.filteredInquiries = this.inquiries.filter(i => {
+      const d = new Date(i.inqueryDate).getTime();
+      const dateOk = (!from || d >= from) && (!to || d <= to);
+      const activeOk = this.filterStatus !== '' ? String(i.isActive) === this.filterStatus : true;
+      const inquiryOk = this.filterInquiryStatus !== '' ? String(i.inqStatusId) === this.filterInquiryStatus : true;
+      return dateOk && activeOk && inquiryOk;
+    });
+
+    this.setupPagination();
+  }
+
+  clearFilters() {
+    this.filterFromDate = '';
+    this.filterToDate = '';
+    this.filterStatus = '';
+    this.filterInquiryStatus = '';
+    this.filteredInquiries = [...this.inquiries];
+    this.setupPagination();
+  }
+
+  /* ================= EXPORT ================= */
+
+  exportData(type: string) {
+    if (type === 'pdf') this.exportPDF();
+    if (type === 'excel') this.exportExcel();
+  }
+
+  exportPDF() {
+    const doc = new jsPDF();
+    doc.text('Inquiry List', 14, 15);
+
+    autoTable(doc, {
+      head: [['#', 'Date', 'Lead', 'Project', 'Status', 'Inquiry Status', 'Total']],
+      body: this.filteredInquiries.map((i, idx) => [
+        idx + 1,
+        new Date(i.inqueryDate).toLocaleDateString(),
+        this.getLeadName(i.leadAccountId),
+        this.getProjectName(i.projectCode),
+        i.isActive ? 'Active' : 'Inactive',
+        this.getInquiryStatusName(i.inqStatusId),
+        i.total
+      ]),
+      startY: 20
+    });
+
+    doc.save('inquiries.pdf');
+  }
+
+  exportExcel() {
+    const data = this.filteredInquiries.map((i, idx) => ({
+      'Sr No': idx + 1,
+      'Date': new Date(i.inqueryDate).toLocaleDateString(),
+      'Lead': this.getLeadName(i.leadAccountId),
+      'Project': this.getProjectName(i.projectCode),
+      'Status': i.isActive ? 'Active' : 'Inactive',
+      'Inquiry Status': this.getInquiryStatusName(i.inqStatusId),
+      'Total': i.total
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Inquiries');
+    XLSX.writeFile(wb, 'inquiries.xlsx');
   }
 
   /* ================= CRUD ================= */
@@ -174,31 +256,7 @@ export class InquiryComponent implements OnInit {
     this.loadInquiries();
   }
 
-  /* ================= FILTER ================= */
-
-  applyFilters() {
-    const from = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
-    const to = this.filterToDate ? new Date(this.filterToDate + 'T23:59:59').getTime() : null;
-
-    this.filteredInquiries = this.inquiries.filter(i => {
-      const d = new Date(i.inqueryDate).getTime();
-      const dateOk = (!from || d >= from) && (!to || d <= to);
-      const activeOk = this.filterStatus !== '' ? String(i.isActive) === this.filterStatus : true;
-      const inquiryOk = this.filterInquiryStatus !== '' ? String(i.inqStatusId) === this.filterInquiryStatus : true;
-      return dateOk && activeOk && inquiryOk;
-    });
-
-    this.setupPagination();
-  }
-
-  clearFilters() {
-    this.filterFromDate = '';
-    this.filterToDate = '';
-    this.filterStatus = '';
-    this.filterInquiryStatus = '';
-    this.filteredInquiries = [...this.inquiries];
-    this.setupPagination();
-  }
+  /* ================= HELPERS ================= */
 
   getLeadName(id: number) {
     return this.leads.find(l => l.leadId === id)?.cname ?? '-';
