@@ -23,7 +23,7 @@
 
 /* ================= CARD ================= */
 .project-card {
-    max-width: 1250px;
+    max-width: 1400px;
     margin: auto;
     background: var(--card-bg);
     border-radius: 14px;

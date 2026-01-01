@@ -19,7 +19,13 @@ export class InquiryComponent implements OnInit {
   inquiries: any[] = [];
   filteredInquiries: any[] = [];
 
-  showInquiries = false;
+  // ✅ PAGINATION
+  currentPage = 1;
+  pageSize = 5;
+  totalPages = 0;
+  paginatedInquiries: any[] = [];
+
+  showInquiries = true;
   isEditMode = false;
   editInquiryId: number | null = null;
 
@@ -60,9 +66,6 @@ export class InquiryComponent implements OnInit {
       isActive: [1]
     });
 
-    this.filterFromDate = today;
-    this.filterToDate = today;
-
     this.loadLeads();
     this.loadProjects();
     this.loadInquiries();
@@ -92,17 +95,43 @@ export class InquiryComponent implements OnInit {
     this.inquiryService.getAll().subscribe(res => {
       this.inquiries = res;
       this.filteredInquiries = [...res];
-      this.applyFilters();
+      this.setupPagination();
     });
   }
 
-  // ✅ FIXED EDIT METHOD (THIS IS THE KEY)
+  /* ================= PAGINATION ================= */
+
+  setupPagination() {
+    this.totalPages = Math.ceil(this.filteredInquiries.length / this.pageSize);
+    this.currentPage = 1;
+    this.updatePaginatedData();
+  }
+
+  updatePaginatedData() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedInquiries = this.filteredInquiries.slice(start, end);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  /* ================= CRUD ================= */
+
   editInquiry(i: any) {
     this.isEditMode = true;
-
-    // ✅ FIXED ID
     this.editInquiryId = i.inqueryId;
-
     this.showInquiries = false;
 
     this.form.patchValue({
@@ -117,10 +146,7 @@ export class InquiryComponent implements OnInit {
       particulars: i.particulars,
       isActive: i.isActive
     });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
 
   submit() {
     if (this.form.invalid) return;
@@ -148,34 +174,21 @@ export class InquiryComponent implements OnInit {
     this.loadInquiries();
   }
 
+  /* ================= FILTER ================= */
+
   applyFilters() {
-
-    if (
-      this.filterFromDate &&
-      this.filterToDate &&
-      new Date(this.filterToDate) < new Date(this.filterFromDate)
-    ) {
-      alert('To Date cannot be earlier than From Date');
-      return;
-    }
-
-    const from = this.filterFromDate
-      ? new Date(this.filterFromDate).setHours(0, 0, 0, 0)
-      : null;
-
-    const to = this.filterToDate
-      ? new Date(this.filterToDate).setHours(23, 59, 59, 999)
-      : null;
+    const from = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
+    const to = this.filterToDate ? new Date(this.filterToDate + 'T23:59:59').getTime() : null;
 
     this.filteredInquiries = this.inquiries.filter(i => {
       const d = new Date(i.inqueryDate).getTime();
-
       const dateOk = (!from || d >= from) && (!to || d <= to);
       const activeOk = this.filterStatus !== '' ? String(i.isActive) === this.filterStatus : true;
       const inquiryOk = this.filterInquiryStatus !== '' ? String(i.inqStatusId) === this.filterInquiryStatus : true;
-
       return dateOk && activeOk && inquiryOk;
     });
+
+    this.setupPagination();
   }
 
   clearFilters() {
@@ -183,7 +196,8 @@ export class InquiryComponent implements OnInit {
     this.filterToDate = '';
     this.filterStatus = '';
     this.filterInquiryStatus = '';
-    this.applyFilters();
+    this.filteredInquiries = [...this.inquiries];
+    this.setupPagination();
   }
 
   getLeadName(id: number) {

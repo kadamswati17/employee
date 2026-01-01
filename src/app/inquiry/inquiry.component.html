@@ -1,54 +1,119 @@
 <div class="inquiry-wrapper">
 
-    <!-- ================= CREATE / EDIT INQUIRY ================= -->
-    <div class="inquiry-card" *ngIf="!showInquiries">
+    <!-- ================= INQUIRY LIST ================= -->
+    <div class="inquiry-card" *ngIf="showInquiries">
 
         <div class="header">
-            <h2>{{ isEditMode ? 'Edit Inquiry' : 'Create Inquiry' }}</h2>
+            <div class="header-top">
+                <h2>Inquiry List</h2>
+                <button class="toggle-btn" (click)="toggleInquiries()">+ Add Inquiry</button>
+            </div>
 
-            <button class="toggle-btn" (click)="toggleInquiries()">
-                Show Inquiry List
-            </button>
+            <div class="filters">
+                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+
+                <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+                    <option value="">Status</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+
+                <select [(ngModel)]="filterInquiryStatus" (change)="applyFilters()">
+                    <option value="">Inquiry Status</option>
+                    <option *ngFor="let s of statusList" [value]="s.id">{{ s.name }}</option>
+                </select>
+
+                <button class="clear-btn" (click)="clearFilters()">Clear</button>
+            </div>
         </div>
 
-        <!-- ⚠️ FORM UI UNCHANGED -->
+        <table class="inquiry-table" *ngIf="paginatedInquiries.length">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Lead</th>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Inquiry Status</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let i of paginatedInquiries; let idx = index">
+                    <td>{{ (currentPage - 1) * pageSize + idx + 1 }}</td>
+                    <td>{{ i.inqueryDate | date }}</td>
+                    <td>{{ getLeadName(i.leadAccountId) }}</td>
+                    <td>{{ getProjectName(i.projectCode) }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="i.isActive ? 'active' : 'inactive'">
+                            {{ i.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                    <td>{{ getInquiryStatusName(i.inqStatusId) }}</td>
+                    <td>₹ {{ i.total | number }}</td>
+                    <td>
+                        <button class="edit-btn" (click)="editInquiry(i)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination" *ngIf="totalPages > 1">
+            <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+        </div>
+    </div>
+
+    <!-- ================= CREATE / EDIT INQUIRY ================= -->
+    <div class="inquiry-card mt" *ngIf="!showInquiries">
+
+        <div class="form-header">
+            <h2>{{ isEditMode ? 'Edit Inquiry' : 'Create Inquiry' }}</h2>
+            <button class="toggle-btn" (click)="toggleInquiries()">Back to List</button>
+        </div>
+
         <form [formGroup]="form" (ngSubmit)="submit()">
-
             <div class="grid">
-
                 <div class="field floating">
                     <input type="date" formControlName="inqueryDate" placeholder=" " />
-                    <label>Inquiry Date</label>
+                    <label>Inquiry Date *</label>
+                </div>
+
+                <div class="field floating">
+                    <select formControlName="isActive">
+                        <option [value]="1">Active</option>
+                        <option [value]="0">Inactive</option>
+                    </select>
+                    <label>Status *</label>
                 </div>
 
                 <div class="field floating">
                     <select formControlName="inqStatusId">
-                        <option value="" disabled selected hidden></option>
-                        <option *ngFor="let s of statusList" [value]="s.id">
-                            {{ s.name }}
-                        </option>
+                        <option value="" disabled></option>
+                        <option *ngFor="let s of statusList" [value]="s.id">{{ s.name }}</option>
                     </select>
-                    <label>Inquiry Status</label>
+                    <label>Inquiry Status *</label>
                 </div>
 
                 <div class="field floating">
                     <select formControlName="leadAccountId">
-                        <option value="" disabled selected hidden></option>
-                        <option *ngFor="let l of leads" [value]="l.leadId">
-                            {{ l.cname }}
-                        </option>
+                        <option value="" disabled></option>
+                        <option *ngFor="let l of leads" [value]="l.leadId">{{ l.cname }}</option>
                     </select>
-                    <label>Lead</label>
+                    <label>Lead *</label>
                 </div>
 
                 <div class="field floating">
                     <select formControlName="projectCode">
-                        <option value="" disabled selected hidden></option>
-                        <option *ngFor="let p of projects" [value]="p.projectId">
-                            {{ p.projectName }}
-                        </option>
+                        <option value="" disabled></option>
+                        <option *ngFor="let p of projects" [value]="p.projectId">{{ p.projectName }}</option>
                     </select>
-                    <label>Project</label>
+                    <label>Project *</label>
                 </div>
 
                 <div class="field floating">
@@ -66,116 +131,26 @@
                     <label>Quantity</label>
                 </div>
 
+                <!-- TOTAL (1 column) -->
                 <div class="field floating">
                     <input type="number" formControlName="total" readonly placeholder=" " />
                     <label>Total</label>
                 </div>
 
+                <!-- PARTICULARS (remaining 3 columns) -->
                 <div class="field floating span-3">
                     <textarea rows="1" formControlName="particulars" placeholder=" "></textarea>
                     <label>Particulars</label>
                 </div>
 
-                <div class="field floating">
-                    <select formControlName="isActive">
-                        <option [value]="1">Active</option>
-                        <option [value]="0">Inactive</option>
-                    </select>
-                    <label>Status</label>
-                </div>
 
             </div>
 
             <div class="actions">
-                <button class="primary-btn" type="submit" [disabled]="loading">
+                <button type="submit" [disabled]="loading">
                     {{ isEditMode ? 'Update Inquiry' : 'Save Inquiry' }}
                 </button>
             </div>
-
         </form>
-    </div>
-
-    <!-- ================= INQUIRY LIST ================= -->
-    <div class="inquiry-card mt" *ngIf="showInquiries">
-
-        <div class="header header-flex">
-            <h3 class="list-title">Inquiry List</h3>
-
-            <!-- ✅ FLOATING FILTER BAR (ONE ROW) -->
-            <div class="filters floating-filters">
-
-                <div class="field floating">
-                    <input type="date" [(ngModel)]="filterFromDate" placeholder=" " (change)="applyFilters()" />
-                    <label>From Date</label>
-                </div>
-
-                <div class="field floating">
-                    <input type="date" [(ngModel)]="filterToDate" placeholder=" " (change)="applyFilters()" />
-                    <label>To Date</label>
-                </div>
-
-                <div class="field floating">
-                    <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-                        <option value="">Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                    </select>
-                    <label>Status</label>
-                </div>
-
-                <div class="field floating">
-                    <select [(ngModel)]="filterInquiryStatus" (change)="applyFilters()">
-                        <option value="" disabled selected hidden></option>
-                        <option *ngFor="let s of statusList" [value]="s.id">
-                            {{ s.name }}
-                        </option>
-                    </select>
-                    <label>Inquiry Status</label>
-                </div>
-
-                <button class="clear-btn" (click)="clearFilters()">Clear</button>
-                <button class="back-btn" (click)="toggleInquiries()">Back</button>
-
-            </div>
-        </div>
-
-        <table class="inquiry-table" *ngIf="filteredInquiries.length">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Lead</th>
-                    <th>Project</th>
-                    <th>Status</th>
-                    <th>Inquiry Status</th>
-                    <th>Total</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr *ngFor="let i of filteredInquiries; let idx = index">
-                    <td>{{ idx + 1 }}</td>
-                    <td>{{ i.inqueryDate | date }}</td>
-                    <td>{{ getLeadName(i.leadAccountId) }}</td>
-                    <td>{{ getProjectName(i.projectCode) }}</td>
-
-                    <td>
-                        <span class="badge" [ngClass]="i.isActive ? 'active' : 'inactive'">
-                            {{ i.isActive ? 'Active' : 'Inactive' }}
-                        </span>
-                    </td>
-
-                    <td>{{ getInquiryStatusName(i.inqStatusId) }}</td>
-
-                    <td>₹ {{ i.total | number }}</td>
-
-                    <td>
-                        <button class="edit-btn" (click)="editInquiry(i)">Edit</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
     </div>
 </div>
