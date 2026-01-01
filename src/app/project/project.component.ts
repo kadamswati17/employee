@@ -13,9 +13,15 @@ export class ProjectComponent implements OnInit {
   form!: FormGroup;
   loading = false;
 
-  showProjects = false;
+  showProjects = true; // ✅ LIST FIRST
   projects: any[] = [];
   filteredProjects: any[] = [];
+
+  // PAGINATION
+  currentPage = 1;
+  pageSize = 5;
+  totalPages = 0;
+  paginatedProjects: any[] = [];
 
   isEditMode = false;
   editProjectId: number | null = null;
@@ -53,11 +59,8 @@ export class ProjectComponent implements OnInit {
       userId: [{ value: userId, disabled: true }],
       isActive: [1]
     });
-  }
 
-  toggleProjects() {
-    this.showProjects = !this.showProjects;
-    if (this.showProjects) this.loadProjects();
+    this.loadProjects();
   }
 
   loadProjects() {
@@ -65,9 +68,50 @@ export class ProjectComponent implements OnInit {
       next: res => {
         this.projects = res;
         this.filteredProjects = [...res];
+        this.setupPagination();
       },
       error: () => alert('Failed to load projects')
     });
+  }
+
+  /* ================= PAGINATION ================= */
+
+  setupPagination() {
+    this.totalPages = Math.ceil(this.filteredProjects.length / this.pageSize);
+    this.currentPage = 1;
+    this.updatePaginatedData();
+  }
+
+  updatePaginatedData() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedProjects = this.filteredProjects.slice(start, end);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  /* ================= FORM NAV ================= */
+
+  openCreateForm() {
+    this.isEditMode = false;
+    this.editProjectId = null;
+    this.showProjects = false;
+  }
+
+  backToList() {
+    this.showProjects = true;
   }
 
   editProject(project: any) {
@@ -95,11 +139,7 @@ export class ProjectComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.loading = true;
-
-    const payload = {
-      ...this.form.getRawValue(),
-      projectId: this.editProjectId
-    };
+    const payload = { ...this.form.getRawValue(), projectId: this.editProjectId };
 
     if (this.isEditMode && this.editProjectId) {
       this.projectService.update(this.editProjectId, payload).subscribe(() => {
@@ -117,16 +157,16 @@ export class ProjectComponent implements OnInit {
   resetForm() {
     const today = new Date().toISOString().split('T')[0];
     this.form.reset({ sanctionDate: today, isActive: 1 });
-    this.isEditMode = false;
-    this.editProjectId = null;
     this.loading = false;
+    this.isEditMode = false;
     this.showProjects = true;
     this.loadProjects();
   }
 
+  /* ================= FILTER ================= */
+
   applyFilters() {
 
-    // ❌ Invalid range guard
     if (
       this.filterFromDate &&
       this.filterToDate &&
@@ -136,40 +176,49 @@ export class ProjectComponent implements OnInit {
       return;
     }
 
-    const fromDate = this.filterFromDate
-      ? new Date(this.filterFromDate).getTime()
-      : null;
-
-    // include full day for To Date
-    const toDate = this.filterToDate
-      ? new Date(this.filterToDate + 'T23:59:59').getTime()
-      : null;
+    const fromDate = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
+    const toDate = this.filterToDate ? new Date(this.filterToDate + 'T23:59:59').getTime() : null;
 
     this.filteredProjects = this.projects.filter(p => {
 
       const projectStart = new Date(p.startDate).getTime();
       const projectEnd = new Date(p.endDate).getTime();
 
-      // ✅ STRICT RANGE CHECK (THIS IS THE FIX)
       const dateOk =
         (!fromDate || projectStart >= fromDate) &&
         (!toDate || projectEnd <= toDate);
 
       const statusOk =
-        this.filterStatus !== ''
-          ? String(p.isActive) === this.filterStatus
-          : true;
+        this.filterStatus !== '' ? String(p.isActive) === this.filterStatus : true;
 
       return dateOk && statusOk;
     });
+
+    this.setupPagination();
   }
-
-
 
   clearFilters() {
     this.filterFromDate = '';
     this.filterToDate = '';
     this.filterStatus = '';
     this.filteredProjects = [...this.projects];
+    this.setupPagination();
   }
+  dateRangeValidator(group: FormGroup) {
+    const start = group.get('startDate')?.value;
+    const end = group.get('endDate')?.value;
+
+    if (start && end && end < start) {
+      group.get('endDate')?.setErrors({ dateInvalid: true });
+    } else {
+      const errors = group.get('endDate')?.errors;
+      if (errors) {
+        delete errors['dateInvalid'];
+        if (!Object.keys(errors).length) {
+          group.get('endDate')?.setErrors(null);
+        }
+      }
+    }
+  }
+
 }

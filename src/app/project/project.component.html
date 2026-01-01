@@ -1,13 +1,88 @@
 <div class="project-wrapper">
 
-    <!-- ================= CREATE / EDIT PROJECT ================= -->
-    <div class="project-card" *ngIf="!showProjects">
+    <!-- ================= PROJECT LIST ================= -->
+    <div class="project-card" *ngIf="showProjects">
 
+        <!-- HEADER -->
         <div class="header">
+            <div class="header-top">
+                <h2>Project List</h2>
+
+                <button type="button" class="toggle-btn" (click)="openCreateForm()">
+                    + Add Project
+                </button>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filters">
+                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+
+                <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+                    <option value="">Status</option>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+
+                <button type="button" class="clear-btn" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <table class="project-table" *ngIf="paginatedProjects.length; else noData">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Project Name</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let p of paginatedProjects; let i = index">
+                    <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                    <td>{{ p.projectName }}</td>
+                    <td>{{ p.startDate | date }}</td>
+                    <td>{{ p.endDate | date }}</td>
+                    <td>₹ {{ p.budgetAmt | number }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="p.isActive ? 'active' : 'inactive'">
+                            {{ p.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                    <td>
+                        <button type="button" class="edit-btn" (click)="editProject(p)">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- PAGINATION -->
+        <div class="pagination" *ngIf="totalPages > 1">
+            <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+        </div>
+
+        <ng-template #noData>
+            <p class="no-data">No projects found</p>
+        </ng-template>
+    </div>
+
+    <!-- ================= CREATE / EDIT PROJECT ================= -->
+    <div class="project-card mt" *ngIf="!showProjects">
+
+        <div class="form-header">
             <h2>{{ isEditMode ? 'Edit Project' : 'Create Project' }}</h2>
 
-            <button class="toggle-btn" (click)="toggleProjects()">
-                Show Project List
+            <button type="button" class="toggle-btn" (click)="backToList()">
+                Back to List
             </button>
         </div>
 
@@ -21,19 +96,21 @@
                 </div>
 
                 <div class="field floating">
-                    <input type="date" formControlName="sanctionDate" />
+                    <input type="date" formControlName="sanctionDate" placeholder=" " />
                     <label>Sanction Date *</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="date" formControlName="startDate" />
+                    <input type="date" formControlName="startDate" placeholder=" " />
                     <label>From Date *</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="date" formControlName="endDate" />
+                    <input type="date" formControlName="endDate" [attr.min]="form.get('startDate')?.value"
+                        placeholder=" " />
                     <label>To Date *</label>
                 </div>
+
 
                 <div class="field floating">
                     <input formControlName="srvGutNo" placeholder=" " />
@@ -56,17 +133,17 @@
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="reraNo" />
+                    <input type="number" formControlName="reraNo" placeholder=" " />
                     <label>RERA No</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="budgetAmt" />
+                    <input type="number" formControlName="budgetAmt" placeholder=" " />
                     <label>Budget Amount *</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="userId" readonly />
+                    <input type="number" formControlName="userId" readonly placeholder=" " />
                     <label>User ID</label>
                 </div>
 
@@ -90,75 +167,7 @@
                     {{ loading ? 'Saving...' : (isEditMode ? 'Update Project' : 'Save Project') }}
                 </button>
             </div>
-
         </form>
-
-    </div>
-
-    <!-- ================= PROJECT LIST ================= -->
-    <div class="project-card mt" *ngIf="showProjects">
-
-        <div class="header header-flex">
-            <h2>Project List</h2>
-
-            <!-- FILTERS -->
-            <div class="filters">
-
-                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
-
-                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
-
-                <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-                    <option value="">Status</option>
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
-                </select>
-
-                <button class="clear-btn" (click)="clearFilters()">Clear</button>
-
-                <button class="toggle-btn" (click)="toggleProjects()">
-                    Back
-                </button>
-
-            </div>
-        </div>
-
-        <table class="project-table" *ngIf="filteredProjects.length; else noData">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Project Name</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Budget</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr *ngFor="let p of filteredProjects; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ p.projectName }}</td>
-                    <td>{{ p.startDate | date }}</td>
-                    <td>{{ p.endDate | date }}</td>
-                    <td>₹ {{ p.budgetAmt | number }}</td>
-                    <td>
-                        <span class="badge" [ngClass]="p.isActive ? 'active' : 'inactive'">
-                            {{ p.isActive ? 'Active' : 'Inactive' }}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="edit-btn" (click)="editProject(p)">Edit</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <ng-template #noData>
-            <p class="no-data">No projects found</p>
-        </ng-template>
-
     </div>
 
 </div>
