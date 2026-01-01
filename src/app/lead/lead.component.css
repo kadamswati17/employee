@@ -1,14 +1,14 @@
 .lead-wrapper {
-    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    background-color: #c6f5d8a0;
     padding: 30px;
     min-height: 100vh;
 }
 
 /* CARD */
 .lead-card {
-    max-width: 1250px;
+    max-width: 1400px;
     margin: auto;
-    background: #ffffff;
+    background-color: #eae1f2;
     border-radius: 18px;
     padding: 18px;
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
@@ -94,9 +94,21 @@ select {
     color: #4f46e5;
 }
 
+/* BUTTON */
+.actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+}
 
-/* MAIN BUTTON */
-
+button {
+    padding: 14px 48px;
+    border-radius: 999px;
+    border: none;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+}
 
 /* TABLE */
 .list-title {
@@ -109,11 +121,20 @@ select {
     border-collapse: collapse;
 }
 
-.lead-table th,
+.lead-table th {
+
+    padding: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    background-color: #2450c7;
+    color: white;
+}
+
 .lead-table td {
     padding: 14px;
     border-bottom: 1px solid #e5e7eb;
     text-align: left;
+    /* background-color: #1e3a8a; */
 }
 
 .badge {
@@ -160,104 +181,111 @@ select {
     }
 }
 
-.header-flex {
+.pagination {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    gap: 14px;
+    margin-top: 24px;
 }
 
-.filters {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.filters input {
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid #cbd5e1;
-}
-
-.clear-btn {
-    padding: 8px 14px;
-    border-radius: 999px;
-    border: none;
-    background: #e5e7eb;
-    cursor: pointer;
-}
-
-.edit-btn {
+.pagination button {
     padding: 8px 20px;
     border-radius: 999px;
     border: none;
     font-weight: 600;
     color: white;
-    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    background-color: #1e40af;
     cursor: pointer;
 }
 
-.actions {
-    margin-top: 28px;
-    display: flex;
-    justify-content: center;
+.pagination button:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
 }
 
-/* MAIN ACTION BUTTON */
-.actions button {
-    min-width: 220px;
-    height: 52px;
-    padding: 0 48px;
+.pagination span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+}
 
-    /* 🔥 IMPORTANT FIX */
+.filters {
     display: flex;
     align-items: center;
-    justify-content: center;
-    line-height: 1;
+    gap: 16px;
+    /* ✅ more breathing space */
+    padding: 12px 18px;
+    /* ✅ comfortable padding */
+    border-radius: 14px;
 
-    border-radius: 999px;
+    background: white;
+    /* ✅ silent light gray */
+    border: 1px solid #e5e7eb;
+    /* subtle outline */
+
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-bottom: 8px;
+}
+
+/* DATE & SELECT INPUTS */
+.filters input,
+.filters select {
+    height: 38px;
+    min-width: 140px;
+
+    padding: 0 12px;
+    font-size: 14px;
+
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    /* soft border */
+    background: #ffffff;
+    color: #374151;
+    /* silent dark gray */
+
+    transition: all 0.2s ease;
+}
+
+/* FOCUS STATE (SOFT, NOT LOUD) */
+.filters input:focus,
+.filters select:focus {
+    outline: none;
+    border-color: #c7d2fe;
+    /* soft indigo */
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+/* CLEAR BUTTON (SUBTLE) */
+.clear-btn {
+    height: 38px;
+    padding: 0 18px;
+
+    border-radius: 800px;
     border: none;
 
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.3px;
-    color: #ffffff;
 
-    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    background: red;
+    /* silent button */
+    color: white;
+    width: 180px;
     cursor: pointer;
-
-    box-shadow:
-        0 10px 25px rgba(79, 70, 229, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
-
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
 }
 
-/* HOVER */
-.actions button:hover {
-    transform: translateY(-2px);
-    box-shadow:
-        0 14px 32px rgba(79, 70, 229, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+.clear-btn:hover {
+    background: #e5e7eb;
 }
 
-/* ACTIVE */
-.actions button:active {
-    transform: translateY(0);
-    box-shadow: 0 8px 18px rgba(79, 70, 229, 0.35);
+/* REMOVE SCROLLBAR VISUALLY (OPTIONAL) */
+.filters::-webkit-scrollbar {
+    height: 4px;
 }
 
-/* DISABLED */
-.actions button:disabled {
-    background: linear-gradient(135deg, #a5b4fc, #818cf8);
-    cursor: not-allowed;
-    box-shadow: none;
-    opacity: 0.75;
-}
-
-/* MOBILE */
-@media (max-width: 600px) {
-    .actions button {
-        width: 100%;
-        min-width: unset;
-    }
+.filters::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 4px;
 }

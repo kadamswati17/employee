@@ -1,49 +1,115 @@
 <div class="lead-wrapper">
 
-    <!-- ================= CREATE / EDIT LEAD ================= -->
-    <div class="lead-card" *ngIf="!showLeads">
+    <!-- ================= LEAD LIST ================= -->
+    <div class="lead-card" *ngIf="showLeads">
 
-        <!-- HEADER -->
         <div class="header">
-            <h2>{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h2>
+            <h2>Lead List</h2>
 
-            <button class="toggle-btn" (click)="toggleLeads()">
-                Show Lead List
+            <button class="toggle-btn" (click)="openCreate()">
+                + Add Lead
             </button>
         </div>
 
-        <!-- FORM -->
+        <!-- FILTERS -->
+        <div class="filters">
+            <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+            <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+
+            <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+                <option value="">Status</option>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+
+            <button type="button" class="clear-btn" (click)="clearFilters()">Clear</button>
+        </div>
+
+        <table class="lead-table" *ngIf="paginatedLeads.length; else noData">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let l of paginatedLeads; let i = index">
+                    <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                    <td>{{ l.cname }}</td>
+                    <td>{{ l.contactNo }}</td>
+                    <td>{{ l.email }}</td>
+                    <td>₹ {{ l.budget | number }}</td>
+                    <td>
+                        <span class="badge" [ngClass]="l.isActive ? 'active' : 'inactive'">
+                            {{ l.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="edit-btn" (click)="editLead(l)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination" *ngIf="totalPages > 1">
+            <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+        </div>
+
+        <ng-template #noData>
+            <p class="no-data">No leads found</p>
+        </ng-template>
+    </div>
+
+    <!-- ================= CREATE / EDIT LEAD ================= -->
+    <div class="lead-card" *ngIf="!showLeads">
+
+        <div class="header">
+            <h2>{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h2>
+
+            <button class="toggle-btn" (click)="backToList()">
+                Back to List
+            </button>
+        </div>
+
         <form [formGroup]="form" (ngSubmit)="submit()">
 
             <div class="grid">
 
                 <div class="field floating">
-                    <input type="date" formControlName="date" />
-                    <label>Date</label>
+                    <input type="date" formControlName="date" placeholder=" " />
+                    <label>Date *</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="cName" />
+                    <input formControlName="cName" placeholder=" " />
                     <label>Customer Name *</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="contactNo" />
+                    <input type="number" formControlName="contactNo" placeholder=" " />
                     <label>Contact No *</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="email" />
+                    <input formControlName="email" placeholder=" " />
                     <label>Email</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="website" />
+                    <input formControlName="website" placeholder=" " />
                     <label>Website</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="panNo" />
+                    <input formControlName="panNo" placeholder=" " />
                     <label>PAN No *</label>
 
                     <small class="error" *ngIf="form.get('panNo')?.hasError('invalidPan')">
@@ -56,53 +122,53 @@
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="gstNo" />
+                    <input formControlName="gstNo" placeholder=" " />
                     <label>GST No</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="phone" />
+                    <input type="number" formControlName="phone" placeholder=" " />
                     <label>Phone</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="fax" />
+                    <input type="number" formControlName="fax" placeholder=" " />
                     <label>Fax</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="income" />
+                    <input type="number" formControlName="income" placeholder=" " />
                     <label>Income</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="incomeSource" />
+                    <input formControlName="incomeSource" placeholder=" " />
                     <label>Income Source</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="otherIncome" />
+                    <input type="number" formControlName="otherIncome" placeholder=" " />
                     <label>Other Income</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="otherIncomeSource" />
+                    <input formControlName="otherIncomeSource" placeholder=" " />
                     <label>Other Income Source</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="budget" />
+                    <input type="number" formControlName="budget" placeholder=" " />
                     <label>Budget *</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="area" />
+                    <input formControlName="area" placeholder=" " />
                     <label>Area</label>
                 </div>
 
                 <div class="field floating">
                     <select formControlName="stateId" (change)="onStateChange()">
-                        <option [ngValue]="null" disabled>Select State</option>
+                        <option [ngValue]="null" disabled></option>
                         <option *ngFor="let s of states" [ngValue]="s.id">{{ s.name }}</option>
                     </select>
                     <label>State *</label>
@@ -110,7 +176,7 @@
 
                 <div class="field floating">
                     <select formControlName="distId" (change)="onDistrictChange()">
-                        <option [ngValue]="null" disabled>Select District</option>
+                        <option [ngValue]="null" disabled></option>
                         <option *ngFor="let d of districts" [ngValue]="d.id">{{ d.name }}</option>
                     </select>
                     <label>District *</label>
@@ -118,7 +184,7 @@
 
                 <div class="field floating">
                     <select formControlName="cityId">
-                        <option [ngValue]="null" disabled>Select City</option>
+                        <option [ngValue]="null" disabled></option>
                         <option *ngFor="let c of cities" [ngValue]="c.id">{{ c.name }}</option>
                     </select>
                     <label>City *</label>
@@ -132,13 +198,13 @@
                     <label>Status</label>
                 </div>
 
-                <div class="field floating ">
-                    <textarea rows="1" formControlName="invoiceAddress"></textarea>
+                <div class="field floating">
+                    <textarea rows="1" formControlName="invoiceAddress" placeholder=" "></textarea>
                     <label>Invoice Address</label>
                 </div>
 
                 <div class="field floating full">
-                    <textarea rows="2" formControlName="notes"></textarea>
+                    <textarea rows="2" formControlName="notes" placeholder=" "></textarea>
                     <label>Notes</label>
                 </div>
 
@@ -146,80 +212,11 @@
 
             <div class="actions">
                 <button type="submit" [disabled]="loading">
-                    {{ isEditMode ? 'Update Lead' : 'Save Lead' }}
+                    {{ loading ? 'Saving...' : (isEditMode ? 'Update Lead' : 'Save Lead') }}
                 </button>
             </div>
 
         </form>
-    </div>
-
-    <!-- ================= LEAD LIST ================= -->
-    <div class="lead-card mt" *ngIf="showLeads">
-
-        <div class="header header-flex">
-            <h3 class="list-title">Lead List</h3>
-
-            <div class="filters">
-                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
-                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
-
-                <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-                    <option value="">Status</option>
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
-                </select>
-
-                <button class="clear-btn" (click)="clearFilters()">Clear</button>
-                <button class="toggle-btn" (click)="toggleLeads()">Back</button>
-            </div>
-        </div>
-
-        <table class="lead-table" *ngIf="filteredLeads.length; else noData">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Customer</th>
-                    <th>Contact</th>
-                    <!-- <th>Email</th> -->
-                    <th>PAN</th>
-                    <th>Budget</th>
-                    <!-- <th>State</th> -->
-                    <!-- <th>District</th> -->
-                    <!-- <th>City</th> -->
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr *ngFor="let l of filteredLeads; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ l.date | date }}</td>
-                    <td>{{ l.cname }}</td>
-                    <td>{{ l.contactNo }}</td>
-                    <!-- <td>{{ l.email }}</td> -->
-                    <td>{{ l.panNo }}</td>
-                    <td>₹ {{ l.budget | number }}</td>
-                    <!-- <td>{{ l.stateName }}</td> -->
-                    <!-- <td>{{ l.districtName }}</td> -->
-                    <!-- <td>{{ l.cityName }}</td> -->
-                    <td>
-                        <span class="badge" [ngClass]="l.isActive ? 'active' : 'inactive'">
-                            {{ l.isActive ? 'Active' : 'Inactive' }}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="edit-btn" (click)="editLead(l)">Edit</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <ng-template #noData>
-            <p class="no-data">No leads found</p>
-        </ng-template>
-
     </div>
 
 </div>

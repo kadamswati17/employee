@@ -15,7 +15,7 @@
 
 /* ================= WRAPPER ================= */
 .project-wrapper {
-    background-color: #a9f3c5a0;
+    background-color: #c6f5d8a0;
     padding: 12px;
     min-height: 100vh;
     font-family: "Inter", "Segoe UI", sans-serif;
@@ -107,7 +107,7 @@
     /* ✅ comfortable padding */
     border-radius: 14px;
 
-    background: #c7dff7;
+    background: white;
     /* ✅ silent light gray */
     border: 1px solid #e5e7eb;
     /* subtle outline */
@@ -155,9 +155,9 @@
     font-size: 13px;
     font-weight: 600;
 
-    background: #f1f5f9;
+    background: red;
     /* silent button */
-    color: #475569;
+    color: white;
 
     cursor: pointer;
     transition: all 0.2s ease;

@@ -17,19 +17,23 @@ export class LeadComponent implements OnInit {
   districts: any[] = [];
   cities: any[] = [];
 
-  showLeads = false;
-
   leads: any[] = [];
   filteredLeads: any[] = [];
 
+  showLeads = true;
   isEditMode = false;
   editLeadId: number | null = null;
 
-  // ✅ FIX: MISSING VARIABLE
-  filterStatus: string = '';
-
+  /* ================= FILTERS ================= */
   filterFromDate = '';
   filterToDate = '';
+  filterStatus = '';
+
+  /* ================= PAGINATION ================= */
+  currentPage = 1;
+  pageSize = 5;
+  totalPages = 0;
+  paginatedLeads: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -44,20 +48,33 @@ export class LeadComponent implements OnInit {
     this.form = this.fb.group({
       date: [today],
       cName: ['', Validators.required],
-      contactNo: ['', Validators.required],
+      contactNo: [null, Validators.required],
       panNo: ['', [Validators.required, this.panValidator]],
-      budget: ['', Validators.required],
+      gstNo: [''],
+      email: ['', Validators.email],
+      website: [''],
+      phone: [null],
+      fax: [null],
+      invoiceAddress: [''],
+      income: [null],
+      incomeSource: [''],
+      otherIncome: [null],
+      otherIncomeSource: [''],
+      budget: [null, Validators.required],
+      notes: [''],
+      area: [''],
       stateId: [null, Validators.required],
       distId: [null, Validators.required],
       cityId: [null, Validators.required],
+
+      userId: [1],
+      branchId: [1],
+      orgId: [1],
       isActive: [1]
     });
 
-    // default filter dates = today
-    this.filterFromDate = today;
-    this.filterToDate = today;
-
     this.loadStates();
+    this.loadLeads();
   }
 
   panValidator(control: any) {
@@ -73,106 +90,34 @@ export class LeadComponent implements OnInit {
 
   onStateChange() {
     const stateId = this.form.value.stateId;
-    if (!stateId) return;
-
     this.districts = [];
     this.cities = [];
     this.form.patchValue({ distId: null, cityId: null });
 
-    this.locationService.getDistricts(stateId)
-      .subscribe(res => this.districts = res);
+    this.locationService.getDistricts(stateId).subscribe(res => this.districts = res);
   }
 
   onDistrictChange() {
-    const distId = this.form.value.distId;
-    if (!distId) return;
-
+    const districtId = this.form.value.distId;
     this.cities = [];
     this.form.patchValue({ cityId: null });
 
-    this.locationService.getCities(distId)
-      .subscribe(res => this.cities = res);
-  }
-
-  toggleLeads() {
-    this.showLeads = !this.showLeads;
-    if (this.showLeads) this.loadLeads();
+    this.locationService.getCities(districtId).subscribe(res => this.cities = res);
   }
 
   loadLeads() {
     this.leadService.getAll().subscribe(res => {
       this.leads = res;
       this.filteredLeads = [...res];
-      this.applyFilters(); // apply default today filter
+      this.setupPagination();
     });
   }
 
-  editLead(lead: any) {
-
-    this.isEditMode = true;
-    this.editLeadId = lead.leadId;
-    this.showLeads = false;
-
-    this.form.patchValue({
-      date: lead.date?.split('T')[0],
-      cName: lead.cname,
-      contactNo: lead.contactNo,
-      panNo: lead.panNo,
-      budget: lead.budget,
-      stateId: lead.stateId,
-      distId: lead.distId,
-      cityId: lead.cityId,
-      isActive: lead.isActive
-    });
-
-    this.locationService.getDistricts(lead.stateId).subscribe(d => {
-      this.districts = d;
-      this.locationService.getCities(lead.distId).subscribe(c => {
-        this.cities = c;
-      });
-    });
-  }
-
-  submit() {
-
-    if (this.form.invalid) return;
-    this.loading = true;
-
-    const payload = {
-      ...this.form.value,
-      leadId: this.editLeadId
-    };
-
-    if (this.isEditMode && this.editLeadId) {
-      this.leadService.update(this.editLeadId, payload).subscribe(() => {
-        alert('Lead Updated');
-        this.resetForm();
-      });
-    } else {
-      this.leadService.create(payload).subscribe(() => {
-        alert('Lead Created');
-        this.resetForm();
-      });
-    }
-  }
-
-  resetForm() {
-    this.form.reset({
-      date: new Date().toISOString().split('T')[0],
-      isActive: 1
-    });
-
-    this.isEditMode = false;
-    this.editLeadId = null;
-    this.loading = false;
-    this.showLeads = true;
-
-    this.loadLeads();
-  }
+  /* ================= FILTER LOGIC ================= */
 
   applyFilters() {
 
-    // ❌ Invalid range guard
+    // ❌ To Date cannot be less than From Date
     if (
       this.filterFromDate &&
       this.filterToDate &&
@@ -182,12 +127,11 @@ export class LeadComponent implements OnInit {
       return;
     }
 
-    const fromDate = this.filterFromDate
+    const from = this.filterFromDate
       ? new Date(this.filterFromDate).setHours(0, 0, 0, 0)
       : null;
 
-    // ✅ include full day for To Date
-    const toDate = this.filterToDate
+    const to = this.filterToDate
       ? new Date(this.filterToDate).setHours(23, 59, 59, 999)
       : null;
 
@@ -195,10 +139,9 @@ export class LeadComponent implements OnInit {
 
       const leadDate = new Date(l.date).getTime();
 
-      // ✅ STRICT RANGE CHECK (NO OVERLAP)
       const dateOk =
-        (!fromDate || leadDate >= fromDate) &&
-        (!toDate || leadDate <= toDate);
+        (!from || leadDate >= from) &&
+        (!to || leadDate <= to); // ✅ equal & greater allowed
 
       const statusOk =
         this.filterStatus !== ''
@@ -207,6 +150,8 @@ export class LeadComponent implements OnInit {
 
       return dateOk && statusOk;
     });
+
+    this.setupPagination();
   }
 
   clearFilters() {
@@ -214,7 +159,118 @@ export class LeadComponent implements OnInit {
     this.filterToDate = '';
     this.filterStatus = '';
     this.filteredLeads = [...this.leads];
+    this.setupPagination();
   }
 
+  /* ================= PAGINATION ================= */
 
+  setupPagination() {
+    this.totalPages = Math.ceil(this.filteredLeads.length / this.pageSize);
+    this.currentPage = 1;
+    this.updatePaginatedData();
+  }
+
+  updatePaginatedData() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedLeads = this.filteredLeads.slice(start, end);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedData();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedData();
+    }
+  }
+
+  /* ================= UI ACTIONS ================= */
+
+  openCreate() {
+    this.isEditMode = false;
+    this.editLeadId = null;
+    this.form.reset({
+      date: new Date().toISOString().split('T')[0],
+      isActive: 1,
+      userId: 1,
+      branchId: 1,
+      orgId: 1
+    });
+    this.showLeads = false;
+  }
+
+  backToList() {
+    this.showLeads = true;
+  }
+
+  editLead(lead: any) {
+    this.isEditMode = true;
+    this.editLeadId = lead.leadId;
+    this.showLeads = false;
+
+    this.form.patchValue({
+      date: lead.date?.split('T')[0],
+      cName: lead.cname,
+      contactNo: lead.contactNo,
+      panNo: lead.panNo,
+      gstNo: lead.gstNo,
+      email: lead.email,
+      website: lead.website,
+      phone: lead.phone,
+      fax: lead.fax,
+      invoiceAddress: lead.invoiceAddress,
+      income: lead.income,
+      incomeSource: lead.incomeSource,
+      otherIncome: lead.otherIncome,
+      otherIncomeSource: lead.otherIncomeSource,
+      budget: lead.budget,
+      notes: lead.notes,
+      area: lead.area,
+      stateId: lead.stateId,
+      distId: lead.distId,
+      cityId: lead.cityId,
+      isActive: lead.isActive,
+      userId: lead.userId ?? 1,
+      branchId: lead.branchId ?? 1,
+      orgId: lead.orgId ?? 1
+    });
+
+    this.onStateChange();
+    this.onDistrictChange();
+  }
+
+  submit() {
+    if (this.form.invalid) return;
+
+    this.loading = true;
+
+    const payload = {
+      ...this.form.value,
+      cname: this.form.value.cName,
+      leadId: this.editLeadId
+    };
+
+    const req = this.isEditMode && this.editLeadId
+      ? this.leadService.update(this.editLeadId, payload)
+      : this.leadService.create(payload);
+
+    req.subscribe({
+      next: () => {
+        alert(this.isEditMode ? 'Lead Updated' : 'Lead Created');
+        this.loading = false;
+        this.showLeads = true;
+        this.loadLeads();
+      },
+      error: (err) => {
+        this.loading = false;
+        alert(err.error || 'Failed to save lead');
+      }
+    });
+  }
 }
