@@ -425,6 +425,8 @@
     .category-product-row {
         grid-template-columns: repeat(2, 1fr);
         margin-bottom: 15px;
+        overflow: auto;
+        padding-bottom: 50px;
     }
 
     .product-card {

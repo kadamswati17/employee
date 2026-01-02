@@ -15,15 +15,16 @@
 
             <!-- FILTERS -->
             <div class="filters">
-                <div class="date-field">
-                    <!-- <label>From Date</label> -->
+                <div class="date-field top-label">
+                    <label>From Date *</label>
                     <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
                 </div>
 
-                <div class="date-field">
-                    <!-- <label>To Date</label> -->
+                <div class="date-field top-label">
+                    <label>To Date *</label>
                     <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
                 </div>
+
 
 
                 <select [(ngModel)]="filterStatus" (change)="applyFilters()">
@@ -45,39 +46,43 @@
         </div>
 
         <!-- TABLE -->
-        <table class="project-table" *ngIf="paginatedProjects.length; else noData">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Project Name</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Budget</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+        <!-- TABLE WRAPPER -->
+        <div class="table-scroll">
+            <table class="project-table" *ngIf="paginatedProjects.length; else noData">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Project Name</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Budget</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr *ngFor="let p of paginatedProjects; let i = index">
-                    <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-                    <td>{{ p.projectName }}</td>
-                    <td>{{ p.startDate | date }}</td>
-                    <td>{{ p.endDate | date }}</td>
-                    <td>₹ {{ p.budgetAmt | number }}</td>
-                    <td>
-                        <span class="badge" [ngClass]="p.isActive ? 'active' : 'inactive'">
-                            {{ p.isActive ? 'Active' : 'Inactive' }}
-                        </span>
-                    </td>
-                    <td>
-                        <button type="button" class="edit-btn" (click)="editProject(p)">
-                            Edit
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                <tbody>
+                    <tr *ngFor="let p of paginatedProjects; let i = index">
+                        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                        <td>{{ p.projectName }}</td>
+                        <td>{{ p.startDate | date }}</td>
+                        <td>{{ p.endDate | date }}</td>
+                        <td>₹ {{ p.budgetAmt | number }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="p.isActive ? 'active' : 'inactive'">
+                                {{ p.isActive ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button" class="edit-btn" (click)="editProject(p)">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
 
         <!-- PAGINATION -->
         <div class="pagination" *ngIf="totalPages > 1">

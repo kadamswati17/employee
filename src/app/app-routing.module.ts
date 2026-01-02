@@ -33,6 +33,7 @@ import { TalukaMasterComponent } from './components/taluka-master/taluka-master.
 import { ProjectComponent } from './project/project.component';
 import { LeadComponent } from './lead/lead.component';
 import { InquiryComponent } from './inquiry/inquiry.component';
+import { InquiryScheduleComponent } from './inquiry-schedule/inquiry-schedule.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -84,6 +85,7 @@ const routes: Routes = [
   { path: 'taluka-master', component: TalukaMasterComponent },
   { path: 'city-master', component: CityMasterComponent },
 
+  { path: 'inquiry-schedule', component: InquiryScheduleComponent },
 
 
   { path: '**', redirectTo: '/login' }

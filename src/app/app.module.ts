@@ -80,6 +80,7 @@ import { CityMasterComponent } from './components/city-master/city-master.compon
 import { ProjectComponent } from './project/project.component';
 import { LeadComponent } from './lead/lead.component';
 import { InquiryComponent } from './inquiry/inquiry.component';
+import { InquiryScheduleComponent } from './inquiry-schedule/inquiry-schedule.component';
 
 @NgModule({
   declarations: [
@@ -138,7 +139,8 @@ import { InquiryComponent } from './inquiry/inquiry.component';
     CityMasterComponent,
     ProjectComponent,
     LeadComponent,
-    InquiryComponent
+    InquiryComponent,
+    InquiryScheduleComponent
   ],
   imports: [
     BrowserModule,

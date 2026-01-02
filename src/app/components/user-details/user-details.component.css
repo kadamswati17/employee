@@ -164,6 +164,7 @@ td {
     /* TABLE SCROLL */
     .table-wrapper {
         overflow-x: auto;
+        margin-bottom: 50px;
     }
 
     table {

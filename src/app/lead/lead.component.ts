@@ -139,9 +139,18 @@ export class LeadComponent implements OnInit {
     this.setupPagination();
   }
 
+
+  getToday(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // yyyy-MM-dd
+  }
+
+
+
   clearFilters() {
-    this.filterFromDate = '';
-    this.filterToDate = '';
+    const today = this.getToday();
+    this.filterFromDate = today;   // ✅ today
+    this.filterToDate = today;
     this.filterStatus = '';
     this.filteredLeads = [...this.leads];
     this.setupPagination();

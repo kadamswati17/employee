@@ -161,7 +161,7 @@ td {
 
     .form-row {
         flex-direction: column;
-        gap: 18px;
+        gap: 30px;
     }
 
     .btn-submit {

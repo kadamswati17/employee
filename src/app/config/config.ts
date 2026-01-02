@@ -20,6 +20,7 @@ export const APP_CONFIG = {
         FILE_UPLOAD: '/api/files/upload',
         PROJECTS: '/api/projects',
         LEADS: '/api/leads',
-        INQUIRIES: '/api/inquiries'
+        INQUIRIES: '/api/inquiries',
+        INQUIRY_SCHEDULE: '/api/inquiry-schedule'
     }
 };

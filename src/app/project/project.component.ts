@@ -48,8 +48,8 @@ export class ProjectComponent implements OnInit {
     this.form = this.fb.group({
       projectName: ['', Validators.required],
       sanctionDate: [today, Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
+      startDate: [today, Validators.required],
+      endDate: [today, Validators.required],
       srvGutNo: [''],
       previousLandOwner: [''],
       landOwner: [''],
@@ -198,9 +198,17 @@ export class ProjectComponent implements OnInit {
     this.setupPagination();
   }
 
+
+  getToday(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // yyyy-MM-dd
+  }
+
+
   clearFilters() {
-    this.filterFromDate = '';
-    this.filterToDate = '';
+    const today = this.getToday();
+    this.filterFromDate = today;   // ✅ today
+    this.filterToDate = today;
     this.filterStatus = '';
     this.filteredProjects = [...this.projects];
     this.setupPagination();
