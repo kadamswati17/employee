@@ -39,10 +39,16 @@ export class InquiryScheduleComponent implements OnInit {
     private scheduleService: InquiryScheduleService,
     private http: HttpClient
   ) { }
-
   ngOnInit(): void {
+
+    const today = this.getToday();   // ✅ today
+
+    // ✅ SHOW TODAY IN FILTER INPUTS
+    this.filterFromDate = today;
+    this.filterToDate = today;
+
     this.form = this.fb.group({
-      inquiryId: [''],   // CORRECT
+      inquiryId: [''],
       scheduleDate: [''],
       scheduleTime: [''],
       remark: [''],
@@ -50,9 +56,10 @@ export class InquiryScheduleComponent implements OnInit {
       assignTo: ['']
     });
 
-    this.loadSchedules();
+    this.loadSchedules();        // ✅ REQUIRED (same as Project)
     this.loadInquiryDropdown();
   }
+
 
   // ================= LOAD SCHEDULES =================
   loadSchedules(): void {
@@ -144,15 +151,37 @@ export class InquiryScheduleComponent implements OnInit {
   applyFilters(): void {
     this.filteredSchedules = this.schedules.filter(s => {
       let ok = true;
-      if (this.filterFromDate) ok = ok && new Date(s.scheduleDate) >= new Date(this.filterFromDate);
-      if (this.filterToDate) ok = ok && new Date(s.scheduleDate) <= new Date(this.filterToDate);
-      if (this.filterStatus) ok = ok && s.inqStatus === this.filterStatus;
+
+      if (
+        this.filterFromDate &&
+        this.filterToDate &&
+        new Date(this.filterToDate) < new Date(this.filterFromDate)
+      ) {
+        alert('To Date cannot be earlier than From Date');
+        return;
+      }
+
+      if (this.filterFromDate) {
+        ok = ok && new Date(s.scheduleDate).getTime() >=
+          new Date(this.filterFromDate).setHours(0, 0, 0, 0);
+      }
+
+      if (this.filterToDate) {
+        ok = ok && new Date(s.scheduleDate).getTime() <=
+          new Date(this.filterToDate).setHours(23, 59, 59, 999);
+      }
+
+      if (this.filterStatus) {
+        ok = ok && s.inqStatus === this.filterStatus;
+      }
+
       return ok;
     });
 
     this.currentPage = 1;
     this.updatePagination();
   }
+
   getToday(): string {
     const today = new Date();
     return today.toISOString().split('T')[0]; // yyyy-MM-dd

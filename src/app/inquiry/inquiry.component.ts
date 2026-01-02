@@ -55,7 +55,8 @@ export class InquiryComponent implements OnInit {
   ngOnInit(): void {
 
     const today = new Date().toISOString().split('T')[0];
-
+    this.filterFromDate = today;
+    this.filterToDate = today;
     this.form = this.fb.group({
       inqueryDate: [today, Validators.required],
       inqStatusId: ['', Validators.required],
@@ -143,6 +144,15 @@ export class InquiryComponent implements OnInit {
   applyFilters() {
     const from = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
     const to = this.filterToDate ? new Date(this.filterToDate + 'T23:59:59').getTime() : null;
+
+    if (
+      this.filterFromDate &&
+      this.filterToDate &&
+      new Date(this.filterToDate) < new Date(this.filterFromDate)
+    ) {
+      alert('To Date cannot be earlier than From Date');
+      return;
+    }
 
     this.filteredInquiries = this.inquiries.filter(i => {
       const d = new Date(i.inqueryDate).getTime();

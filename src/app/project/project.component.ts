@@ -45,6 +45,9 @@ export class ProjectComponent implements OnInit {
     const userId = currentUser?.id || 0;
     const today = new Date().toISOString().split('T')[0];
 
+    this.filterFromDate = today;
+    this.filterToDate = today;
+
     this.form = this.fb.group({
       projectName: ['', Validators.required],
       sanctionDate: [today, Validators.required],
@@ -66,26 +69,36 @@ export class ProjectComponent implements OnInit {
     this.loadProjects();
   }
 
+
   loadProjects() {
     this.projectService.getAll().subscribe({
       next: res => {
         this.projects = res;
 
-        // ✅ DEFAULT CURRENT MONTH
+        // ✅ DEFAULT CURRENT MONTH (KEEP AS IS)
         const now = new Date();
         const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-        const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).getTime();
+        const end = new Date(
+          now.getFullYear(),
+          now.getMonth() + 1,
+          0,
+          23,
+          59,
+          59
+        ).getTime();
 
         this.filteredProjects = this.projects.filter(p => {
           const d = new Date(p.startDate).getTime();
           return d >= start && d <= end;
         });
 
+        // ✅ pagination only
         this.setupPagination();
       },
       error: () => alert('Failed to load projects')
     });
   }
+
 
   setupPagination() {
     this.totalPages = Math.ceil(this.filteredProjects.length / this.pageSize);

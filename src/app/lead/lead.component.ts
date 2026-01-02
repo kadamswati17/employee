@@ -46,6 +46,8 @@ export class LeadComponent implements OnInit {
   ngOnInit(): void {
 
     const today = new Date().toISOString().split('T')[0];
+    this.filterFromDate = today;
+    this.filterToDate = today;
 
     this.form = this.fb.group({
       date: [today],
@@ -96,7 +98,6 @@ export class LeadComponent implements OnInit {
     this.form.patchValue({ cityId: null });
     this.locationService.getCities(distId).subscribe(res => this.cities = res);
   }
-
   loadLeads() {
     this.leadService.getAll().subscribe(res => {
       this.leads = res;
@@ -104,7 +105,14 @@ export class LeadComponent implements OnInit {
       // ✅ DEFAULT CURRENT MONTH
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).getTime();
+      const end = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+        23,
+        59,
+        59
+      ).getTime();
 
       this.filteredLeads = this.leads.filter(l => {
         const d = new Date(l.date).getTime();
@@ -114,6 +122,7 @@ export class LeadComponent implements OnInit {
       this.setupPagination();
     });
   }
+
 
   applyFilters() {
 
@@ -126,18 +135,27 @@ export class LeadComponent implements OnInit {
       return;
     }
 
-    const from = this.filterFromDate ? new Date(this.filterFromDate).setHours(0, 0, 0, 0) : null;
-    const to = this.filterToDate ? new Date(this.filterToDate).setHours(23, 59, 59, 999) : null;
+    const from = this.filterFromDate
+      ? new Date(this.filterFromDate).getTime()
+      : null;
+
+    const to = this.filterToDate
+      ? new Date(this.filterToDate + 'T23:59:59').getTime()
+      : null;
 
     this.filteredLeads = this.leads.filter(l => {
       const d = new Date(l.date).getTime();
+
       const dateOk = (!from || d >= from) && (!to || d <= to);
-      const statusOk = this.filterStatus !== '' ? String(l.isActive) === this.filterStatus : true;
+      const statusOk =
+        this.filterStatus !== '' ? String(l.isActive) === this.filterStatus : true;
+
       return dateOk && statusOk;
     });
 
     this.setupPagination();
   }
+
 
 
   getToday(): string {
