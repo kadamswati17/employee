@@ -91,6 +91,21 @@
                     </tr>
                 </tbody>
             </table>
+            <!-- ================= PAGINATION ================= -->
+            <div class="pagination" *ngIf="totalPages > 1">
+                <button (click)="prevPage()" [disabled]="currentPage === 1">
+                    Prev
+                </button>
+
+                <span>
+                    Page {{ currentPage }} of {{ totalPages }}
+                </span>
+
+                <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+                    Next
+                </button>
+            </div>
+
         </div>
 
         <ng-template #noData>
