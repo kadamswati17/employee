@@ -5,16 +5,20 @@
 
         <div class="header">
             <div class="header-top">
-                <h2>Schedule List</h2>
+                <h2>{{ isHistoryView ? 'Schedule History' : 'Schedule List' }}</h2>
 
-                <button type="button" class="toggle-btn" (click)="openForm()">
+                <button type="button" class="toggle-btn" *ngIf="!isHistoryView" (click)="openForm()">
                     + Add Schedule
+                </button>
+
+                <button type="button" class="toggle-btn" *ngIf="isHistoryView" (click)="backFromHistory()">
+                    Back to List
                 </button>
             </div>
         </div>
 
         <!-- ================= FILTERS ================= -->
-        <div class="filters">
+        <div class="filters" *ngIf="!isHistoryView">
 
             <div class="date-field top-label">
                 <label>From Date *</label>
@@ -41,7 +45,9 @@
                 <option value="excel">Export Excel</option>
             </select>
 
-            <button class="clear-btn" (click)="clearFilters()">Clear</button>
+            <button class="clear-btn" (click)="clearFilters()">
+                Clear
+            </button>
         </div>
 
         <!-- ================= TABLE ================= -->
@@ -72,18 +78,17 @@
                         </td>
                         <td>{{ s.assignTo }}</td>
                         <td>
-                            <button class="edit-btn" (click)="editSchedule(s)">Edit</button>
+                            <button class="edit-btn" (click)="editSchedule(s)">
+                                Edit
+                            </button>
+
+                            <button class="edit-btn history-btn" (click)="viewHistory(s.inquiryId)">
+                                History
+                            </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-
-        <!-- ================= PAGINATION ================= -->
-        <div class="pagination" *ngIf="totalPages > 1">
-            <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
-            <span>Page {{ currentPage }} of {{ totalPages }}</span>
-            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
         </div>
 
         <ng-template #noData>
@@ -106,10 +111,8 @@
 
             <div class="grid">
 
-                <!-- Inquiry dropdown -->
                 <div class="field floating">
                     <select formControlName="inquiryId">
-
                         <option value="" disabled>Select Inquiry</option>
                         <option *ngFor="let l of inquiries" [value]="l.inqId">
                             {{ l.inqId }} - {{ l.cname }}
@@ -117,7 +120,6 @@
                     </select>
                     <label>Inquiry Id</label>
                 </div>
-
 
                 <div class="field floating">
                     <input type="date" formControlName="scheduleDate" />

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { InquiryScheduleService } from '../services/InquiryScheduleService';
+import { ActivatedRoute } from '@angular/router';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-inquiry-schedule',
@@ -17,6 +17,7 @@ export class InquiryScheduleComponent implements OnInit {
 
   showList = true;
   isEdit = false;
+  isHistoryView = false;
 
   form!: FormGroup;
   selectedId: number | null = null;
@@ -28,7 +29,6 @@ export class InquiryScheduleComponent implements OnInit {
   filteredSchedules: any[] = [];
   paginatedData: any[] = [];
 
-  // 👇 THIS WILL POWER THE DROPDOWN
   inquiries: any[] = [];
 
   filterFromDate = '';
@@ -41,18 +41,16 @@ export class InquiryScheduleComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute
   ) { }
+
   ngOnInit(): void {
 
     this.route.queryParams.subscribe(params => {
       if (params['openForm']) {
-        this.showList = false;   // 🔥 OPEN FORM DIRECTLY
-        this.isEdit = false;
+        this.showList = false;
       }
     });
 
-    const today = this.getToday();   // ✅ today
-
-    // ✅ SHOW TODAY IN FILTER INPUTS
+    const today = this.getToday();
     this.filterFromDate = today;
     this.filterToDate = today;
 
@@ -65,42 +63,77 @@ export class InquiryScheduleComponent implements OnInit {
       assignTo: ['']
     });
 
-    this.loadSchedules();        // ✅ REQUIRED (same as Project)
+    this.loadSchedules();
     this.loadInquiryDropdown();
   }
-
 
   // ================= LOAD SCHEDULES =================
   loadSchedules(): void {
     this.scheduleService.getAllSchedules().subscribe(res => {
       this.schedules = res || [];
-      this.filteredSchedules = [...this.schedules];
+
+      // 🔥 ONLY LATEST PER inquiryId
+      this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
+
       this.currentPage = 1;
       this.updatePagination();
     });
   }
 
-  // ================= 🔥 LOAD INQUIRY + LEAD NAME =================
-  loadInquiryDropdown(): void {
+  // ================= GET LATEST RECORD PER inquiryId =================
+  getLatestPerInquiry(data: any[]): any[] {
+    const map = new Map<number, any>();
 
-    // 1️⃣ Get inquiries
+    data.forEach(item => {
+      const key = item.inquiryId;
+      const currentTime = new Date(
+        item.scheduleDate + ' ' + item.scheTime
+      ).getTime();
+
+      if (
+        !map.has(key) ||
+        currentTime >
+        new Date(
+          map.get(key).scheduleDate + ' ' + map.get(key).scheTime
+        ).getTime()
+      ) {
+        map.set(key, item);
+      }
+    });
+
+    return Array.from(map.values());
+  }
+
+  // ================= HISTORY VIEW =================
+  viewHistory(inquiryId: number): void {
+    this.isHistoryView = true;
+    this.filteredSchedules =
+      this.schedules.filter(s => s.inquiryId === inquiryId);
+
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  backFromHistory(): void {
+    this.isHistoryView = false;
+    this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  // ================= DROPDOWN =================
+  loadInquiryDropdown(): void {
     this.http.get<any[]>('http://localhost:8080/api/inquiries')
       .subscribe(inquiries => {
-
-        // 2️⃣ Get leads
         this.http.get<any[]>('http://localhost:8080/api/leads')
           .subscribe(leads => {
-
-            // 3️⃣ Map inquiryId + lead name
             this.inquiries = inquiries.map(inq => {
               const lead = leads.find(l => l.leadId === inq.leadAccountId);
-
               return {
-                inqId: inq.inqueryId,                // ✅ REAL inquiry id
-                cname: lead ? lead.cname : '-'       // ✅ lead name
+                inqId: inq.inqueryId,
+                cname: lead ? lead.cname : '-'
               };
             });
-
           });
       });
   }
@@ -114,7 +147,10 @@ export class InquiryScheduleComponent implements OnInit {
 
   backToList(): void {
     this.showList = true;
+    this.isHistoryView = false;
     this.form.reset();
+    this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
+    this.updatePagination();
   }
 
   editSchedule(data: any): void {
@@ -130,7 +166,6 @@ export class InquiryScheduleComponent implements OnInit {
       status: data.inqStatus,
       assignTo: data.assignTo
     });
-
   }
 
   submit(): void {
@@ -144,65 +179,63 @@ export class InquiryScheduleComponent implements OnInit {
     };
 
     if (this.isEdit && this.selectedId) {
-      this.scheduleService.updateSchedule(this.selectedId, payload).subscribe(() => {
-        this.loadSchedules();
-        this.backToList();
-      });
+      this.scheduleService.updateSchedule(this.selectedId, payload)
+        .subscribe(() => {
+          this.loadSchedules();
+          this.backToList();
+        });
     } else {
-      this.scheduleService.createSchedule(payload).subscribe(() => {
-        this.loadSchedules();
-        this.backToList();
-      });
+      this.scheduleService.createSchedule(payload)
+        .subscribe(() => {
+          this.loadSchedules();
+          this.backToList();
+        });
     }
   }
 
   // ================= FILTER =================
   applyFilters(): void {
-    this.filteredSchedules = this.schedules.filter(s => {
-      let ok = true;
+    this.filteredSchedules = this.getLatestPerInquiry(
+      this.schedules.filter(s => {
+        let ok = true;
 
-      if (
-        this.filterFromDate &&
-        this.filterToDate &&
-        new Date(this.filterToDate) < new Date(this.filterFromDate)
-      ) {
-        alert('To Date cannot be earlier than From Date');
-        return;
-      }
+        if (
+          this.filterFromDate &&
+          this.filterToDate &&
+          new Date(this.filterToDate) < new Date(this.filterFromDate)
+        ) {
+          alert('To Date cannot be earlier than From Date');
+          return false;
+        }
 
-      if (this.filterFromDate) {
-        ok = ok && new Date(s.scheduleDate).getTime() >=
-          new Date(this.filterFromDate).setHours(0, 0, 0, 0);
-      }
+        if (this.filterFromDate) {
+          ok = ok && new Date(s.scheduleDate).getTime() >=
+            new Date(this.filterFromDate).setHours(0, 0, 0, 0);
+        }
 
-      if (this.filterToDate) {
-        ok = ok && new Date(s.scheduleDate).getTime() <=
-          new Date(this.filterToDate).setHours(23, 59, 59, 999);
-      }
+        if (this.filterToDate) {
+          ok = ok && new Date(s.scheduleDate).getTime() <=
+            new Date(this.filterToDate).setHours(23, 59, 59, 999);
+        }
 
-      if (this.filterStatus) {
-        ok = ok && s.inqStatus === this.filterStatus;
-      }
+        if (this.filterStatus) {
+          ok = ok && s.inqStatus === this.filterStatus;
+        }
 
-      return ok;
-    });
+        return ok;
+      })
+    );
 
     this.currentPage = 1;
     this.updatePagination();
   }
 
-  getToday(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0]; // yyyy-MM-dd
-  }
-
-
   clearFilters(): void {
     const today = this.getToday();
-    this.filterFromDate = today;   // ✅ today
-    this.filterToDate = today;     // ✅ today
+    this.filterFromDate = today;
+    this.filterToDate = today;
     this.filterStatus = '';
-    this.filteredSchedules = [...this.schedules];
+    this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -210,7 +243,8 @@ export class InquiryScheduleComponent implements OnInit {
   // ================= PAGINATION =================
   updatePagination(): void {
     const start = (this.currentPage - 1) * this.pageSize;
-    this.paginatedData = this.filteredSchedules.slice(start, start + this.pageSize);
+    this.paginatedData =
+      this.filteredSchedules.slice(start, start + this.pageSize);
   }
 
   get totalPages(): number {
@@ -262,4 +296,7 @@ export class InquiryScheduleComponent implements OnInit {
     }
   }
 
+  getToday(): string {
+    return new Date().toISOString().split('T')[0];
+  }
 }
