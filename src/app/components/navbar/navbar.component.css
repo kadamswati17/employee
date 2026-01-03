@@ -5,7 +5,7 @@
 
 .navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 14px 20px;
+  padding: 14px 60px;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -13,7 +13,7 @@
 
 .navbar-container {
   max-width: 1200px;
-  margin: auto;
+  /* margin-top: 2px; */
   display: flex;
   align-items: center;
 }
@@ -24,8 +24,9 @@
   font-size: 22px;
   font-weight: bold;
   text-decoration: none;
-  margin-right: 520px;
+  /* margin-right: 20px; */
   /* DESKTOP spacing */
+  margin-left: 0px;
 }
 
 /* DESKTOP NAV */
@@ -222,4 +223,19 @@
   body {
     overflow-x: hidden;
   }
+}
+
+.home-icon {
+  font-size: 22px;
+  color: black;
+  background-color: white;
+  cursor: pointer;
+  padding: 10px 10px;
+  border-radius: 8px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.home-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }

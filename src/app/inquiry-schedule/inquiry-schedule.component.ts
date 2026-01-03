@@ -6,6 +6,7 @@ import { InquiryScheduleService } from '../services/InquiryScheduleService';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-inquiry-schedule',
@@ -37,9 +38,17 @@ export class InquiryScheduleComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private scheduleService: InquiryScheduleService,
-    private http: HttpClient
+    private http: HttpClient,
+    private route: ActivatedRoute
   ) { }
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe(params => {
+      if (params['openForm']) {
+        this.showList = false;   // 🔥 OPEN FORM DIRECTLY
+        this.isEdit = false;
+      }
+    });
 
     const today = this.getToday();   // ✅ today
 

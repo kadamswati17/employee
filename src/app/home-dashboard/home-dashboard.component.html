@@ -1,0 +1,97 @@
+<div class="project-wrapper">
+    <div class="project-card">
+
+        <!-- HEADER -->
+        <div class="header-top">
+            <h2>Home Dashboard</h2>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+
+            <div class="date-field top-label">
+                <label>From Date</label>
+                <input type="date" [(ngModel)]="fromDate" (change)="applyFilters()" />
+            </div>
+
+            <div class="date-field top-label">
+                <label>To Date</label>
+                <input type="date" [(ngModel)]="toDate" (change)="applyFilters()" />
+            </div>
+
+            <select [(ngModel)]="status" (change)="applyFilters()">
+                <option value="">All Status</option>
+                <option value="OPEN">Open</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="CLOSED">Closed</option>
+                <option value="SUCCESS">Success</option>
+                <option value="CANCELLED">Cancelled</option>
+            </select>
+
+            <select #exportSel (change)="exportData(exportSel.value)">
+                <option value="">Export</option>
+                <option value="pdf">PDF</option>
+                <option value="excel">Excel</option>
+            </select>
+
+            <button class="clear-btn" (click)="clear()">Clear</button>
+        </div>
+
+        <!-- DASHBOARD CARDS -->
+        <div class="dashboard-cards">
+
+            <div class="card open">
+                <h2>{{ summary.OPEN.count }}</h2>
+                <h4>Open</h4>
+
+                <p>₹ {{ summary.OPEN.amount }}</p>
+            </div>
+
+            <div class="card progress">
+                <h2>{{ summary.IN_PROGRESS.count }}</h2>
+                <h4>In Progress</h4>
+
+                <p>₹ {{ summary.IN_PROGRESS.amount }}</p>
+            </div>
+
+            <div class="card closed">
+                <h2>{{ summary.CLOSED.count }}</h2>
+                <h4>Closed</h4>
+
+                <p>₹ {{ summary.CLOSED.amount }}</p>
+            </div>
+
+            <div class="card success">
+                <h2>{{ summary.SUCCESS.count }}</h2>
+                <h4>Success</h4>
+
+                <p>₹ {{ summary.SUCCESS.amount }}</p>
+            </div>
+
+            <div class="card cancel">
+                <h2>{{ summary.CANCELLED.count }}</h2>
+                <h4>Cancelled</h4>
+
+                <p>₹ {{ summary.CANCELLED.amount }}</p>
+            </div>
+
+        </div>
+
+        <!-- GRAND TOTAL -->
+        <div class="total-summary">
+            <span>Total Amount :</span>
+            <strong> ₹ {{ grandTotalAmount }}</strong>
+        </div>
+
+
+
+        <!-- 🔽 ADD THIS -->
+        <div class="open-schedule-link">
+            <a [routerLink]="['/inquiry-schedule']" [queryParams]="{ openForm: true }">
+                ➕ Create Schedule
+            </a>
+        </div>
+
+
+    </div>
+</div>

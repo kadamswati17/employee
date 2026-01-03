@@ -34,6 +34,7 @@ import { ProjectComponent } from './project/project.component';
 import { LeadComponent } from './lead/lead.component';
 import { InquiryComponent } from './inquiry/inquiry.component';
 import { InquiryScheduleComponent } from './inquiry-schedule/inquiry-schedule.component';
+import { HomeDashboardComponent } from './home-dashboard/home-dashboard.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -86,7 +87,7 @@ const routes: Routes = [
   { path: 'city-master', component: CityMasterComponent },
 
   { path: 'inquiry-schedule', component: InquiryScheduleComponent },
-
+  { path: 'home', component: HomeDashboardComponent },   // home dashboard
 
   { path: '**', redirectTo: '/login' }
 ];

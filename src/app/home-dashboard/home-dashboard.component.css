@@ -1,0 +1,309 @@
+.project-wrapper {
+    width: auto;
+    margin: 20px 50px;
+    background-color: #f1f4f8;
+    padding: 10px 20px;
+    border-radius: 25px;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.card {
+    padding: 18px;
+    border-radius: 14px;
+    background: #f8fafc;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
+    text-align: center;
+}
+
+.card h4 {
+    margin: 0;
+    font-size: 18px;
+    /* color: blue; */
+}
+
+.card h2 {
+    margin: 10px 0 4px;
+    font-size: 28px;
+}
+
+.card p {
+    margin: 0;
+    font-weight: 600;
+}
+
+
+/* STATUS TITLE COLORS – MATCH BORDER (NO BORDER CHANGES) */
+.card.open h4 {
+    color: #2563eb;
+}
+
+.card.progress h4 {
+    color: #f59e0b;
+}
+
+.card.closed h4 {
+    color: #64748b;
+}
+
+.card.success h4 {
+    color: #16a34a;
+}
+
+.card.cancel h4 {
+    color: #dc2626;
+}
+
+/* STATUS BORDER COLORS */
+.card.open {
+    border: 4px solid #2563eb;
+    /* Blue */
+}
+
+.card.progress {
+    border: 4px solid #f59e0b;
+    /* Orange */
+}
+
+.card.closed {
+    border: 4px solid #64748b;
+    /* Gray */
+}
+
+.card.success {
+    border: 4px solid #16a34a;
+    /* Green */
+}
+
+.card.cancel {
+    border: 4px solid #dc2626;
+    /* Red */
+}
+
+
+@media(max-width: 1100px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    /* tighter & balanced spacing */
+    padding: 14px 18px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+/* ================= DATE FIELD (LABEL + INPUT) ================= */
+
+.date-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* LABEL */
+.date-field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* ================= INPUTS & SELECTS ================= */
+
+.filters input[type="date"],
+.filters select {
+    height: 42px;
+    /* ✅ same height everywhere */
+    width: 280px;
+    /* ✅ same width everywhere */
+
+    padding: 0 14px;
+    font-size: 16px;
+
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ================= FOCUS (CLEAN & SOFT) ================= */
+
+.filters input:focus,
+.filters select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* ================= SELECT ARROW (CONSISTENT) ================= */
+
+.filters select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%236b7280' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* ================= CLEAR BUTTON ================= */
+
+.clear-btn {
+    height: 42px;
+    /* matches inputs */
+    padding: 0 35px;
+
+    border-radius: 999px;
+    border: none;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    background: #ff0000;
+    color: #ffffff;
+
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.clear-btn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* ================= SCROLLBAR (CLEAN) ================= */
+
+.filters::-webkit-scrollbar {
+    height: 4px;
+}
+
+.filters::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+
+
+
+
+
+
+
+
+
+/* ================= TOP LINE LABEL INPUT ================= */
+
+.date-field.top-label {
+    position: relative;
+    min-width: 280px;
+}
+
+/* LABEL ON BORDER LINE */
+.date-field.top-label label {
+    position: absolute;
+    top: -9px;
+    /* 👈 sits on border line */
+    left: 14px;
+    background: #ffffff;
+    /* cuts border behind */
+    padding: 0 6px;
+
+    font-size: 14px;
+    font-weight: 600;
+    color: #2563eb;
+    z-index: 2;
+}
+
+/* INPUT */
+.date-field.top-label input {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    font-size: 16px;
+
+    border-radius: 12px;
+    border: 1.5px solid #cbd5e1;
+    background: #f8fafc;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* FOCUS */
+.date-field.top-label input:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* FIX: In Progress card text & alignment */
+.card h4 {
+    white-space: nowrap;
+    /* prevent line break */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+/* Ensure all cards have equal height */
+.dashboard-cards .card {
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.total-summary {
+    display: flex;
+    justify-content: end;
+    color: black;
+    font-size: 20px;
+    margin: 15px 0px;
+}
+
+.card p {
+    margin: 0;
+    font-weight: 700;
+    color: #16a34a;
+    /* Green */
+}
+
+.total-summary strong {
+    color: #16a34a;
+    font-weight: 700;
+}
+
+.open-schedule-link {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+.open-schedule-link a {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.open-schedule-link a:hover {
+    color: #1e40af;
+}
