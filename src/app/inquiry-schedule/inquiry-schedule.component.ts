@@ -73,7 +73,7 @@ export class InquiryScheduleComponent implements OnInit {
       this.schedules = res || [];
 
       // 🔥 ONLY LATEST PER inquiryId
-      this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
+      this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(this.schedules));
 
       this.currentPage = 1;
       this.updatePagination();
@@ -108,7 +108,7 @@ export class InquiryScheduleComponent implements OnInit {
   viewHistory(inquiryId: number): void {
     this.isHistoryView = true;
     this.filteredSchedules =
-      this.schedules.filter(s => s.inquiryId === inquiryId);
+      this.sortDesc(this.schedules.filter(s => s.inquiryId === inquiryId));
 
     this.currentPage = 1;
     this.updatePagination();
@@ -116,7 +116,8 @@ export class InquiryScheduleComponent implements OnInit {
 
   backFromHistory(): void {
     this.isHistoryView = false;
-    this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
+    // this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
+    this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(this.schedules));
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -127,7 +128,7 @@ export class InquiryScheduleComponent implements OnInit {
       .subscribe(inquiries => {
         this.http.get<any[]>('http://localhost:8080/api/leads')
           .subscribe(leads => {
-            this.inquiries = inquiries.map(inq => {
+            this.inquiries = this.sortDesc(inquiries).map(inq => {
               const lead = leads.find(l => l.leadId === inq.leadAccountId);
               return {
                 inqId: inq.inqueryId,
@@ -138,35 +139,76 @@ export class InquiryScheduleComponent implements OnInit {
       });
   }
 
+  // openForm(): void {
+  //   this.showList = false;
+  //   // this.isEdit = false;
+  //   this.selectedId = null;
+  //   this.form.reset({ status: 'OPEN' });
+  // }
+
   openForm(): void {
     this.showList = false;
-    this.isEdit = false;
-    this.selectedId = null;
     this.form.reset({ status: 'OPEN' });
   }
+
 
   backToList(): void {
     this.showList = true;
     this.isHistoryView = false;
     this.form.reset();
-    this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
+    this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(this.schedules));
     this.updatePagination();
   }
 
-  editSchedule(data: any): void {
-    this.isEdit = true;
-    this.showList = false;
-    this.selectedId = data.inqId;
+  // editSchedule(data: any): void {
+  //   this.isEdit = true;
+  //   this.showList = false;
+  //   this.selectedId = data.inqId;
 
-    this.form.patchValue({
+  //   this.form.patchValue({
+  //     inquiryId: data.inquiryId,
+  //     scheduleDate: data.scheduleDate,
+  //     scheduleTime: data.scheTime,
+  //     remark: data.remark,
+  //     status: data.inqStatus,
+  //     assignTo: data.assignTo
+  //   });
+  // }
+  editSchedule(data: any): void {
+    this.showList = false;
+
+    // ✅ ONLY inquiryId auto-fill
+    this.form.reset({
       inquiryId: data.inquiryId,
-      scheduleDate: data.scheduleDate,
-      scheduleTime: data.scheTime,
-      remark: data.remark,
-      status: data.inqStatus,
-      assignTo: data.assignTo
+      status: 'OPEN'
     });
   }
+
+
+  // submit(): void {
+  //   const payload = {
+  //     inquiryId: this.form.value.inquiryId,
+  //     scheduleDate: this.form.value.scheduleDate,
+  //     scheTime: this.form.value.scheduleTime,
+  //     remark: this.form.value.remark,
+  //     inqStatus: this.form.value.status,
+  //     assignTo: this.form.value.assignTo
+  //   };
+
+  //   if (this.isEdit && this.selectedId) {
+  //     this.scheduleService.updateSchedule(this.selectedId, payload)
+  //       .subscribe(() => {
+  //         this.loadSchedules();
+  //         this.backToList();
+  //       });
+  //   } else {
+  //     this.scheduleService.createSchedule(payload)
+  //       .subscribe(() => {
+  //         this.loadSchedules();
+  //         this.backToList();
+  //       });
+  //   }
+  // }
 
   submit(): void {
     const payload = {
@@ -178,25 +220,18 @@ export class InquiryScheduleComponent implements OnInit {
       assignTo: this.form.value.assignTo
     };
 
-    if (this.isEdit && this.selectedId) {
-      this.scheduleService.updateSchedule(this.selectedId, payload)
-        .subscribe(() => {
-          this.loadSchedules();
-          this.backToList();
-        });
-    } else {
-      this.scheduleService.createSchedule(payload)
-        .subscribe(() => {
-          this.loadSchedules();
-          this.backToList();
-        });
-    }
+    this.scheduleService.createSchedule(payload)
+      .subscribe(() => {
+        this.loadSchedules();
+        this.backToList();
+      });
   }
+
 
   // ================= FILTER =================
   applyFilters(): void {
-    this.filteredSchedules = this.getLatestPerInquiry(
-      this.schedules.filter(s => {
+    this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(
+      this.schedules).filter(s => {
         let ok = true;
 
         if (
@@ -235,7 +270,7 @@ export class InquiryScheduleComponent implements OnInit {
     this.filterFromDate = today;
     this.filterToDate = today;
     this.filterStatus = '';
-    this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
+    this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(this.schedules));
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -268,7 +303,7 @@ export class InquiryScheduleComponent implements OnInit {
   exportData(type: string): void {
     if (!type) return;
 
-    const data = this.filteredSchedules.map((s, i) => ({
+    const data = this.sortDesc(this.filteredSchedules).map((s, i) => ({
       '#': i + 1,
       'Inquiry ID': s.inquiryId,
       'Schedule Date': s.scheduleDate,
@@ -299,4 +334,13 @@ export class InquiryScheduleComponent implements OnInit {
   getToday(): string {
     return new Date().toISOString().split('T')[0];
   }
+
+  // ================= SORT BY SCHEDULE ID DESC =================
+  sortDesc(data: any[]): any[] {
+    return [...data].sort((a, b) => {
+      return b.inqId - a.inqId;   // 🔥 Schedule record id DESC
+    });
+  }
+
+
 }

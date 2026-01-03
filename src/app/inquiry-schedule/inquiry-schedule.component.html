@@ -68,7 +68,9 @@
 
                 <tbody>
                     <tr *ngFor="let s of paginatedData; let i = index">
-                        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                        <!-- <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td> -->
+                        <td>{{ s.inqId }}</td>
+
                         <td>{{ s.inquiryId }}</td>
                         <td>{{ s.scheduleDate | date }}</td>
                         <td>{{ s.scheTime }}</td>
@@ -79,7 +81,7 @@
                         <td>{{ s.assignTo }}</td>
                         <td>
                             <button class="edit-btn" (click)="editSchedule(s)">
-                                Edit
+                                + Schedule
                             </button>
 
                             <button class="edit-btn history-btn" (click)="viewHistory(s.inquiryId)">
@@ -100,7 +102,7 @@
     <div class="project-card mt" *ngIf="!showList">
 
         <div class="form-header">
-            <h2>{{ isEdit ? 'Edit Schedule' : 'Add Schedule' }}</h2>
+            <h2>{{ isEdit ? 'Add Schedule' : 'Add Schedule' }}</h2>
 
             <button type="button" class="toggle-btn" (click)="backToList()">
                 Back to List
@@ -155,9 +157,13 @@
             </div>
 
             <div class="actions">
-                <button type="submit">
+                <!-- <button type="submit">
                     {{ isEdit ? 'Update Schedule' : 'Save Schedule' }}
+                </button> -->
+                <button type="submit">
+                    Save Schedule
                 </button>
+
             </div>
 
         </form>
