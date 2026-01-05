@@ -33,31 +33,36 @@
     <!-- BATCH TABLE LIST -->
     <div *ngIf="!isLoading && filteredBatches.length > 0" class="table-container">
 
-        <table class="employee-table table table-striped">
-            <thead>
-                <tr>
-                    <th>Batch No</th>
-                    <th>Date</th>
-                    <th>Created By</th>
-                    <th>Total Entries</th>
-                    <th>Download</th>
-                </tr>
-            </thead>
+        <div *ngIf="!isLoading && filteredBatches.length > 0" class="table-scroll">
+            <table class="lead-table">
+                <thead>
+                    <tr>
+                        <th>Batch No</th>
+                        <th>Date</th>
+                        <th>Created By</th>
+                        <th>Total Entries</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr *ngFor="let b of paginatedBatches">
-                    <td class="clickable" (click)="openBatchModal(b.kmBatchNo)">
-                        {{ b.kmBatchNo }}
-                    </td>
-                    <td>{{ b.trndate | date:'shortDate' }}</td>
-                    <td>{{ b.createdby }}</td>
-                    <td>{{ b.totalEntries }}</td>
-                    <td>
-                        <button class="btn btn-info btn-sm" (click)="download(b.kmBatchNo)">Download</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                <tbody>
+                    <tr *ngFor="let b of paginatedBatches">
+                        <td class="clickable" (click)="openBatchModal(b.kmBatchNo)">
+                            {{ b.kmBatchNo }}
+                        </td>
+                        <td>{{ b.trndate | date:'shortDate' }}</td>
+                        <td>{{ b.createdby }}</td>
+                        <td>{{ b.totalEntries }}</td>
+                        <td>
+                            <button class="edit-btn" (click)="download(b.kmBatchNo)">
+                                Download
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <!-- EMPTY STATE -->

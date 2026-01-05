@@ -1,5 +1,5 @@
 .lead-wrapper {
-    background-color: #c6f5d8a0;
+    background-color: white;
     padding: 30px;
     min-height: 100vh;
 }
@@ -8,7 +8,7 @@
 .lead-card {
     max-width: 1400px;
     margin: auto;
-    background-color: white;
+    background-color: #f1f4f8;
     border-radius: 18px;
     padding: 18px;
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
@@ -116,26 +116,34 @@ button {
     color: #1e3a8a;
 }
 
+/* ================= LEAD TABLE (SAME AS PROJECT) ================= */
+
 .lead-table {
     width: 100%;
+    min-width: 720px;
     border-collapse: collapse;
+    border: 1px solid #e5e7eb;
 }
 
+/* HEADER */
 .lead-table th {
-
-    padding: 14px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
-    background-color: #2450c7;
+    background: blue;
+    font-size: 16px;
+    text-transform: uppercase;
     color: white;
 }
 
+/* CELL */
+.lead-table th,
 .lead-table td {
     padding: 14px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
+    border: 1px solid #e5e7eb;
     font-size: 16px;
-    /* background-color: #1e3a8a; */
+}
+
+/* ROW HOVER */
+.lead-table tbody tr:hover {
+    background: #f1f5f9;
 }
 
 .badge {

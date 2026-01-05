@@ -100,38 +100,44 @@
 
     <!-- TABLE (UNCHANGED) -->
     <div class="table-wrapper" *ngIf="paginatedUsers.length">
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>User Name</th>
-                    <th>Root Name</th>
-                    <th>GST No</th>
-                    <th>Address</th>
-                    <th>State</th>
-                    <th>City</th>
-                    <th>Dist</th>
-                    <th>Taluka</th>
-                    <th>Balance</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let u of paginatedUsers; let i = index">
-                    <td>{{ users.length - ((page - 1) * pageSize + i) }}</td>
-                    <td>{{ u.username }}</td>
-                    <td>{{ u.rootName }}</td>
-                    <td>{{ u.gstNo }}</td>
-                    <td>{{ u.address }}</td>
-                    <td>{{ u.state }}</td>
-                    <td>{{ u.city }}</td>
-                    <td>{{ u.dist }}</td>
-                    <td>{{ u.tq }}</td>
-                    <td>{{ u.balance }}</td>
-                    <td><button class="btn-edit" (click)="edit(u)">Edit</button></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-scroll" *ngIf="paginatedUsers.length">
+            <table class="lead-table">
+                <thead>
+                    <tr>
+                        <th>Sr No</th>
+                        <th>User Name</th>
+                        <th>Root Name</th>
+                        <th>GST No</th>
+                        <th>Address</th>
+                        <th>State</th>
+                        <th>City</th>
+                        <th>Dist</th>
+                        <th>Taluka</th>
+                        <th>Balance</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let u of paginatedUsers; let i = index">
+                        <td>{{ users.length - ((page - 1) * pageSize + i) }}</td>
+                        <td>{{ u.username }}</td>
+                        <td>{{ u.rootName }}</td>
+                        <td>{{ u.gstNo }}</td>
+                        <td>{{ u.address }}</td>
+                        <td>{{ u.state }}</td>
+                        <td>{{ u.city }}</td>
+                        <td>{{ u.dist }}</td>
+                        <td>{{ u.tq }}</td>
+                        <td>{{ u.balance }}</td>
+                        <td>
+                            <button class="edit-btn" (click)="edit(u)">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
 </div>

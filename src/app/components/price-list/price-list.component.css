@@ -113,21 +113,28 @@
     color: white;
     border: none;
     margin-top: 20px;
-    margin-left: 390px;
+    /* margin-left: 390px; */
     padding: 12px 18px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
 }
 
-.btn-edit {
-    background: #2ecc71;
-    border: none;
+.btn-submit {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
     color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
     cursor: pointer;
+    font-weight: 600;
+
+    display: block;
+    /* ✅ required */
+    margin: 20px auto 0;
+    /* ✅ centers button */
 }
+
 
 /* TABLE */
 .table-wrapper {

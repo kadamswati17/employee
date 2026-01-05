@@ -63,7 +63,9 @@
 
                 <tbody>
                     <tr *ngFor="let p of paginatedProjects; let i = index">
-                        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                        <!-- <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td> -->
+                        <td>{{ p.projectId }}</td>
+
                         <td>{{ p.projectName }}</td>
                         <td>{{ p.startDate | date }}</td>
                         <td>{{ p.endDate | date }}</td>

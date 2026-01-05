@@ -34,6 +34,8 @@ export class InquiryScheduleComponent implements OnInit {
   filterFromDate = '';
   filterToDate = '';
   filterStatus = '';
+  inquiryNameMap: { [key: number]: string } = {};
+
 
   constructor(
     private fb: FormBuilder,
@@ -128,16 +130,23 @@ export class InquiryScheduleComponent implements OnInit {
       .subscribe(inquiries => {
         this.http.get<any[]>('http://localhost:8080/api/leads')
           .subscribe(leads => {
+
             this.inquiries = this.sortDesc(inquiries).map(inq => {
               const lead = leads.find(l => l.leadId === inq.leadAccountId);
+              const cname = lead ? lead.cname : '-';
+
+              // ✅ STORE MAP (THIS IS THE KEY)
+              this.inquiryNameMap[inq.inqueryId] = cname;
+
               return {
                 inqId: inq.inqueryId,
-                cname: lead ? lead.cname : '-'
+                cname
               };
             });
           });
       });
   }
+
 
   // openForm(): void {
   //   this.showList = false;

@@ -42,37 +42,41 @@
         </div>
 
         <!-- TABLE -->
-        <table class="lead-table" *ngIf="paginatedLeads.length; else noData">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
-                    <th>Contact</th>
-                    <th>Email</th>
-                    <th>Budget</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+        <!-- TABLE -->
+        <div class="table-scroll">
+            <table class="lead-table" *ngIf="paginatedLeads.length; else noData">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Budget</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr *ngFor="let l of paginatedLeads; let i = index">
-                    <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-                    <td>{{ l.cname }}</td>
-                    <td>{{ l.contactNo }}</td>
-                    <td>{{ l.email }}</td>
-                    <td>₹ {{ l.budget | number }}</td>
-                    <td>
-                        <span class="badge" [ngClass]="l.isActive ? 'active' : 'inactive'">
-                            {{ l.isActive ? 'Active' : 'Inactive' }}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="edit-btn" (click)="editLead(l)">Edit</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                <tbody>
+                    <tr *ngFor="let l of paginatedLeads">
+                        <td>{{ l.leadId }}</td>
+                        <td>{{ l.cname }}</td>
+                        <td>{{ l.contactNo }}</td>
+                        <td>{{ l.email }}</td>
+                        <td>₹ {{ l.budget | number }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="l.isActive ? 'active' : 'inactive'">
+                                {{ l.isActive ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="edit-btn" (click)="editLead(l)">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
 
         <!-- PAGINATION -->
         <div class="pagination" *ngIf="totalPages > 1">

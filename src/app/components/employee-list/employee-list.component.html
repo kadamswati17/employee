@@ -1,4 +1,6 @@
 <div class="employee-list-container">
+
+  <!-- HEADER -->
   <div class="header-section">
     <h1>Employee List</h1>
     <button class="btn btn-primary" (click)="addEmployee()">
@@ -6,20 +8,24 @@
     </button>
   </div>
 
+  <!-- LOADING -->
   <div *ngIf="isLoading" class="loading">
     <p>Loading employees...</p>
   </div>
 
+  <!-- ERROR -->
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
 
+  <!-- EMPTY -->
   <div *ngIf="!isLoading && employees.length === 0 && !errorMessage" class="empty-state">
-    <p>No employees found. Click "Add New Employee" to get started.</p>
+    <p>No employees found. Click "Add Employee" to get started.</p>
   </div>
 
-  <div *ngIf="!isLoading && employees.length > 0" class="table-container">
-    <table class="employee-table">
+  <!-- TABLE -->
+  <div class="table-scroll" *ngIf="!isLoading && paginatedEmployees.length">
+    <table class="lead-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -31,11 +37,12 @@
           <th>Position</th>
           <th>Salary</th>
           <th>Hire Date</th>
-          <th>Actions</th>
+          <th>Action</th>
         </tr>
       </thead>
+
       <tbody>
-        <tr *ngFor="let employee of employees">
+        <tr *ngFor="let employee of paginatedEmployees">
           <td>{{ employee.id }}</td>
           <td>{{ employee.firstName }}</td>
           <td>{{ employee.lastName }}</td>
@@ -43,18 +50,22 @@
           <td>{{ employee.phoneNumber }}</td>
           <td>{{ employee.department }}</td>
           <td>{{ employee.position }}</td>
-          <td>${{ employee.salary | number:'1.2-2' }}</td>
+          <td>₹ {{ employee.salary | number }}</td>
           <td>{{ employee.hireDate | date:'shortDate' }}</td>
-          <td class="actions">
-            <button class="btn btn-edit" (click)="editEmployee(employee.id!)">
-              Edit
-            </button>
-            <button class="btn btn-delete" (click)="deleteEmployee(employee.id!)">
-              Delete
-            </button>
+          <td>
+            <button class="edit-btn" (click)="editEmployee(employee.id!)">Edit</button>
+            <button class="delete-btn" (click)="deleteEmployee(employee.id!)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+
 </div>

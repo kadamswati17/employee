@@ -6,15 +6,16 @@
         <button class="btn-add" (click)="addUser()">+ Add User</button>
     </div>
 
-    <div class="table-wrapper">
-        <table class="excel-table" *ngIf="paginatedUsers.length > 0">
+    <div class="table-scroll">
+
+        <table class="project-table" *ngIf="paginatedUsers.length > 0">
             <thead>
                 <tr>
-                    <th style="width: 80px;">ID</th>
-                    <th style="width: 200px;">USERNAME</th>
-                    <th style="width: 260px;">EMAIL</th>
-                    <th style="width: 150px;">ROLE</th>
-                    <th style="width: 160px;">ACTIONS</th>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
@@ -25,34 +26,41 @@
                     <td>{{ u.email }}</td>
 
                     <td>
-                        <span class="role-badge" [ngClass]="u.role">{{ u.role }}</span>
+                        <span class="badge active">{{ u.role }}</span>
                     </td>
 
-                    <td class="actions">
-                        <button class="btn btn-edit" (click)="editUser(u.id)">Edit</button>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="edit-btn" (click)="editUser(u.id)">Edit</button>
 
-                        <button *ngIf="u.active" class="btn btn-warning" (click)="deactivate(u.id)">
-                            Deactivate
-                        </button>
+                            <button *ngIf="u.active" class="edit-btn warn" (click)="deactivate(u.id)">
+                                Deactivate
+                            </button>
 
-                        <button *ngIf="!u.active" class="btn btn-success" (click)="activate(u.id)">
-                            Activate
-                        </button>
+                            <button *ngIf="!u.active" class="edit-btn success" (click)="activate(u.id)">
+                                Activate
+                            </button>
 
-                        <button class="btn btn-delete" (click)="deleteUser(u.id)">Delete</button>
+                            <button class="edit-btn danger" (click)="deleteUser(u.id)">
+                                Delete
+                            </button>
+                        </div>
                     </td>
+
                 </tr>
             </tbody>
         </table>
 
-        <p *ngIf="paginatedUsers.length === 0" class="no-data">No users found.</p>
-
-        <!-- 🔹 PAGINATION -->
-        <div style="margin-top:15px; text-align:center;">
-            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
-                [disabled]="page === i + 1" style="margin: 0 5px; padding: 6px 12px;">
-                {{ i + 1 }}
-            </button>
-        </div>
+        <p *ngIf="paginatedUsers.length === 0" class="no-data">
+            No users found
+        </p>
     </div>
+
+    <!-- PAGINATION (SAME AS PROJECT) -->
+    <div class="pagination" *ngIf="totalPages() > 1">
+        <button (click)="setPage(page - 1)" [disabled]="page === 1">Prev</button>
+        <span>Page {{ page }} of {{ totalPages() }}</span>
+        <button (click)="setPage(page + 1)" [disabled]="page === totalPages()">Next</button>
+    </div>
+
 </div>

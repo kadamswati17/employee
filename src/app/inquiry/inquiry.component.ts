@@ -121,9 +121,13 @@ export class InquiryComponent implements OnInit {
   }
 
   updatePaginatedData() {
+    const sorted = [...this.filteredInquiries]
+      .sort((a, b) => b.inqueryId - a.inqueryId); // 🔥 DESC by ID
+
     const start = (this.currentPage - 1) * this.pageSize;
-    this.paginatedInquiries = this.filteredInquiries.slice(start, start + this.pageSize);
+    this.paginatedInquiries = sorted.slice(start, start + this.pageSize);
   }
+
 
   nextPage() {
     if (this.currentPage < this.totalPages) {

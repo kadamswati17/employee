@@ -71,7 +71,10 @@
                         <!-- <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td> -->
                         <td>{{ s.inqId }}</td>
 
-                        <td>{{ s.inquiryId }}</td>
+                        <td>
+                            {{ s.inquiryId }} - {{ inquiryNameMap[s.inquiryId] || '-' }}
+                        </td>
+
                         <td>{{ s.scheduleDate | date }}</td>
                         <td>{{ s.scheTime }}</td>
                         <td>{{ s.remark }}</td>

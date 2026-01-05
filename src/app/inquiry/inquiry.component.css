@@ -1,5 +1,5 @@
 .inquiry-wrapper {
-    background-color: #c6f5d8a0;
+    background-color: white;
     padding: 20px;
     min-height: 100vh;
 }
@@ -7,7 +7,7 @@
 .inquiry-card {
     max-width: 1400px;
     margin: auto;
-    background-color: white;
+    background-color: #f1f4f8;
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, .1);

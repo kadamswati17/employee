@@ -1,20 +1,99 @@
 .employee-list-container {
   max-width: 1400px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   padding: 30px 20px;
+  background-color: #f1f4f8;
+  border-radius: 20px;
+  margin: 20px 60px;
+
 }
 
 .header-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .header-section h1 {
   color: #333;
   font-size: 32px;
   margin: 0;
+}
+
+/* ================= TABLE SCROLL ================= */
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ================= TABLE ================= */
+.lead-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  border: 1px solid #e5e7eb;
+}
+
+/* HEADER */
+.lead-table th {
+  background: blue;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: white;
+}
+
+/* CELLS */
+.lead-table th,
+.lead-table td {
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  font-size: 16px;
+}
+
+/* ROW HOVER */
+.lead-table tbody tr:hover {
+  background: #f1f5f9;
+}
+
+/* ACTION BUTTONS */
+.edit-btn {
+  padding: 6px 20px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.delete-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  background: #dc2626;
+  color: white;
+  cursor: pointer;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .lead-table th,
+  .lead-table td {
+    font-size: 13px;
+    padding: 10px 12px;
+    white-space: nowrap;
+  }
+
+  .lead-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
 }
 
 .btn {
@@ -165,4 +244,39 @@
   .employee-table td {
     padding: 10px 8px;
   }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.pagination button {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 600;
+  background: #1e40af;
+  color: white;
+}
+
+.pagination button:disabled {
+  background: #94a3b8;
+}
+
+/* STATES */
+.loading,
+.empty-state {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+}
+
+.alert-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 14px;
+  border-radius: 8px;
 }
