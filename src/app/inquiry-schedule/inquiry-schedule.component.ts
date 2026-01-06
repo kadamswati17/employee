@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -17,6 +16,11 @@ export class InquiryScheduleComponent implements OnInit {
 
   showList = true;
   isEdit = false;
+
+  isHistoryView = false;
+
+  scheduleExcelPreview: any[] = [];
+  hasScheduleExcelErrors = false;
 
   form!: FormGroup;
   selectedId: number | null = null;
@@ -112,7 +116,8 @@ export class InquiryScheduleComponent implements OnInit {
       scheduleDate: data.scheduleDate,
       scheduleTime: data.scheTime,
       remark: data.remark,
-      status: data.inqStatus,
+      status: this.normalizeStatus(data.inqStatus),
+
       assignTo: data.assignTo
     });
 
@@ -140,6 +145,30 @@ export class InquiryScheduleComponent implements OnInit {
       });
     }
   }
+  onImportSelect(event: any, fileInput: HTMLInputElement): void {
+    if (event.target.value === 'excel') {
+      fileInput.click();
+    }
+    event.target.value = '';
+  }
+
+  viewHistory(inquiryId: number): void {
+    this.isHistoryView = true;
+    this.filteredSchedules = this.schedules.filter(
+      s => s.inquiryId === inquiryId
+    );
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+
+
+  backFromHistory(): void {
+    this.isHistoryView = false;
+    this.filteredSchedules = [...this.schedules];
+    this.currentPage = 1;
+    this.updatePagination();
+  }
 
   // ================= FILTER =================
   applyFilters(): void {
@@ -147,7 +176,10 @@ export class InquiryScheduleComponent implements OnInit {
       let ok = true;
       if (this.filterFromDate) ok = ok && new Date(s.scheduleDate) >= new Date(this.filterFromDate);
       if (this.filterToDate) ok = ok && new Date(s.scheduleDate) <= new Date(this.filterToDate);
-      if (this.filterStatus) ok = ok && s.inqStatus === this.filterStatus;
+      if (this.filterStatus) {
+        ok = ok && this.normalizeStatus(s.inqStatus) === this.normalizeStatus(this.filterStatus);
+      }
+
       return ok;
     });
 
@@ -224,6 +256,112 @@ export class InquiryScheduleComponent implements OnInit {
       XLSX.writeFile(wb, 'schedule-report.xlsx');
     }
   }
+
+  importScheduleExcel(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.scheduleExcelPreview = [];
+    this.hasScheduleExcelErrors = false;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json<any>(sheet);
+
+      this.validateScheduleExcel(rows);
+    };
+
+    reader.readAsArrayBuffer(file);
+  }
+
+
+  validateScheduleExcel(rows: any[]) {
+    this.scheduleExcelPreview = [];
+    this.hasScheduleExcelErrors = false;
+
+    rows.forEach(r => {
+      const errors: string[] = [];
+
+      const inquiryId = r['Inquiry ID'] || r['InquiryId'];
+      const dateVal = r['Schedule Date'] || r['Date'];
+      const timeVal = r['Time'];
+      const statusVal = r['Status'];
+      const assignToVal = r['Assign To'];
+      const remarkVal = r['Remark'];
+
+      if (!inquiryId) errors.push('InquiryId required');
+      if (!dateVal) errors.push('ScheduleDate required');
+      if (!timeVal) errors.push('Time required');
+      if (!statusVal) errors.push('Status required');
+
+      const allowed = ['OPEN', 'IN_PROGRESS', 'CLOSED', 'SUCCESS', 'CANCELLED'];
+      if (statusVal && !allowed.includes(String(statusVal).toUpperCase())) {
+        errors.push('Invalid Status');
+      }
+
+      if (errors.length) this.hasScheduleExcelErrors = true;
+
+      this.scheduleExcelPreview.push({
+        inquiryId: Number(inquiryId),
+        scheduleDate: this.parseExcelDate(dateVal),
+        scheTime: timeVal,
+        inqStatus: this.normalizeStatus(statusVal),
+
+        assignTo: assignToVal || '',
+        remark: remarkVal || '',
+        _errors: errors
+      });
+    });
+  }
+
+
+  parseExcelDate(value: any): string {
+    if (typeof value === 'number') {
+      const date = new Date((value - 25569) * 86400 * 1000);
+      return date.toISOString().split('T')[0];
+    }
+    return new Date(value).toISOString().split('T')[0];
+  }
+
+  saveScheduleExcelToDB() {
+    const validRows = this.scheduleExcelPreview.filter(r => !r._errors.length);
+
+    validRows.forEach(r => {
+      this.scheduleService.createSchedule({
+        inquiryId: r.inquiryId,
+        scheduleDate: r.scheduleDate,
+        scheTime: r.scheTime,
+        inqStatus: r.inqStatus,
+        assignTo: r.assignTo,
+        remark: r.remark
+      }).subscribe();
+    });
+
+    alert('Schedules imported successfully');
+    this.clearExcelPreview();
+    this.loadSchedules();
+  }
+
+  clearExcelPreview() {
+    this.scheduleExcelPreview = [];
+    this.hasScheduleExcelErrors = false;
+  }
+
+  onScheduleImportSelect(event: any, fileInput: HTMLInputElement) {
+    if (event.target.value === 'excel') {
+      fileInput.click();
+    }
+    event.target.value = '';
+  }
+  normalizeStatus(value: any): string {
+    if (!value) return '';
+    return String(value).toUpperCase().replace(/\s+/g, '_');
+  }
+
 
 }
 
