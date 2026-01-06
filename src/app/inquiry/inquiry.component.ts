@@ -28,6 +28,10 @@ export class InquiryComponent implements OnInit {
   totalPages = 0;
   paginatedInquiries: any[] = [];
 
+  excelPreview: any[] = [];
+  hasExcelErrors = false;
+
+
   showInquiries = true;
   isEditMode = false;
   editInquiryId: number | null = null;
@@ -293,4 +297,187 @@ export class InquiryComponent implements OnInit {
   getInquiryStatusName(id: number): string {
     return this.statusList.find(s => s.id === id)?.name ?? '-';
   }
+
+  onImportSelect(event: any, fileInput: HTMLInputElement) {
+    if (event.target.value === 'excel') {
+      fileInput.click();
+    }
+    event.target.value = '';
+  }
+
+
+  importInquiryExcel(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.excelPreview = [];      // 🔥 reset
+    this.hasExcelErrors = false;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+
+      if (!workbook.SheetNames.length) {
+        alert('Invalid Excel file');
+        return;
+      }
+
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json<any>(sheet);
+
+      if (!rows.length) {
+        alert('Excel file is empty');
+        return;
+      }
+
+      this.validateInquiryExcel(rows);
+    };
+
+    reader.readAsArrayBuffer(file);
+  }
+
+
+
+
+  validateInquiryExcel(rows: any[]) {
+    this.excelPreview = [];
+    this.hasExcelErrors = false;
+
+    rows.forEach(r => {
+
+      // 🔥 Skip empty rows
+      if (!r['Date'] && !r['Lead'] && !r['Project']) {
+        return;
+      }
+
+      const errors: string[] = [];
+
+      const date = r['Date'];
+      const leadName = r['Lead'];
+      const projectName = r['Project'];
+      const statusText = r['Status']; // Active / Inactive
+      const inquiryStatusText = r['Inquiry Status'];
+
+      // Rate & Qty
+      const rate = this.parseNumber(r['Rate']);
+      const qty = this.parseNumber(r['Qty']);
+
+      const safeRate = isNaN(rate) ? 0 : rate;
+      const safeQty = isNaN(qty) ? 1 : qty;
+
+      const total =
+        !isNaN(this.parseNumber(r['Total']))
+          ? this.parseNumber(r['Total'])
+          : safeRate * safeQty;
+
+      // 🔎 FIND LEAD
+      const lead = this.leads.find(l =>
+        l.cname?.toLowerCase().trim() === String(leadName || '').toLowerCase().trim()
+      );
+
+      // 🔎 FIND PROJECT
+      const project = this.projects.find(p =>
+        p.projectName?.toLowerCase().trim() === String(projectName || '').toLowerCase().trim()
+      );
+
+      // 🔎 FIND INQUIRY STATUS
+      const inquiryStatus = this.statusList.find(s =>
+        s.name.toLowerCase().trim() === String(inquiryStatusText || '').toLowerCase().trim()
+      );
+
+      // 🔎 STATUS → isActive
+      let isActive = 1;
+      if (statusText && statusText.toLowerCase() === 'inactive') {
+        isActive = 0;
+      }
+
+      // ===== VALIDATIONS =====
+      if (!date) errors.push('Date required');
+
+      if (!leadName || leadName === '-') errors.push('Lead required');
+      else if (!lead) errors.push('Invalid Lead');
+
+      if (!projectName || projectName === '-') errors.push('Project required');
+      else if (!project) errors.push('Invalid Project');
+
+      if (!inquiryStatusText) errors.push('Inquiry Status required');
+      else if (!inquiryStatus) errors.push('Invalid Inquiry Status');
+
+      if (errors.length) this.hasExcelErrors = true;
+
+      this.excelPreview.push({
+        inqueryDate: this.parseExcelDate(date),
+        leadAccountId: lead ? lead.leadId : null,
+        projectCode: project ? project.projectId : null,
+        inqStatusId: inquiryStatus ? inquiryStatus.id : null,
+        rate: safeRate,
+        quantity: safeQty,
+        total: total,
+        isActive: isActive,
+        _errors: errors
+      });
+    });
+  }
+
+
+
+
+  saveInquiryExcelToDB() {
+    const validRows = this.excelPreview.filter(r => !r._errors.length);
+
+    validRows.forEach(r => {
+      this.inquiryService.create({
+        inqueryDate: r.inqueryDate,
+        leadAccountId: r.leadAccountId,
+        projectCode: r.projectCode,
+        inqStatusId: r.inqStatusId,
+
+        // REQUIRED BY Inquiry MODEL
+        unitCode: 0,
+        rate: r.rate,
+        quantity: r.quantity,
+
+        amount: r.rate * r.quantity,   // 🔥 REQUIRED
+        total: r.total,
+
+        particulars: '',
+
+        // REQUIRED META FIELDS
+        userId: 1,
+        branchId: 1,
+        orgId: 1,
+
+        isActive: r.isActive
+      }).subscribe();
+    });
+
+    alert('Inquiries imported successfully');
+    this.clearExcelPreview();
+    this.loadInquiries();
+  }
+
+
+  clearExcelPreview() {
+    this.excelPreview = [];
+    this.hasExcelErrors = false;
+  }
+
+  parseExcelDate(value: any): string {
+    if (typeof value === 'number') {
+      const date = new Date((value - 25569) * 86400 * 1000);
+      return date.toISOString().split('T')[0];
+    }
+    return new Date(value).toISOString().split('T')[0];
+  }
+
+  parseNumber(val: any): number {
+    if (val === null || val === undefined || val === '') return NaN;
+
+    // Remove currency symbols, commas, spaces
+    const clean = String(val).replace(/[₹, ]/g, '');
+    return Number(clean);
+  }
+
+
 }

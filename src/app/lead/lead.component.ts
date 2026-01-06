@@ -37,6 +37,10 @@ export class LeadComponent implements OnInit {
   totalPages = 0;
   paginatedLeads: any[] = [];
 
+  excelPreview: any[] = [];
+  hasExcelErrors = false;
+
+
   constructor(
     private fb: FormBuilder,
     private leadService: LeadService,
@@ -280,4 +284,92 @@ export class LeadComponent implements OnInit {
       this.loadLeads();
     });
   }
+
+  onImportSelect(event: any, fileInput: HTMLInputElement) {
+    if (event.target.value === 'excel') {
+      fileInput.click();
+    }
+    event.target.value = '';
+  }
+
+
+  importLeadExcel(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json<any>(sheet);
+      this.validateLeadExcel(rows);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+  validateLeadExcel(rows: any[]) {
+    this.excelPreview = [];
+    this.hasExcelErrors = false;
+
+    rows.forEach(r => {
+      const errors: string[] = [];
+
+      if (!r['Customer']) errors.push('Customer required');
+      if (!r['Contact']) errors.push('Contact required');
+      if (isNaN(r['Budget'])) errors.push('Invalid Budget');
+
+      if (!r['StateId']) errors.push('StateId required');
+      if (!r['DistId']) errors.push('DistId required');
+      if (!r['CityId']) errors.push('CityId required');
+
+      if (errors.length) this.hasExcelErrors = true;
+
+      this.excelPreview.push({
+        cName: r['Customer'],
+        contactNo: r['Contact'],
+        email: r['Email'] || '',
+        budget: Number(r['Budget']),
+        stateId: Number(r['StateId']),
+        distId: Number(r['DistId']),
+        cityId: Number(r['CityId']),
+        isActive: r['Status'] === 'Inactive' ? 0 : 1,
+        _errors: errors
+      });
+    });
+  }
+
+
+  saveLeadExcelToDB() {
+    const validRows = this.excelPreview.filter(r => !r._errors.length);
+
+    validRows.forEach(r => {
+      this.leadService.create({
+        cName: r.cName,
+        contactNo: r.contactNo,
+        email: r.email,
+        budget: r.budget,
+        stateId: r.stateId,
+        distId: r.distId,
+        cityId: r.cityId,
+        isActive: r.isActive,
+        date: this.getToday(),
+        userId: 1,
+        branchId: 1,
+        orgId: 1
+      }).subscribe();
+    });
+
+    alert('Leads imported successfully');
+    this.clearExcelPreview();
+    this.loadLeads();
+  }
+
+
+  clearExcelPreview() {
+    this.excelPreview = [];
+    this.hasExcelErrors = false;
+  }
+
+
+
 }

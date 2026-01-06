@@ -82,6 +82,7 @@
     transition: 0.25s ease;
     background-color: #2563eb;
     color: #e8e8f1;
+    margin: 15px 10px;
 }
 
 .toggle-btn,
@@ -506,4 +507,102 @@ select:focus {
     background: #ffffff;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ================= EXCEL ACTION BUTTON COLORS ================= */
+
+/* GREEN – SAVE IMPORTED PROJECTS */
+.btn-success {
+    background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 25px rgba(34, 197, 94, 0.35) !important;
+}
+
+.btn-success:hover:not(:disabled) {
+    background: linear-gradient(135deg, #15803d, #16a34a) !important;
+    transform: translateY(-1px);
+}
+
+/* RED – CLEAR EXCEL PREVIEW */
+.btn-danger {
+    background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35) !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #b91c1c, #dc2626) !important;
+    transform: translateY(-1px);
+}
+
+/* DISABLED STATE (SAVE BUTTON WHEN ERRORS EXIST) */
+.actions button:disabled {
+    background: #9ca3af !important;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* ================= MODAL ================= */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1001;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-card {
+    background: #ffffff;
+    width: 90%;
+    max-width: 1100px;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
 }

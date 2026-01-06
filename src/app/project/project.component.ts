@@ -33,6 +33,9 @@ export class ProjectComponent implements OnInit {
   filterToDate = '';
   filterStatus = '';
 
+  excelPreview: any[] = [];
+  hasExcelErrors = false;
+
   constructor(
     private fb: FormBuilder,
     private projectService: ProjectService,
@@ -43,6 +46,7 @@ export class ProjectComponent implements OnInit {
 
     const currentUser = this.authService.getCurrentUser();
     const userId = currentUser?.id || 0;
+
     const today = new Date().toISOString().split('T')[0];
 
     this.filterFromDate = today;
@@ -62,20 +66,43 @@ export class ProjectComponent implements OnInit {
       budgetAmt: ['', Validators.required],
       orgId: [0],
       branchId: [0],
-      userId: [{ value: userId, disabled: true }],
+      userId: [userId, Validators.required],
       isActive: [1]
     });
 
     this.loadProjects();
   }
 
+  // ================= SCROLL FIX =================
+  scrollToTop() {
+    const container = document.querySelector('.project-wrapper');
+    if (container) {
+      container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+
+  // ================= DATE HELPERS =================
+
+  private formatDate(date: any): string {
+    return new Date(date).toISOString().split('T')[0];
+  }
+
+  private excelDateToISO(value: any): string {
+    if (typeof value === 'number') {
+      const date = new Date(Math.round((value - 25569) * 86400 * 1000));
+      return date.toISOString().split('T')[0];
+    }
+    return new Date(value).toISOString().split('T')[0];
+  }
+
+  // ================= PROJECT LIST =================
 
   loadProjects() {
     this.projectService.getAll().subscribe({
       next: res => {
         this.projects = res;
 
-        // ✅ DEFAULT CURRENT MONTH (KEEP AS IS)
         const now = new Date();
         const start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
         const end = new Date(
@@ -92,13 +119,11 @@ export class ProjectComponent implements OnInit {
           return d >= start && d <= end;
         });
 
-        // ✅ pagination only
         this.setupPagination();
       },
       error: () => alert('Failed to load projects')
     });
   }
-
 
   setupPagination() {
     this.totalPages = Math.ceil(this.filteredProjects.length / this.pageSize);
@@ -108,12 +133,11 @@ export class ProjectComponent implements OnInit {
 
   updatePaginatedData() {
     const sorted = [...this.filteredProjects]
-      .sort((a, b) => b.projectId - a.projectId); // 🔥 DESC by projectId
+      .sort((a, b) => b.projectId - a.projectId);
 
     const start = (this.currentPage - 1) * this.pageSize;
     this.paginatedProjects = sorted.slice(start, start + this.pageSize);
   }
-
 
   nextPage() {
     if (this.currentPage < this.totalPages) {
@@ -133,10 +157,12 @@ export class ProjectComponent implements OnInit {
     this.isEditMode = false;
     this.editProjectId = null;
     this.showProjects = false;
+    this.scrollToTop(); // ✅ FIX
   }
 
   backToList() {
     this.showProjects = true;
+    this.scrollToTop(); // ✅ FIX
   }
 
   editProject(project: any) {
@@ -158,13 +184,23 @@ export class ProjectComponent implements OnInit {
       budgetAmt: project.budgetAmt,
       isActive: project.isActive
     });
+
+    this.scrollToTop(); // ✅ FIX
   }
 
   submit() {
     if (this.form.invalid) return;
 
     this.loading = true;
-    const payload = { ...this.form.getRawValue(), projectId: this.editProjectId };
+
+    const payload = {
+      ...this.form.getRawValue(),
+      sanctionDate: this.formatDate(this.form.value.sanctionDate),
+      startDate: this.formatDate(this.form.value.startDate),
+      endDate: this.formatDate(this.form.value.endDate),
+      projectId: this.editProjectId,
+      userId: this.authService.getCurrentUser()?.id
+    };
 
     if (this.isEditMode && this.editProjectId) {
       this.projectService.update(this.editProjectId, payload).subscribe(() => {
@@ -188,8 +224,9 @@ export class ProjectComponent implements OnInit {
     this.loadProjects();
   }
 
-  applyFilters() {
+  // ================= FILTERS =================
 
+  applyFilters() {
     if (
       this.filterFromDate &&
       this.filterToDate &&
@@ -199,15 +236,22 @@ export class ProjectComponent implements OnInit {
       return;
     }
 
-    const from = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
-    const to = this.filterToDate ? new Date(this.filterToDate + 'T23:59:59').getTime() : null;
+    const from = this.filterFromDate
+      ? new Date(this.filterFromDate).getTime()
+      : null;
+    const to = this.filterToDate
+      ? new Date(this.filterToDate + 'T23:59:59').getTime()
+      : null;
 
     this.filteredProjects = this.projects.filter(p => {
       const s = new Date(p.startDate).getTime();
       const e = new Date(p.endDate).getTime();
 
       const dateOk = (!from || s >= from) && (!to || e <= to);
-      const statusOk = this.filterStatus !== '' ? String(p.isActive) === this.filterStatus : true;
+      const statusOk =
+        this.filterStatus !== ''
+          ? String(p.isActive) === this.filterStatus
+          : true;
 
       return dateOk && statusOk;
     });
@@ -215,21 +259,16 @@ export class ProjectComponent implements OnInit {
     this.setupPagination();
   }
 
-
-  getToday(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0]; // yyyy-MM-dd
-  }
-
-
   clearFilters() {
-    const today = this.getToday();
-    this.filterFromDate = today;   // ✅ today
+    const today = new Date().toISOString().split('T')[0];
+    this.filterFromDate = today;
     this.filterToDate = today;
     this.filterStatus = '';
     this.filteredProjects = [...this.projects];
     this.setupPagination();
   }
+
+  // ================= EXPORT =================
 
   exportData(type: string) {
     if (type === 'pdf') this.exportPDF();
@@ -270,5 +309,83 @@ export class ProjectComponent implements OnInit {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Projects');
     XLSX.writeFile(wb, 'projects.xlsx');
+  }
+
+  // ================= EXCEL IMPORT =================
+
+  importExcel(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json<any>(sheet);
+      this.validateExcel(rows);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  validateExcel(rows: any[]) {
+    this.excelPreview = [];
+    this.hasExcelErrors = false;
+
+    rows.forEach(r => {
+      const errors: string[] = [];
+
+      if (!r['Project Name']) errors.push('Project Name required');
+      if (!r['Start Date']) errors.push('Start Date required');
+      if (!r['End Date']) errors.push('End Date required');
+      if (isNaN(r['Budget'])) errors.push('Invalid Budget');
+      if (!['Active', 'Inactive'].includes(r['Status']))
+        errors.push('Status must be Active or Inactive');
+
+      if (errors.length) this.hasExcelErrors = true;
+
+      this.excelPreview.push({
+        projectName: r['Project Name'],
+        startDate: this.excelDateToISO(r['Start Date']),
+        endDate: this.excelDateToISO(r['End Date']),
+        budgetAmt: Number(r['Budget']),
+        isActive: r['Status'] === 'Active' ? 1 : 0,
+        _errors: errors
+      });
+    });
+  }
+
+  saveExcelToDB() {
+    const validRows = this.excelPreview.filter(r => !r._errors.length);
+
+    validRows.forEach(r => {
+      this.projectService.create({
+        projectName: r.projectName,
+        sanctionDate: r.startDate,
+        startDate: r.startDate,
+        endDate: r.endDate,
+        budgetAmt: r.budgetAmt,
+        isActive: r.isActive,
+        orgId: 0,
+        branchId: 0,
+        userId: this.authService.getCurrentUser()?.id
+      }).subscribe();
+    });
+
+    alert('Excel projects imported successfully');
+    this.excelPreview = [];
+    this.loadProjects();
+  }
+
+  clearExcelPreview() {
+    this.excelPreview = [];
+    this.hasExcelErrors = false;
+  }
+
+  onImportSelect(event: any, fileInput: HTMLInputElement) {
+    if (event.target.value === 'excel') {
+      fileInput.click();
+    }
+    event.target.value = '';
   }
 }

@@ -24,7 +24,6 @@
                 <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
             </div>
 
-
             <select [(ngModel)]="filterStatus" (change)="applyFilters()">
                 <option value="">Status</option>
                 <option value="1">Active</option>
@@ -38,10 +37,17 @@
                 <option value="excel">Export Excel</option>
             </select>
 
+            <!-- IMPORT -->
+            <select (change)="onImportSelect($event, leadFileInput)">
+                <option value="">Import</option>
+                <option value="excel">Import Excel</option>
+            </select>
+
+            <input type="file" hidden #leadFileInput accept=".xlsx,.xls" (change)="importLeadExcel($event)" />
+
             <button type="button" class="clear-btn" (click)="clearFilters()">Clear</button>
         </div>
 
-        <!-- TABLE -->
         <!-- TABLE -->
         <div class="table-scroll">
             <table class="lead-table" *ngIf="paginatedLeads.length; else noData">
@@ -77,7 +83,6 @@
             </table>
         </div>
 
-
         <!-- PAGINATION -->
         <div class="pagination" *ngIf="totalPages > 1">
             <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
@@ -96,9 +101,7 @@
         <div class="header">
             <h2>{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h2>
 
-            <button class="toggle-btn" (click)="backToList()">
-                Back to List
-            </button>
+            <button class="toggle-btn" (click)="backToList()">Back to List</button>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="submit()">
@@ -231,6 +234,58 @@
             </div>
 
         </form>
+    </div>
+
+    <!-- ================= LEAD EXCEL IMPORT MODAL ================= -->
+    <div class="modal-backdrop" *ngIf="excelPreview.length"></div>
+
+    <div class="modal" *ngIf="excelPreview.length">
+        <div class="modal-card">
+
+            <div class="modal-header">
+                <h3>Excel Import Preview (Leads)</h3>
+                <button class="close-btn" (click)="clearExcelPreview()">✕</button>
+            </div>
+
+            <div class="modal-body table-scroll">
+                <table class="lead-table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Budget</th>
+                            <th>Status</th>
+                            <th>Errors</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let r of excelPreview" [style.background]="r._errors.length ? '#fee2e2' : ''">
+                            <td>{{ r.cName }}</td>
+                            <td>{{ r.contactNo }}</td>
+                            <td>{{ r.email }}</td>
+                            <td>{{ r.budget }}</td>
+                            <td>{{ r.isActive ? 'Active' : 'Inactive' }}</td>
+                            <td style="color:#991b1b;font-size:13px">
+                                {{ r._errors.join(', ') }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button class="toggle-btn btn-success" [disabled]="hasExcelErrors" (click)="saveLeadExcelToDB()">
+                    Save Imported Leads
+                </button>
+
+                <button class="clear-btn btn-danger" (click)="clearExcelPreview()">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
     </div>
 
 </div>

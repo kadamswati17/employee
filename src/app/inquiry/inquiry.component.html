@@ -42,6 +42,15 @@
                     <option value="excel">Export Excel</option>
                 </select>
 
+                <!-- 🔵 IMPORT INQUIRY -->
+                <select (change)="onImportSelect($event, inquiryFileInput)">
+                    <option value="">Import</option>
+                    <option value="excel">Import Excel</option>
+                </select>
+
+                <input type="file" hidden #inquiryFileInput accept=".xlsx,.xls" (change)="importInquiryExcel($event)" />
+
+
                 <button class="clear-btn" (click)="clearFilters()">Clear</button>
             </div>
         </div>
@@ -183,6 +192,65 @@
             </div>
 
         </form>
+    </div>
+
+
+    <!-- ================= INQUIRY EXCEL IMPORT MODAL ================= -->
+    <div class="modal-backdrop" *ngIf="excelPreview.length"></div>
+
+    <div class="modal" *ngIf="excelPreview.length">
+        <div class="modal-card">
+
+            <div class="modal-header">
+                <h3>Excel Import Preview (Inquiry)</h3>
+                <button class="close-btn" (click)="clearExcelPreview()">✕</button>
+            </div>
+
+            <div class="modal-body table-scroll">
+                <table class="inquiry-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Lead</th>
+                            <th>Project</th>
+                            <th>Status</th>
+                            <!-- <th>Rate</th> -->
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th>Errors</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let r of excelPreview" [style.background]="r._errors.length ? '#fee2e2' : ''">
+
+                            <td>{{ r.inqueryDate }}</td>
+                            <td>{{ r.leadAccountId ? getLeadName(r.leadAccountId) : '-' }}</td>
+                            <td>{{ r.projectCode ? getProjectName(r.projectCode) : '-' }}</td>
+                            <td>{{ r.inqStatusId ? getInquiryStatusName(r.inqStatusId) : '-' }}</td>
+
+                            <!-- <td>{{ r.rate }}</td> -->
+                            <td>{{ r.quantity }}</td>
+                            <td>{{ r.total }}</td>
+                            <td style="color:#991b1b;font-size:13px">
+                                {{ r._errors.join(', ') }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button class="toggle-btn btn-success" [disabled]="hasExcelErrors" (click)="saveInquiryExcelToDB()">
+                    Save Imported Inquiries
+                </button>
+
+                <button class="clear-btn btn-danger" (click)="clearExcelPreview()">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
     </div>
 
 </div>

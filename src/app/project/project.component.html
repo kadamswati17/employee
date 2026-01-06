@@ -1,103 +1,5 @@
 <div class="project-wrapper">
 
-    <!-- ================= PROJECT LIST ================= -->
-    <div class="project-card" *ngIf="showProjects">
-
-        <!-- HEADER -->
-        <div class="header">
-            <div class="header-top">
-                <h2>Project List</h2>
-
-                <button type="button" class="toggle-btn" (click)="openCreateForm()">
-                    + Add Project
-                </button>
-            </div>
-
-            <!-- FILTERS -->
-            <div class="filters">
-                <div class="date-field top-label">
-                    <label>From Date *</label>
-                    <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
-                </div>
-
-                <div class="date-field top-label">
-                    <label>To Date *</label>
-                    <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
-                </div>
-
-
-
-                <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-                    <option value="">Status</option>
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
-                </select>
-
-                <!-- EXPORT -->
-                <select (change)="exportData($any($event.target).value)">
-
-                    <option value="">Export</option>
-                    <option value="pdf">Export PDF</option>
-                    <option value="excel">Export Excel</option>
-                </select>
-
-                <button type="button" class="clear-btn" (click)="clearFilters()">Clear</button>
-            </div>
-        </div>
-
-        <!-- TABLE -->
-        <!-- TABLE WRAPPER -->
-        <div class="table-scroll">
-            <table class="project-table" *ngIf="paginatedProjects.length; else noData">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Project Name</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Budget</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr *ngFor="let p of paginatedProjects; let i = index">
-                        <!-- <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td> -->
-                        <td>{{ p.projectId }}</td>
-
-                        <td>{{ p.projectName }}</td>
-                        <td>{{ p.startDate | date }}</td>
-                        <td>{{ p.endDate | date }}</td>
-                        <td>₹ {{ p.budgetAmt | number }}</td>
-                        <td>
-                            <span class="badge" [ngClass]="p.isActive ? 'active' : 'inactive'">
-                                {{ p.isActive ? 'Active' : 'Inactive' }}
-                            </span>
-                        </td>
-                        <td>
-                            <button type="button" class="edit-btn" (click)="editProject(p)">
-                                Edit
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        <!-- PAGINATION -->
-        <div class="pagination" *ngIf="totalPages > 1">
-            <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
-            <span>Page {{ currentPage }} of {{ totalPages }}</span>
-            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-        </div>
-
-        <ng-template #noData>
-            <p class="no-data">No projects found</p>
-        </ng-template>
-    </div>
-
     <!-- ================= CREATE / EDIT PROJECT ================= -->
     <div class="project-card mt" *ngIf="!showProjects">
 
@@ -165,7 +67,7 @@
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="userId" readonly placeholder=" " />
+                    <input type="number" formControlName="userId" readonly />
                     <label>User ID</label>
                 </div>
 
@@ -189,7 +91,166 @@
                     {{ loading ? 'Saving...' : (isEditMode ? 'Update Project' : 'Save Project') }}
                 </button>
             </div>
+
         </form>
     </div>
 
-</div>
+    <div class="project-wrapper">
+
+        <!-- ================= PROJECT LIST ================= -->
+        <div class="project-card" *ngIf="showProjects">
+
+            <!-- HEADER -->
+            <div class="header">
+                <div class="header-top">
+                    <h2>Project List</h2>
+
+                    <button type="button" class="toggle-btn" (click)="openCreateForm()">
+                        + Add Project
+                    </button>
+                </div>
+
+                <!-- FILTERS -->
+                <div class="filters">
+
+                    <div class="date-field top-label">
+                        <label>From Date *</label>
+                        <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+                    </div>
+
+                    <div class="date-field top-label">
+                        <label>To Date *</label>
+                        <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+                    </div>
+
+                    <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+                        <option value="">Status</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+
+                    <!-- EXPORT -->
+                    <select (change)="exportData($any($event.target).value)">
+                        <option value="">Export</option>
+                        <option value="pdf">Export PDF</option>
+                        <option value="excel">Export Excel</option>
+                    </select>
+
+                    <!-- 🔵 IMPORT EXCEL -->
+
+                    <!-- 🔵 IMPORT (LIKE EXPORT) -->
+                    <select (change)="onImportSelect($event, fileInput)">
+                        <option value="">Import</option>
+                        <option value="excel">Import Excel</option>
+                    </select>
+
+                    <input type="file" hidden #fileInput accept=".xlsx,.xls" (change)="importExcel($event)" />
+
+                    <button type="button" class="clear-btn" (click)="clearFilters()">Clear</button>
+                </div>
+            </div>
+
+            <!-- 🔵 EXCEL PREVIEW TABLE -->
+
+
+            <!-- TABLE -->
+            <div class="table-scroll">
+                <table class="project-table" *ngIf="paginatedProjects.length; else noData">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Project Name</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Budget</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let p of paginatedProjects">
+                            <td>{{ p.projectId }}</td>
+                            <td>{{ p.projectName }}</td>
+                            <td>{{ p.startDate | date }}</td>
+                            <td>{{ p.endDate | date }}</td>
+                            <td>₹ {{ p.budgetAmt | number }}</td>
+                            <td>
+                                <span class="badge" [ngClass]="p.isActive ? 'active' : 'inactive'">
+                                    {{ p.isActive ? 'Active' : 'Inactive' }}
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" class="edit-btn" (click)="editProject(p)">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="pagination" *ngIf="totalPages > 1">
+                <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+                <span>Page {{ currentPage }} of {{ totalPages }}</span>
+                <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+            </div>
+
+            <ng-template #noData>
+                <p class="no-data">No projects found</p>
+            </ng-template>
+        </div>
+    </div>
+    <!-- ================= EXCEL IMPORT MODAL ================= -->
+    <div class="modal-backdrop" *ngIf="excelPreview.length"></div>
+
+    <div class="modal" *ngIf="excelPreview.length">
+        <div class="modal-card">
+
+            <div class="modal-header">
+                <h3>Excel Import Preview</h3>
+                <button class="close-btn" (click)="clearExcelPreview()">✕</button>
+            </div>
+
+            <div class="modal-body table-scroll">
+                <table class="project-table">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Budget</th>
+                            <th>Status</th>
+                            <th>Errors</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let r of excelPreview" [style.background]="r._errors.length ? '#fee2e2' : ''">
+
+                            <td>{{ r.projectName }}</td>
+                            <td>{{ r.startDate }}</td>
+                            <td>{{ r.endDate }}</td>
+                            <td>{{ r.budgetAmt }}</td>
+                            <td>{{ r.isActive ? 'Active' : 'Inactive' }}</td>
+                            <td style="color:#991b1b;font-size:13px">
+                                {{ r._errors.join(', ') }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button class="toggle-btn btn-success" [disabled]="hasExcelErrors" (click)="saveExcelToDB()">
+                    Save Imported Projects
+                </button>
+
+                <button class="clear-btn btn-danger" (click)="clearExcelPreview()">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+    </div>
