@@ -5,20 +5,16 @@
 
         <div class="header">
             <div class="header-top">
-                <h2>{{ isHistoryView ? 'Schedule History' : 'Schedule List' }}</h2>
+                <h2>Schedule List</h2>
 
-                <button type="button" class="toggle-btn" *ngIf="!isHistoryView" (click)="openForm()">
+                <button type="button" class="toggle-btn" (click)="openForm()">
                     + Add Schedule
-                </button>
-
-                <button type="button" class="toggle-btn" *ngIf="isHistoryView" (click)="backFromHistory()">
-                    Back to List
                 </button>
             </div>
         </div>
 
         <!-- ================= FILTERS ================= -->
-        <div class="filters" *ngIf="!isHistoryView">
+        <div class="filters">
 
             <div class="date-field top-label">
                 <label>From Date *</label>
@@ -45,9 +41,7 @@
                 <option value="excel">Export Excel</option>
             </select>
 
-            <button class="clear-btn" (click)="clearFilters()">
-                Clear
-            </button>
+            <button class="clear-btn" (click)="clearFilters()">Clear</button>
         </div>
 
         <!-- ================= TABLE ================= -->
@@ -60,7 +54,7 @@
                         <th>Schedule Date</th>
                         <th>Time</th>
                         <th>Remark</th>
-                        <th>Inquiry Status</th>
+                        <th>Status</th>
                         <th>Assign To</th>
                         <th>Action</th>
                     </tr>
@@ -68,13 +62,8 @@
 
                 <tbody>
                     <tr *ngFor="let s of paginatedData; let i = index">
-                        <!-- <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td> -->
-                        <td>{{ s.inqId }}</td>
-
-                        <td>
-                            {{ s.inquiryId }} - {{ inquiryNameMap[s.inquiryId] || '-' }}
-                        </td>
-
+                        <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                        <td>{{ s.inquiryId }}</td>
                         <td>{{ s.scheduleDate | date }}</td>
                         <td>{{ s.scheTime }}</td>
                         <td>{{ s.remark }}</td>
@@ -83,32 +72,18 @@
                         </td>
                         <td>{{ s.assignTo }}</td>
                         <td>
-                            <button class="edit-btn" (click)="editSchedule(s)">
-                                + Schedule
-                            </button>
-
-                            <button class="edit-btn history-btn" (click)="viewHistory(s.inquiryId)">
-                                History
-                            </button>
+                            <button class="edit-btn" (click)="editSchedule(s)">Edit</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <!-- ================= PAGINATION ================= -->
-            <div class="pagination" *ngIf="totalPages > 1">
-                <button (click)="prevPage()" [disabled]="currentPage === 1">
-                    Prev
-                </button>
+        </div>
 
-                <span>
-                    Page {{ currentPage }} of {{ totalPages }}
-                </span>
-
-                <button (click)="nextPage()" [disabled]="currentPage === totalPages">
-                    Next
-                </button>
-            </div>
-
+        <!-- ================= PAGINATION ================= -->
+        <div class="pagination" *ngIf="totalPages > 1">
+            <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
         </div>
 
         <ng-template #noData>
@@ -120,7 +95,7 @@
     <div class="project-card mt" *ngIf="!showList">
 
         <div class="form-header">
-            <h2>{{ isEdit ? 'Add Schedule' : 'Add Schedule' }}</h2>
+            <h2>{{ isEdit ? 'Edit Schedule' : 'Add Schedule' }}</h2>
 
             <button type="button" class="toggle-btn" (click)="backToList()">
                 Back to List
@@ -131,8 +106,10 @@
 
             <div class="grid">
 
+                <!-- Inquiry dropdown -->
                 <div class="field floating">
                     <select formControlName="inquiryId">
+
                         <option value="" disabled>Select Inquiry</option>
                         <option *ngFor="let l of inquiries" [value]="l.inqId">
                             {{ l.inqId }} - {{ l.cname }}
@@ -140,6 +117,7 @@
                     </select>
                     <label>Inquiry Id</label>
                 </div>
+
 
                 <div class="field floating">
                     <input type="date" formControlName="scheduleDate" />
@@ -175,13 +153,9 @@
             </div>
 
             <div class="actions">
-                <!-- <button type="submit">
-                    {{ isEdit ? 'Update Schedule' : 'Save Schedule' }}
-                </button> -->
                 <button type="submit">
-                    Save Schedule
+                    {{ isEdit ? 'Update Schedule' : 'Save Schedule' }}
                 </button>
-
             </div>
 
         </form>

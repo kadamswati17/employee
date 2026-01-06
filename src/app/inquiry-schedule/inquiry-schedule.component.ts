@@ -1,8 +1,8 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { InquiryScheduleService } from '../services/InquiryScheduleService';
-import { ActivatedRoute } from '@angular/router';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -17,7 +17,6 @@ export class InquiryScheduleComponent implements OnInit {
 
   showList = true;
   isEdit = false;
-  isHistoryView = false;
 
   form!: FormGroup;
   selectedId: number | null = null;
@@ -29,35 +28,22 @@ export class InquiryScheduleComponent implements OnInit {
   filteredSchedules: any[] = [];
   paginatedData: any[] = [];
 
+  // 👇 THIS WILL POWER THE DROPDOWN
   inquiries: any[] = [];
 
   filterFromDate = '';
   filterToDate = '';
   filterStatus = '';
-  inquiryNameMap: { [key: number]: string } = {};
-
 
   constructor(
     private fb: FormBuilder,
     private scheduleService: InquiryScheduleService,
-    private http: HttpClient,
-    private route: ActivatedRoute
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
-
-    this.route.queryParams.subscribe(params => {
-      if (params['openForm']) {
-        this.showList = false;
-      }
-    });
-
-    const today = this.getToday();
-    this.filterFromDate = today;
-    this.filterToDate = today;
-
     this.form = this.fb.group({
-      inquiryId: [''],
+      inquiryId: [''],   // CORRECT
       scheduleDate: [''],
       scheduleTime: [''],
       remark: [''],
@@ -73,151 +59,64 @@ export class InquiryScheduleComponent implements OnInit {
   loadSchedules(): void {
     this.scheduleService.getAllSchedules().subscribe(res => {
       this.schedules = res || [];
-
-      // 🔥 ONLY LATEST PER inquiryId
-      this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(this.schedules));
-
+      this.filteredSchedules = [...this.schedules];
       this.currentPage = 1;
       this.updatePagination();
     });
   }
 
-  // ================= GET LATEST RECORD PER inquiryId =================
-  getLatestPerInquiry(data: any[]): any[] {
-    const map = new Map<number, any>();
-
-    data.forEach(item => {
-      const key = item.inquiryId;
-      const currentTime = new Date(
-        item.scheduleDate + ' ' + item.scheTime
-      ).getTime();
-
-      if (
-        !map.has(key) ||
-        currentTime >
-        new Date(
-          map.get(key).scheduleDate + ' ' + map.get(key).scheTime
-        ).getTime()
-      ) {
-        map.set(key, item);
-      }
-    });
-
-    return Array.from(map.values());
-  }
-
-  // ================= HISTORY VIEW =================
-  viewHistory(inquiryId: number): void {
-    this.isHistoryView = true;
-    this.filteredSchedules =
-      this.sortDesc(this.schedules.filter(s => s.inquiryId === inquiryId));
-
-    this.currentPage = 1;
-    this.updatePagination();
-  }
-
-  backFromHistory(): void {
-    this.isHistoryView = false;
-    // this.filteredSchedules = this.getLatestPerInquiry(this.schedules);
-    this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(this.schedules));
-    this.currentPage = 1;
-    this.updatePagination();
-  }
-
-  // ================= DROPDOWN =================
+  // ================= 🔥 LOAD INQUIRY + LEAD NAME =================
   loadInquiryDropdown(): void {
+
+    // 1️⃣ Get inquiries
     this.http.get<any[]>('http://localhost:8080/api/inquiries')
       .subscribe(inquiries => {
+
+        // 2️⃣ Get leads
         this.http.get<any[]>('http://localhost:8080/api/leads')
           .subscribe(leads => {
 
-            this.inquiries = this.sortDesc(inquiries).map(inq => {
+            // 3️⃣ Map inquiryId + lead name
+            this.inquiries = inquiries.map(inq => {
               const lead = leads.find(l => l.leadId === inq.leadAccountId);
-              const cname = lead ? lead.cname : '-';
-
-              // ✅ STORE MAP (THIS IS THE KEY)
-              this.inquiryNameMap[inq.inqueryId] = cname;
 
               return {
-                inqId: inq.inqueryId,
-                cname
+                inqId: inq.inqueryId,                // ✅ REAL inquiry id
+                cname: lead ? lead.cname : '-'       // ✅ lead name
               };
             });
+
           });
       });
   }
 
-
-  // openForm(): void {
-  //   this.showList = false;
-  //   // this.isEdit = false;
-  //   this.selectedId = null;
-  //   this.form.reset({ status: 'OPEN' });
-  // }
-
   openForm(): void {
     this.showList = false;
+    this.isEdit = false;
+    this.selectedId = null;
     this.form.reset({ status: 'OPEN' });
   }
 
-
   backToList(): void {
     this.showList = true;
-    this.isHistoryView = false;
     this.form.reset();
-    this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(this.schedules));
-    this.updatePagination();
   }
 
-  // editSchedule(data: any): void {
-  //   this.isEdit = true;
-  //   this.showList = false;
-  //   this.selectedId = data.inqId;
-
-  //   this.form.patchValue({
-  //     inquiryId: data.inquiryId,
-  //     scheduleDate: data.scheduleDate,
-  //     scheduleTime: data.scheTime,
-  //     remark: data.remark,
-  //     status: data.inqStatus,
-  //     assignTo: data.assignTo
-  //   });
-  // }
   editSchedule(data: any): void {
+    this.isEdit = true;
     this.showList = false;
+    this.selectedId = data.inqId;
 
-    // ✅ ONLY inquiryId auto-fill
-    this.form.reset({
+    this.form.patchValue({
       inquiryId: data.inquiryId,
-      status: 'OPEN'
+      scheduleDate: data.scheduleDate,
+      scheduleTime: data.scheTime,
+      remark: data.remark,
+      status: data.inqStatus,
+      assignTo: data.assignTo
     });
+
   }
-
-
-  // submit(): void {
-  //   const payload = {
-  //     inquiryId: this.form.value.inquiryId,
-  //     scheduleDate: this.form.value.scheduleDate,
-  //     scheTime: this.form.value.scheduleTime,
-  //     remark: this.form.value.remark,
-  //     inqStatus: this.form.value.status,
-  //     assignTo: this.form.value.assignTo
-  //   };
-
-  //   if (this.isEdit && this.selectedId) {
-  //     this.scheduleService.updateSchedule(this.selectedId, payload)
-  //       .subscribe(() => {
-  //         this.loadSchedules();
-  //         this.backToList();
-  //       });
-  //   } else {
-  //     this.scheduleService.createSchedule(payload)
-  //       .subscribe(() => {
-  //         this.loadSchedules();
-  //         this.backToList();
-  //       });
-  //   }
-  // }
 
   submit(): void {
     const payload = {
@@ -229,57 +128,44 @@ export class InquiryScheduleComponent implements OnInit {
       assignTo: this.form.value.assignTo
     };
 
-    this.scheduleService.createSchedule(payload)
-      .subscribe(() => {
+    if (this.isEdit && this.selectedId) {
+      this.scheduleService.updateSchedule(this.selectedId, payload).subscribe(() => {
         this.loadSchedules();
         this.backToList();
       });
+    } else {
+      this.scheduleService.createSchedule(payload).subscribe(() => {
+        this.loadSchedules();
+        this.backToList();
+      });
+    }
   }
-
 
   // ================= FILTER =================
   applyFilters(): void {
-    this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(
-      this.schedules).filter(s => {
-        let ok = true;
-
-        if (
-          this.filterFromDate &&
-          this.filterToDate &&
-          new Date(this.filterToDate) < new Date(this.filterFromDate)
-        ) {
-          alert('To Date cannot be earlier than From Date');
-          return false;
-        }
-
-        if (this.filterFromDate) {
-          ok = ok && new Date(s.scheduleDate).getTime() >=
-            new Date(this.filterFromDate).setHours(0, 0, 0, 0);
-        }
-
-        if (this.filterToDate) {
-          ok = ok && new Date(s.scheduleDate).getTime() <=
-            new Date(this.filterToDate).setHours(23, 59, 59, 999);
-        }
-
-        if (this.filterStatus) {
-          ok = ok && s.inqStatus === this.filterStatus;
-        }
-
-        return ok;
-      })
-    );
+    this.filteredSchedules = this.schedules.filter(s => {
+      let ok = true;
+      if (this.filterFromDate) ok = ok && new Date(s.scheduleDate) >= new Date(this.filterFromDate);
+      if (this.filterToDate) ok = ok && new Date(s.scheduleDate) <= new Date(this.filterToDate);
+      if (this.filterStatus) ok = ok && s.inqStatus === this.filterStatus;
+      return ok;
+    });
 
     this.currentPage = 1;
     this.updatePagination();
   }
+  getToday(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // yyyy-MM-dd
+  }
+
 
   clearFilters(): void {
     const today = this.getToday();
-    this.filterFromDate = today;
-    this.filterToDate = today;
+    this.filterFromDate = today;   // ✅ today
+    this.filterToDate = today;     // ✅ today
     this.filterStatus = '';
-    this.filteredSchedules = this.sortDesc(this.getLatestPerInquiry(this.schedules));
+    this.filteredSchedules = [...this.schedules];
     this.currentPage = 1;
     this.updatePagination();
   }
@@ -287,8 +173,7 @@ export class InquiryScheduleComponent implements OnInit {
   // ================= PAGINATION =================
   updatePagination(): void {
     const start = (this.currentPage - 1) * this.pageSize;
-    this.paginatedData =
-      this.filteredSchedules.slice(start, start + this.pageSize);
+    this.paginatedData = this.filteredSchedules.slice(start, start + this.pageSize);
   }
 
   get totalPages(): number {
@@ -312,7 +197,7 @@ export class InquiryScheduleComponent implements OnInit {
   exportData(type: string): void {
     if (!type) return;
 
-    const data = this.sortDesc(this.filteredSchedules).map((s, i) => ({
+    const data = this.filteredSchedules.map((s, i) => ({
       '#': i + 1,
       'Inquiry ID': s.inquiryId,
       'Schedule Date': s.scheduleDate,
@@ -340,16 +225,6 @@ export class InquiryScheduleComponent implements OnInit {
     }
   }
 
-  getToday(): string {
-    return new Date().toISOString().split('T')[0];
-  }
-
-  // ================= SORT BY SCHEDULE ID DESC =================
-  sortDesc(data: any[]): any[] {
-    return [...data].sort((a, b) => {
-      return b.inqId - a.inqId;   // 🔥 Schedule record id DESC
-    });
-  }
-
-
 }
+
+
