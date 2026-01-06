@@ -146,11 +146,18 @@ export class InquiryScheduleComponent implements OnInit {
     }
   }
   onImportSelect(event: any, fileInput: HTMLInputElement): void {
+    console.log("modal opne")
     if (event.target.value === 'excel') {
-      fileInput.click();
+      setTimeout(() => {
+        fileInput.click();
+      });
     }
-    event.target.value = '';
+
+    setTimeout(() => {
+      event.target.value = '';
+    }, 200);
   }
+
 
   viewHistory(inquiryId: number): void {
     this.isHistoryView = true;
@@ -286,20 +293,28 @@ export class InquiryScheduleComponent implements OnInit {
     rows.forEach(r => {
       const errors: string[] = [];
 
-      const inquiryId = r['Inquiry ID'] || r['InquiryId'];
-      const dateVal = r['Schedule Date'] || r['Date'];
+      const inquiryId =
+        r['Inquiry ID'] ??
+        r['InquiryId'] ??
+        r['Inquiry_Id'];
+
+      const dateVal =
+        r['Schedule Date'] ??
+        r['ScheduleDate'] ??
+        r['Date'];
+
       const timeVal = r['Time'];
       const statusVal = r['Status'];
-      const assignToVal = r['Assign To'];
-      const remarkVal = r['Remark'];
 
-      if (!inquiryId) errors.push('InquiryId required');
-      if (!dateVal) errors.push('ScheduleDate required');
+      if (!inquiryId) errors.push('Inquiry ID required');
+      if (!dateVal) errors.push('Schedule Date required');
       if (!timeVal) errors.push('Time required');
       if (!statusVal) errors.push('Status required');
 
+      const normalizedStatus = this.normalizeStatus(statusVal);
       const allowed = ['OPEN', 'IN_PROGRESS', 'CLOSED', 'SUCCESS', 'CANCELLED'];
-      if (statusVal && !allowed.includes(String(statusVal).toUpperCase())) {
+
+      if (statusVal && !allowed.includes(normalizedStatus)) {
         errors.push('Invalid Status');
       }
 
@@ -309,14 +324,16 @@ export class InquiryScheduleComponent implements OnInit {
         inquiryId: Number(inquiryId),
         scheduleDate: this.parseExcelDate(dateVal),
         scheTime: timeVal,
-        inqStatus: this.normalizeStatus(statusVal),
-
-        assignTo: assignToVal || '',
-        remark: remarkVal || '',
+        inqStatus: normalizedStatus,
+        assignTo: r['Assign To'] ?? r['AssignTo'] ?? '',
+        remark: r['Remark'] ?? '',
         _errors: errors
       });
     });
+
+    console.log('Preview rows:', this.scheduleExcelPreview);
   }
+
 
 
   parseExcelDate(value: any): string {

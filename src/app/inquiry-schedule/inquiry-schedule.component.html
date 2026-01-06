@@ -169,61 +169,68 @@
         </form>
     </div>
 
-    <div class="modal" *ngIf="scheduleExcelPreview.length">
-
-        <div class="modal-card">
-
-            <div class="modal-header">
-                <h3>Excel Import Preview (Schedule)</h3>
-                <button class="close-btn" (click)="clearExcelPreview()">✕</button>
-            </div>
-
-            <div class="modal-body table-scroll">
-                <table class="project-table">
-                    <thead>
-                        <tr>
-                            <th>Inquiry</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Status</th>
-                            <th>Assign To</th>
-                            <th>Remark</th>
-                            <th>Errors</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr *ngFor="let r of scheduleExcelPreview"
-                            [style.background]="r._errors.length ? '#fee2e2' : ''">
+    <!-- BACKDROP -->
 
 
-                            <td>{{ r.inquiryId || '-' }}</td>
-                            <td>{{ r.scheduleDate }}</td>
-                            <td>{{ r.scheTime }}</td>
-                            <td>{{ r.inqStatus }}</td>
-                            <td>{{ r.assignTo }}</td>
-                            <td>{{ r.remark }}</td>
+</div>
+<div class="modal-backdrop-custom" *ngIf="scheduleExcelPreview.length"></div>
 
-                            <td style="color:#991b1b;font-size:13px">
-                                {{ r._errors.join(', ') }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="modal-footer">
-                <button class="toggle-btn" [disabled]="hasScheduleExcelErrors" (click)="saveScheduleExcelToDB()">
-                    Save Imported Schedules
-                </button>
+<!-- <div class="modal-custom" *ngIf="scheduleExcelPreview.length"> -->
 
 
-                <button class="clear-btn" (click)="clearExcelPreview()">
-                    Cancel
-                </button>
-            </div>
+<div class="modal-custom" *ngIf="scheduleExcelPreview.length">
 
+
+    <div class="modal-card">
+
+        <div class="modal-header">
+            <h3>Excel Import Preview </h3>
+            <button class="close-btn" (click)="clearExcelPreview()">✕</button>
         </div>
-    </div>
 
+        <div class="modal-body table-scroll">
+            <table class="project-table">
+                <thead>
+                    <tr>
+                        <th>Inquiry</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Assign To</th>
+                        <th>Remark</th>
+                        <th>Errors</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let r of scheduleExcelPreview" [style.background]="r._errors.length ? '#fee2e2' : ''">
+
+
+                        <td>{{ r.inquiryId || '-' }}</td>
+                        <td>{{ r.scheduleDate }}</td>
+                        <td>{{ r.scheTime }}</td>
+                        <td>{{ r.inqStatus }}</td>
+                        <td>{{ r.assignTo }}</td>
+                        <td>{{ r.remark }}</td>
+
+                        <td style="color:#991b1b;font-size:13px">
+                            {{ r._errors.join(', ') }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-footer">
+            <button class="toggle-btn" [disabled]="hasScheduleExcelErrors" (click)="saveScheduleExcelToDB()">
+                Save Imported Schedules
+            </button>
+
+
+            <button class="clear-btn" (click)="clearExcelPreview()">
+                Cancel
+            </button>
+        </div>
+
+    </div>
 </div>
