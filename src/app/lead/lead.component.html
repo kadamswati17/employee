@@ -5,10 +5,7 @@
 
         <div class="header">
             <h2>Lead List</h2>
-
-            <button class="toggle-btn" (click)="openCreate()">
-                + Add Lead
-            </button>
+            <button class="toggle-btn" (click)="openCreate()">+ Add Lead</button>
         </div>
 
         <!-- FILTERS -->
@@ -66,7 +63,8 @@
                 <tbody>
                     <tr *ngFor="let l of paginatedLeads">
                         <td>{{ l.leadId }}</td>
-                        <td>{{ l.cname }}</td>
+                        <td>{{ l.cName || l.customerName }}</td>
+
                         <td>{{ l.contactNo }}</td>
                         <td>{{ l.email }}</td>
                         <td>₹ {{ l.budget | number }}</td>
@@ -100,7 +98,6 @@
 
         <div class="header">
             <h2>{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h2>
-
             <button class="toggle-btn" (click)="backToList()">Back to List</button>
         </div>
 
@@ -109,77 +106,77 @@
             <div class="grid">
 
                 <div class="field floating">
-                    <input type="date" formControlName="date" placeholder=" " />
+                    <input type="date" formControlName="date" />
                     <label>Date *</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="cName" placeholder=" " />
+                    <input formControlName="cName" />
                     <label>Customer Name *</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="contactNo" placeholder=" " />
+                    <input type="number" formControlName="contactNo" />
                     <label>Contact No *</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="email" placeholder=" " />
+                    <input formControlName="email" />
                     <label>Email</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="website" placeholder=" " />
+                    <input formControlName="website" />
                     <label>Website</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="panNo" placeholder=" " />
+                    <input formControlName="panNo" />
                     <label>PAN No *</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="gstNo" placeholder=" " />
+                    <input formControlName="gstNo" />
                     <label>GST No</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="phone" placeholder=" " />
-                    <label>Phone</label>
+                    <input type="number" formControlName="phone" />
+                    <label>Contact No 2</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="fax" placeholder=" " />
+                    <input type="number" formControlName="fax" />
                     <label>Fax</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="income" placeholder=" " />
+                    <input type="number" formControlName="income" />
                     <label>Income</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="incomeSource" placeholder=" " />
+                    <input formControlName="incomeSource" />
                     <label>Income Source</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="otherIncome" placeholder=" " />
+                    <input type="number" formControlName="otherIncome" />
                     <label>Other Income</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="otherIncomeSource" placeholder=" " />
+                    <input formControlName="otherIncomeSource" />
                     <label>Other Income Source</label>
                 </div>
 
                 <div class="field floating">
-                    <input type="number" formControlName="budget" placeholder=" " />
+                    <input type="number" formControlName="budget" />
                     <label>Budget *</label>
                 </div>
 
                 <div class="field floating">
-                    <input formControlName="area" placeholder=" " />
+                    <input formControlName="area" />
                     <label>Area</label>
                 </div>
 
@@ -216,12 +213,12 @@
                 </div>
 
                 <div class="field floating">
-                    <textarea rows="1" formControlName="invoiceAddress" placeholder=" "></textarea>
-                    <label>Invoice Address</label>
+                    <textarea rows="1" formControlName="invoiceAddress"></textarea>
+                    <label>Address</label>
                 </div>
 
                 <div class="field floating full">
-                    <textarea rows="2" formControlName="notes" placeholder=" "></textarea>
+                    <textarea rows="2" formControlName="notes"></textarea>
                     <label>Notes</label>
                 </div>
 
@@ -236,7 +233,7 @@
         </form>
     </div>
 
-    <!-- ================= LEAD EXCEL IMPORT MODAL ================= -->
+    <!-- ================= EXCEL IMPORT MODAL ================= -->
     <div class="modal-backdrop" *ngIf="excelPreview.length"></div>
 
     <div class="modal" *ngIf="excelPreview.length">
@@ -251,27 +248,46 @@
                 <table class="lead-table">
                     <thead>
                         <tr>
-                            <th>Customer</th>
-                            <th>Contact</th>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Contact 1</th>
+                            <th>Contact 2</th>
                             <th>Email</th>
+                            <th>State</th>
+                            <th>Income</th>
                             <th>Budget</th>
+                            <th>Income Source</th>
+                            <th>Address</th>
                             <th>Status</th>
-                            <th>Errors</th>
+                            <th>Result</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <tr *ngFor="let r of excelPreview" [style.background]="r._errors.length ? '#fee2e2' : ''">
+                        <tr *ngFor="let r of excelPreview" [ngClass]="{
+        'success-row': r.importStatus === 'SUCCESS',
+        'error-row': r.importStatus === 'FAILED'
+      }">
+
+                            <td>{{ r.id }}</td>
+                            <td>{{ r.date }}</td>
                             <td>{{ r.cName }}</td>
-                            <td>{{ r.contactNo }}</td>
+
+                            <td>{{ r.contactNo1 }}</td>
+                            <td>{{ r.contactNo2 }}</td>
                             <td>{{ r.email }}</td>
+                            <td>{{ r.state }}</td>
+                            <td>{{ r.income }}</td>
                             <td>{{ r.budget }}</td>
-                            <td>{{ r.isActive ? 'Active' : 'Inactive' }}</td>
-                            <td style="color:#991b1b;font-size:13px">
-                                {{ r._errors.join(', ') }}
-                            </td>
+                            <td>{{ r.incomeSource }}</td>
+                            <td>{{ r.address }}</td>
+
+                            <td>{{ r.importStatus }}</td>
+                            <td class="error-text">{{ r.errorMessage }}</td>
                         </tr>
                     </tbody>
+
                 </table>
             </div>
 

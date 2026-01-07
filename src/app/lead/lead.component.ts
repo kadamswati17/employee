@@ -105,6 +105,9 @@ export class LeadComponent implements OnInit {
   loadLeads() {
     this.leadService.getAll().subscribe(res => {
       this.leads = res;
+      console.log('🟢 API RAW RESPONSE:', res);
+      console.log('🟢 FIRST RECORD:', res[0]);
+      console.log('🟢 FIRST RECORD KEYS:', Object.keys(res[0] || {}));
 
       // ✅ DEFAULT CURRENT MONTH
       const now = new Date();
@@ -217,14 +220,22 @@ export class LeadComponent implements OnInit {
     doc.text('Lead List', 14, 15);
 
     autoTable(doc, {
-      head: [['#', 'Customer', 'Contact', 'Email', 'Budget', 'Status']],
-      body: this.filteredLeads.map((l, i) => [
-        i + 1,
-        l.cname,
+      head: [[
+        'ID', 'Date', 'Name', 'Contact 1', 'Contact 2',
+        'Email', 'State', 'Income', 'Budget', 'Income Source', 'Address'
+      ]],
+      body: this.filteredLeads.map(l => [
+        l.leadId,
+        l.date,
+        l.cName,
         l.contactNo,
+        l.phone || '',
         l.email,
+        l.stateName || '',
+        l.income || 0,
         l.budget,
-        l.isActive ? 'Active' : 'Inactive'
+        l.incomeSource || '',
+        l.invoiceAddress || ''
       ]),
       startY: 20
     });
@@ -232,14 +243,20 @@ export class LeadComponent implements OnInit {
     doc.save('leads.pdf');
   }
 
+
   exportExcel() {
-    const data = this.filteredLeads.map((l, i) => ({
-      'Sr No': i + 1,
-      'Customer': l.cname,
-      'Contact': l.contactNo,
-      'Email': l.email,
-      'Budget': l.budget,
-      'Status': l.isActive ? 'Active' : 'Inactive'
+    const data = this.filteredLeads.map(l => ({
+      ID: l.leadId,
+      Date: l.date,
+      Name: l.cName,
+      ContactNo1: l.contactNo,
+      ContactNo2: l.phone || '',
+      Email: l.email,
+      State: l.stateName || '',
+      Income: l.income || 0,
+      Budget: l.budget,
+      IncomeSource: l.incomeSource || '',
+      Address: l.invoiceAddress || ''
     }));
 
     const ws = XLSX.utils.json_to_sheet(data);
@@ -271,7 +288,11 @@ export class LeadComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.loading = true;
-    const payload = { ...this.form.value, cname: this.form.value.cName, leadId: this.editLeadId };
+    const payload = {
+      ...this.form.value,
+      leadId: this.editLeadId
+    };
+
 
     const req = this.isEditMode && this.editLeadId
       ? this.leadService.update(this.editLeadId, payload)
@@ -297,21 +318,112 @@ export class LeadComponent implements OnInit {
     const file = event.target.files[0];
     if (!file) return;
 
-    // ✅ Ensure states are loaded
-    this.locationService.getStates().subscribe(states => {
-      this.states = states;
+    const reader = new FileReader();
 
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json<any>(sheet);
-        this.validateLeadExcel(rows);
-      };
-      reader.readAsArrayBuffer(file);
-    });
+    reader.onload = (e: any) => {
+      const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json<any>(sheet);
+
+      console.log('Excel row sample:', rows[0]); // ✅ DEBUG HERE
+
+      this.excelPreview = rows.map(r => {
+        const row = this.normalizeRow(r);
+
+        return {
+          id: row.id || null,
+          date: this.formatExcelDate(row.date),
+
+          cName:
+            row.name ||
+            row.customer ||
+            row.customername ||
+            row.cname ||
+            '',
+
+          contactNo1:
+            String(
+              row.contactno1 ||
+              row.contact1 ||
+              row.contact ||
+              ''
+            ),
+
+          contactNo2:
+            String(
+              row.contactno2 ||
+              row.contact2 ||
+              row.phone ||
+              ''
+            ),
+
+          email: row.email || '',
+
+          state:
+            row.state ||
+            row.statename ||
+            row.stateid ||
+            '',
+
+          income: Number(row.income || 0),
+          budget: Number(row.budget || 0),
+
+          incomeSource:
+            row.incomesource ||
+            row.source ||
+            '',
+
+          address:
+            row.address ||
+            row.invoiceaddress ||
+            '',
+
+          importStatus: 'PENDING',
+          errorMessage: ''
+        };
+      });
+
+
+    };
+
+    reader.readAsArrayBuffer(file);
   }
+
+  normalizeRow(row: any) {
+    const normalized: any = {};
+
+    Object.keys(row).forEach(key => {
+      const cleanKey = key
+        .toLowerCase()
+        .replace(/\s+/g, '')
+        .replace(/_/g, '');
+
+      normalized[cleanKey] = row[key];
+    });
+
+    return normalized;
+  }
+
+  formatExcelDate(value: any): string | null {
+    if (!value) return null;
+
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return value;
+    }
+
+    if (typeof value === 'number') {
+      const d = XLSX.SSF.parse_date_code(value);
+      return `${d.y}-${String(d.m).padStart(2, '0')}-${String(d.d).padStart(2, '0')}`;
+    }
+
+    if (typeof value === 'string' && value.includes('/')) {
+      const [d, m, y] = value.split('/');
+      return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    }
+
+    return null;
+  }
+
 
   validateLeadExcel(rows: any[]) {
     this.excelPreview = [];
@@ -341,32 +453,36 @@ export class LeadComponent implements OnInit {
 
 
   saveLeadExcelToDB() {
-    const validRows = this.excelPreview.filter(r => !r._errors.length);
+    const payload = this.excelPreview.map(r => ({
+      cName: r.cName,
+      contactNo: Number(r.contactNo1),
+      phone: Number(r.contactNo2 || 0),
+      email: r.email,
+      income: r.income,
+      budget: r.budget,
+      incomeSource: r.incomeSource,
+      invoiceAddress: r.address,
+      isActive: 1
+    }));
 
-    validRows.forEach(r => {
-      this.leadService.create({
-        cName: r.cName,
-        contactNo: r.contactNo,
-        email: r.email,
-        budget: r.budget,
+    this.leadService.importLeads({ leads: payload }).subscribe({
+      next: (res: any) => {
+        res.results.forEach((r: any) => {
+          const row = this.excelPreview.find(
+            p => p.cName === r.name && p.contactNo1 === r.contactNo1
+          );
 
-        // ✅ DEFAULT LOCATION IDS
-        stateId: 1,
-        distId: 1,
-        cityId: 1,
-
-        isActive: r.isActive,
-        date: this.getToday(),
-        userId: 1,
-        branchId: 1,
-        orgId: 1
-      }).subscribe();
+          if (row) {
+            row.importStatus = r.status;
+            row.errorMessage = r.error || '';
+          }
+        });
+      }
     });
-
-    alert('Leads imported successfully');
-    this.clearExcelPreview();
-    this.loadLeads();
   }
+
+
+
 
 
 

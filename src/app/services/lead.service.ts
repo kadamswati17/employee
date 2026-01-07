@@ -32,4 +32,9 @@ export class LeadService {
     delete(id: number): Observable<void> {
         return this.http.delete<void>(`${this.API}/${id}`);
     }
+
+    // ✅ FIXED IMPORT METHOD
+    importLeads(payload: { leads: any[] }): Observable<any> {
+        return this.http.post<any>(`${this.API}/import`, payload);
+    }
 }
