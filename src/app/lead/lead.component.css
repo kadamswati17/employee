@@ -430,3 +430,55 @@ button {
     font-size: 22px;
     cursor: pointer;
 }
+
+/* ================= COMPACT FILTER BAR – LEAD LIST ================= */
+
+@media (max-width: 1200px) {
+
+    .filters {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: nowrap;
+        /* keep single row */
+        overflow-x: hidden;
+        /* remove scroll */
+        justify-content: flex-start;
+        padding: 10px 12px;
+    }
+
+    /* DATE FIELDS */
+    .filters .date-field.top-label {
+        min-width: unset;
+    }
+
+    .filters .date-field.top-label input {
+        width: 150px;
+        /* 🔽 reduced width */
+        height: 34px;
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    .filters .date-field.top-label label {
+        font-size: 12px;
+        top: -6px;
+    }
+
+    /* SELECT DROPDOWNS */
+    .filters select {
+        width: 140px;
+        /* 🔽 compact */
+        height: 34px;
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    /* CLEAR BUTTON */
+    .filters .clear-btn {
+        height: 34px;
+        padding: 0 18px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+}

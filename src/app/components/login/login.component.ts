@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     // Already logged in? redirect
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/employees']);
+      this.router.navigate(['/home']);
       return;
     }
 
@@ -48,29 +48,25 @@ export class LoginComponent implements OnInit {
     };
 
     this.authService.login(credentials).subscribe({
-      next: () => {
-        const user = this.authService.getCurrentUser();
+      next: (res: any) => {
+        // ✅ token & user already saved in AuthService
 
-        if (!user) return;
-
-        // ROLE-BASED REDIRECT
-        if (user.role === 'ROLE_ADMIN') {
-          this.router.navigate(['/employees']);
+        // 🔒 SAME ROLE-BASED LOGIC (UNCHANGED)
+        if (res.role === 'ROLE_ADMIN') {
+          this.router.navigate(['/home']);
         } else if (
-          user.role === 'ROLE_L1' ||
-          user.role === 'ROLE_L2' ||
-          user.role === 'ROLE_L3'
+          res.role === 'ROLE_L1' ||
+          res.role === 'ROLE_L2' ||
+          res.role === 'ROLE_L3'
         ) {
-          this.router.navigate(['/customers']);   // or '/km-list' if you prefer
+          this.router.navigate(['/customers']); // or '/km-list'
         }
-      }
-      ,
+
+        this.isLoading = false;
+      },
       error: (err) => {
         this.isLoginFailed = true;
         this.errorMessage = err.error?.message || 'Invalid login credentials';
-        this.isLoading = false;
-      },
-      complete: () => {
         this.isLoading = false;
       }
     });

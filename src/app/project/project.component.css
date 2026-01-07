@@ -606,3 +606,121 @@ select:focus {
     justify-content: center;
     gap: 16px;
 }
+
+/* ================= COMPACT FILTER BAR – PROJECT LIST ================= */
+
+@media (max-width: 1200px) {
+
+    .filters {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: nowrap;
+        /* keep single row */
+        overflow-x: hidden;
+        /* remove scrollbar */
+        justify-content: flex-start;
+        padding: 10px 12px;
+    }
+
+    /* DATE FIELDS */
+    .filters .date-field.top-label {
+        min-width: unset;
+    }
+
+    .filters .date-field.top-label input {
+        width: 150px;
+        /* 🔽 reduced date width */
+        height: 34px;
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    .filters .date-field.top-label label {
+        font-size: 12px;
+        top: -12px;
+    }
+
+    /* ALL SELECT DROPDOWNS */
+    .filters select {
+        width: 140px;
+        /* 🔽 compact width */
+        height: 34px;
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    /* CLEAR BUTTON */
+    .filters .clear-btn {
+        height: 34px;
+        padding: 0 18px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+}
+
+/* ================= COMPACT TABLE ROWS ================= */
+
+.project-table th,
+.project-table td {
+    padding: 8px 12px;
+    /* reduced row height */
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+.project-table th {
+    padding: 10px 12px;
+    font-size: 13px;
+}
+
+/* Badge size reduced */
+.project-table .badge {
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+/* Edit button compact */
+.project-table .edit-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* Mobile extra compact */
+@media (max-width: 768px) {
+
+    .project-table th,
+    .project-table td {
+        padding: 6px 10px;
+        font-size: 18px;
+    }
+
+    .project-table .badge {
+        padding: 3px 8px;
+        font-size: 18px;
+    }
+
+    .project-table .edit-btn {
+        padding: 5px 12px;
+        font-size: 18px;
+    }
+}
+
+.success-row {
+    background-color: #e6fffa;
+}
+
+.error-row {
+    background-color: #ffe6e6;
+}
+
+.success-text {
+    color: green;
+    font-weight: bold;
+}
+
+.error-text {
+    color: red;
+    font-size: 13px;
+}

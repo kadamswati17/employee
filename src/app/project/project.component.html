@@ -204,13 +204,27 @@
     </div>
     <!-- ================= EXCEL IMPORT MODAL ================= -->
     <div class="modal-backdrop" *ngIf="excelPreview.length"></div>
+    <!-- 🔴 API MESSAGE -->
+
 
     <div class="modal" *ngIf="excelPreview.length">
         <div class="modal-card">
+            <div *ngIf="apiMessage" style="
+  margin: 12px 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 600;
+  text-align: center;
+">
+                {{ apiMessage }}
+            </div>
+
 
             <div class="modal-header">
                 <h3>Excel Import Preview</h3>
-                <button class="close-btn" (click)="clearExcelPreview()">✕</button>
+                <!-- <button class="close-btn" (click)="clearExcelPreview()">✕</button> -->
             </div>
 
             <div class="modal-body table-scroll">
@@ -222,23 +236,42 @@
                             <th>End Date</th>
                             <th>Budget</th>
                             <th>Status</th>
-                            <th>Errors</th>
+                            <th> Import Status</th>
+                            <th>Import Result</th>
+
                         </tr>
                     </thead>
 
                     <tbody>
-                        <tr *ngFor="let r of excelPreview" [style.background]="r._errors.length ? '#fee2e2' : ''">
+                        <tr *ngFor="let row of excelPreview" [ngClass]="{
+        'success-row': row.importStatus === 'SUCCESS',
+        'error-row': row.importStatus === 'FAILED'
+      }">
 
-                            <td>{{ r.projectName }}</td>
-                            <td>{{ r.startDate }}</td>
-                            <td>{{ r.endDate }}</td>
-                            <td>{{ r.budgetAmt }}</td>
-                            <td>{{ r.isActive ? 'Active' : 'Inactive' }}</td>
-                            <td style="color:#991b1b;font-size:13px">
-                                {{ r._errors.join(', ') }}
+                            <td>{{ row.projectName }}</td>
+                            <td>{{ row.startDate }}</td>
+                            <td>{{ row.endDate }}</td>
+                            <td>{{ row.budgetAmt }}</td>
+
+                            <!-- ✅ BUSINESS STATUS -->
+                            <td>
+                                {{ row.isActive ? 'Active' : 'Inactive' }}
                             </td>
+
+                            <!-- ✅ IMPORT RESULT -->
+                            <td>
+                                <span *ngIf="row.importStatus === 'SUCCESS'" class="success-text">✔ Success</span>
+                                <span *ngIf="row.importStatus === 'FAILED'" class="error-text">❌ Failed</span>
+                            </td>
+
+                            <!-- ERRORS -->
+                            <td class="error-text">
+                                {{ row.errorMessage }}
+                            </td>
+
                         </tr>
                     </tbody>
+
                 </table>
             </div>
 

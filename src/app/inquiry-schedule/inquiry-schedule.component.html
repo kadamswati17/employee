@@ -27,7 +27,7 @@
             </div>
 
             <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-                <option value="">Status</option>
+                <option value=""> Inquiry Status</option>
                 <option value="OPEN">Open</option>
                 <option value="IN_PROGRESS">In Progress</option>
                 <option value="CLOSED">Closed</option>
@@ -41,10 +41,10 @@
                 <option value="excel">Export Excel</option>
             </select>
 
-            <select (change)="onImportSelect($event, inquiryFileInput)">
+            <!-- <select (change)="onImportSelect($event, inquiryFileInput)">
                 <option value="">Import</option>
                 <option value="excel">Import Excel</option>
-            </select>
+            </select> -->
 
             <input type="file" hidden #inquiryFileInput accept=".xlsx,.xls" (change)="importScheduleExcel($event)" />
 

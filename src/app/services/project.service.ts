@@ -38,4 +38,18 @@ export class ProjectService {
     delete(id: number): Observable<any> {
         return this.http.delete(`${this.API_URL}/${id}`, this.authHeaders());
     }
+    importProjects(payload: any) {
+        return this.http.post(
+            `${this.API_URL}/import`,
+            payload,
+            {
+                headers: new HttpHeaders({
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                })
+            }
+        );
+    }
+
+
 }

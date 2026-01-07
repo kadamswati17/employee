@@ -297,16 +297,22 @@ export class LeadComponent implements OnInit {
     const file = event.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json<any>(sheet);
-      this.validateLeadExcel(rows);
-    };
-    reader.readAsArrayBuffer(file);
+    // ✅ Ensure states are loaded
+    this.locationService.getStates().subscribe(states => {
+      this.states = states;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json<any>(sheet);
+        this.validateLeadExcel(rows);
+      };
+      reader.readAsArrayBuffer(file);
+    });
   }
+
   validateLeadExcel(rows: any[]) {
     this.excelPreview = [];
     this.hasExcelErrors = false;
@@ -316,27 +322,22 @@ export class LeadComponent implements OnInit {
 
       if (!r['Customer']) errors.push('Customer required');
       if (!r['Contact']) errors.push('Contact required');
-      if (isNaN(r['Budget'])) errors.push('Invalid Budget');
-
-      if (!r['StateId']) errors.push('StateId required');
-      if (!r['DistId']) errors.push('DistId required');
-      if (!r['CityId']) errors.push('CityId required');
+      if (!r['Budget'] || isNaN(r['Budget'])) errors.push('Invalid Budget');
 
       if (errors.length) this.hasExcelErrors = true;
 
       this.excelPreview.push({
         cName: r['Customer'],
-        contactNo: r['Contact'],
+        contactNo: String(r['Contact']), // 👈 IMPORTANT (no scientific notation)
         email: r['Email'] || '',
         budget: Number(r['Budget']),
-        stateId: Number(r['StateId']),
-        distId: Number(r['DistId']),
-        cityId: Number(r['CityId']),
         isActive: r['Status'] === 'Inactive' ? 0 : 1,
         _errors: errors
       });
     });
   }
+
+
 
 
   saveLeadExcelToDB() {
@@ -348,9 +349,12 @@ export class LeadComponent implements OnInit {
         contactNo: r.contactNo,
         email: r.email,
         budget: r.budget,
-        stateId: r.stateId,
-        distId: r.distId,
-        cityId: r.cityId,
+
+        // ✅ DEFAULT LOCATION IDS
+        stateId: 1,
+        distId: 1,
+        cityId: 1,
+
         isActive: r.isActive,
         date: this.getToday(),
         userId: 1,
@@ -363,6 +367,8 @@ export class LeadComponent implements OnInit {
     this.clearExcelPreview();
     this.loadLeads();
   }
+
+
 
 
   clearExcelPreview() {

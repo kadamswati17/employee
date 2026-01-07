@@ -565,3 +565,55 @@ select:focus {
 .modal-header .close-btn:hover {
     background: #dc2626;
 }
+
+/* ================= COMPACT FILTERS – SCHEDULE LIST ================= */
+
+@media (max-width: 1200px) {
+
+    .filters {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        /* tighter spacing */
+        flex-wrap: nowrap;
+        /* ❌ no wrapping */
+        overflow-x: hidden;
+        /* ❌ no scroll */
+        padding: 10px 12px;
+    }
+
+    /* DATE FIELDS */
+    .filters .date-field.top-label {
+        min-width: unset;
+    }
+
+    .filters .date-field.top-label input {
+        width: 150px;
+        /* 🔽 reduced date width */
+        height: 34px;
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    .filters .date-field.top-label label {
+        font-size: 12px;
+        top: -6px;
+    }
+
+    /* SELECT DROPDOWNS */
+    .filters select {
+        width: 140px;
+        /* 🔽 smaller select */
+        height: 34px;
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    /* CLEAR BUTTON */
+    .filters .clear-btn {
+        height: 34px;
+        padding: 0 18px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+}
