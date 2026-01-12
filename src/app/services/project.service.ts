@@ -50,6 +50,27 @@ export class ProjectService {
             }
         );
     }
+    createFromExcel(projectName: string): Observable<any> {
+        return this.http.post(this.API_URL, {
+            projectName: projectName,
+            isActive: 1
+        }, this.authHeaders());
+    }
+
+    createFromInquiry(payload: {
+        projectName: string;
+        budgetAmt?: number;
+        panNo?: string | null;
+        stateId?: number | null;
+        cityId?: number | null;
+        budget?: number | null;
+    }) {
+        return this.http.post(
+            `${this.API_URL}/from-inquiry`,
+            payload,
+            this.authHeaders()
+        );
+    }
 
 
 }

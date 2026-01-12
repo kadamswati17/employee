@@ -444,3 +444,15 @@ textarea {
         white-space: nowrap;
     }
 }
+
+/* ================= TABLE ROW COLORS ================= */
+
+/* .inquiry-table tbody tr:nth-child(odd) {
+    background-color: #bfd6ed;
+  
+}
+
+.inquiry-table tbody tr:nth-child(even) {
+    background-color: #f1cece;
+   
+} */

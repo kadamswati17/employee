@@ -617,3 +617,13 @@ select:focus {
         white-space: nowrap;
     }
 }
+
+/* .project-table tbody tr:nth-child(odd) {
+    background-color: #bfd6ed;
+   
+}
+
+.project-table tbody tr:nth-child(even) {
+    background-color: #f1cece;
+ 
+} */

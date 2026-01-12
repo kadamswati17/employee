@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Inquiry } from '../models/inquiry.model';
 import { APP_CONFIG } from '../config/config';
@@ -11,18 +11,24 @@ export class InquiryService {
 
     constructor(private http: HttpClient) { }
 
-    // CREATE
+    private authHeaders() {
+        return {
+            headers: new HttpHeaders({
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            })
+        };
+    }
+
     create(data: Inquiry): Observable<Inquiry> {
-        return this.http.post<Inquiry>(this.API, data);
+        return this.http.post<Inquiry>(this.API, data, this.authHeaders());
     }
 
-    // GET ALL
     getAll(): Observable<Inquiry[]> {
-        return this.http.get<Inquiry[]>(this.API);
+        return this.http.get<Inquiry[]>(this.API, this.authHeaders());
     }
 
-    // UPDATE
     update(id: number, data: Inquiry): Observable<Inquiry> {
-        return this.http.put<Inquiry>(`${this.API}/${id}`, data);
+        return this.http.put<Inquiry>(`${this.API}/${id}`, data, this.authHeaders());
     }
 }

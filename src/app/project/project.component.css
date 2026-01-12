@@ -724,3 +724,24 @@ select:focus {
     color: red;
     font-size: 13px;
 }
+
+/* ================= LEAD & PROJECT TABLE ROW COLORS ================= */
+
+/* .lead-table tbody tr:nth-child(odd),
+.project-table tbody tr:nth-child(odd) {
+    background-color: #bfd6ed;
+  
+}
+
+.lead-table tbody tr:nth-child(even),
+.project-table tbody tr:nth-child(even) {
+    background-color: #f1cece;
+
+}
+
+
+.lead-table tbody tr:hover,
+.project-table tbody tr:hover {
+    background-color: #e0f2fe;
+    transition: background-color 0.2s ease;
+} */

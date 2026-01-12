@@ -29,11 +29,12 @@
                 </select>
 
                 <select [(ngModel)]="filterInquiryStatus" (change)="applyFilters()">
-                    <option value="">Inquiry Status</option>
-                    <option *ngFor="let s of statusList" [value]="s.id">
+                    <option [ngValue]="''">Inquiry Status</option>
+                    <option *ngFor="let s of statusList" [ngValue]="s.id">
                         {{ s.name }}
                     </option>
                 </select>
+
 
                 <!-- EXPORT -->
                 <select #exportSel (change)="exportData(exportSel.value)">
@@ -64,6 +65,8 @@
                     <th>Lead</th>
                     <th>Project</th>
                     <th>Status</th>
+                    <th>Unit Code</th>
+
                     <th>Inquiry Status</th>
                     <th>Total</th>
                     <th>Action</th>
@@ -83,6 +86,9 @@
                             {{ i.isActive ? 'Active' : 'Inactive' }}
                         </span>
                     </td>
+                    <td>{{ i.unitCode }}</td>
+
+
                     <td>{{ getInquiryStatusName(i.inqStatusId) }}</td>
                     <td>₹ {{ i.total | number }}</td>
                     <td>
@@ -140,13 +146,16 @@
 
                 <div class="field floating">
                     <select formControlName="leadAccountId">
-                        <option value="" disabled></option>
+                        <option value="" disabled>Select Lead</option>
+
                         <option *ngFor="let l of leads" [value]="l.leadId">
-                            {{ l.cname }}
+                            {{ l.leadId }} - {{ l.cName }}
                         </option>
                     </select>
+
                     <label>Lead *</label>
                 </div>
+
 
                 <div class="field floating">
                     <select formControlName="projectCode">
@@ -214,6 +223,8 @@
                             <th>Lead</th>
                             <th>Project</th>
                             <th>Status</th>
+                            <th>Unit Code</th>
+
                             <!-- <th>Rate</th> -->
                             <th>Qty</th>
                             <th>Total</th>
@@ -225,9 +236,23 @@
                         <tr *ngFor="let r of excelPreview" [style.background]="r._errors.length ? '#fee2e2' : ''">
 
                             <td>{{ r.inqueryDate }}</td>
-                            <td>{{ r.leadAccountId ? getLeadName(r.leadAccountId) : '-' }}</td>
-                            <td>{{ r.projectCode ? getProjectName(r.projectCode) : '-' }}</td>
+                            <td>
+                                {{ r.leadObj?.cName }}
+                                <span *ngIf="r.leadObj?._isNew" style="color:red;font-size:11px">
+                                    (new)
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ r.projectObj?.projectName }}
+                                <span *ngIf="r.projectObj?._isNew" style="color:red;font-size:11px">
+                                    (new)
+                                </span>
+                            </td>
+
                             <td>{{ r.inqStatusId ? getInquiryStatusName(r.inqStatusId) : '-' }}</td>
+                            <td>{{ r.unitCode }}</td>
+
 
                             <!-- <td>{{ r.rate }}</td> -->
                             <td>{{ r.quantity }}</td>
@@ -241,9 +266,10 @@
             </div>
 
             <div class="modal-footer">
-                <button class="toggle-btn btn-success" [disabled]="hasExcelErrors" (click)="saveInquiryExcelToDB()">
+                <button class="toggle-btn btn-success" (click)="saveInquiryExcelToDB()">
                     Save Imported Inquiries
                 </button>
+
 
                 <button class="clear-btn btn-danger" (click)="clearExcelPreview()">
                     Cancel
