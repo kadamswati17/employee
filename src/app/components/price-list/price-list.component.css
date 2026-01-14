@@ -1,19 +1,21 @@
+/* ================= CONTAINER ================= */
 .party-price-container {
-    max-width: 100%;
-    margin: 25px 100px;
-    background: #fff;
-    padding: 25px;
+    width: calc(100% - 40px);
+    margin: 20px;
+    background-color: #f1f4f8;
+    padding: 18px;
     border-radius: 12px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
+/* ================= TITLE ================= */
 .title {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     font-weight: 700;
 }
 
-/* FORM */
+/* ================= FORM ================= */
 .price-form {
     margin-bottom: 30px;
 }
@@ -24,66 +26,80 @@
     align-items: flex-end;
 }
 
+/* ================= FIELD ================= */
 .field {
     position: relative;
     width: 100%;
 }
 
-.field input {
+/* ================= INPUT & SELECT BASE ================= */
+.field input,
+.select-input {
     width: 100%;
-    padding: 12px 10px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    height: 56px;
+    padding: 16px 14px;
+    font-size: 16px;
+    border: 2px solid #c7c7c7;
+    border-radius: 10px;
     outline: none;
     background: transparent;
 }
 
-/* FLOATING LABEL */
-.field label {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    background: white;
-    padding: 0 6px;
-    color: #777;
-    font-size: 14px;
-    transform: translateY(-50%);
-    pointer-events: none;
-    transition: 0.3s;
+/* ================= INPUT ================= */
+.field input {
+    background: transparent;
 }
 
+/* ================= SELECT ================= */
+.select-input {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    /* ✅ fixes before-select look */
+    color: #999;
+    /* placeholder-like */
+    background: #fff;
+}
+
+/* ================= LABEL ================= */
+.field label {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0 6px;
+    font-size: 16px;
+    color: #777;
+    background: #f1f4f8;
+    pointer-events: none;
+    transition: 0.25s ease;
+}
+
+/* ================= FLOAT LABEL — INPUT ================= */
 .field input:focus+label,
-.field input:not(:placeholder-shown)+label,
-.select-input.open+label,
-.select-input:not(:empty)+label {
-    top: -6px;
-    font-size: 18px;
+.field input:not(:placeholder-shown)+label {
+    top: -8px;
+    font-size: 12px;
+    font-weight: 600;
     color: #6a11cb;
 }
 
-/* ================= CUSTOM DROPDOWN ================= */
-.custom-select {
-    position: relative;
+/* ================= FLOAT LABEL — SELECT ================= */
+.select-input.open+label,
+.select-input.filled+label {
+    top: -8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6a11cb;
 }
 
-.select-input {
-    width: 100%;
-
-    padding: 20px 10px;
-    font-size: 18px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    cursor: pointer;
-    background: #fff;
-
-}
-
+/* ================= BORDER FOCUS ================= */
+.field input:focus,
 .select-input.open {
     border-color: #6a11cb;
 }
 
-/* DROPDOWN LIST FIX */
+/* ================= DROPDOWN ================= */
 .select-options {
     position: absolute;
     top: 100%;
@@ -107,36 +123,20 @@
     background: #f1ecff;
 }
 
-/* BUTTON */
+/* ================= BUTTON ================= */
 .btn-submit {
     background: linear-gradient(135deg, #6a11cb, #2575fc);
     color: white;
     border: none;
-    margin-top: 20px;
-    /* margin-left: 390px; */
-    padding: 12px 18px;
-    border-radius: 8px;
+    padding: 14px 32px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
-}
-
-.btn-submit {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-
     display: block;
-    /* ✅ required */
     margin: 20px auto 0;
-    /* ✅ centers button */
 }
 
-
-/* TABLE */
+/* ================= TABLE ================= */
 .table-wrapper {
     margin-top: 20px;
 }
@@ -147,7 +147,7 @@ table {
 }
 
 thead {
-    background: #6a11cb;
+    background: blue;
     color: white;
 }
 
@@ -158,11 +158,34 @@ td {
     text-align: center;
 }
 
-/* MOBILE */
-@media (max-width: 767px) {
+/* ================= ROW STRIPES ================= */
+.party-price-container table tbody tr:nth-child(odd) {
+    background-color: #bfd6edab;
+}
 
+.party-price-container table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.party-price-container table tbody tr:hover {
+    background-color: #f1f5f9 !important;
+}
+
+/* ================= EDIT BUTTON ================= */
+.party-price-container .btn-edit {
+    background: #2563eb;
+    color: #ffffff;
+    padding: 6px 18px;
+    border: none;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 767px) {
     .party-price-container {
-        margin: 15px;
         padding: 15px;
     }
 
@@ -172,12 +195,7 @@ td {
     }
 
     .btn-submit {
-        margin-left: 0;
         width: 100%;
-    }
-
-    .table-wrapper {
-        overflow-x: auto;
     }
 
     table {

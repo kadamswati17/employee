@@ -1,12 +1,15 @@
 .employee-list-container {
-  max-width: 1400px;
-  /* margin: 0 auto; */
-  padding: 30px 20px;
+  max-width: 1465px;
+  padding: 12px 20px;
   background-color: #f1f4f8;
   border-radius: 20px;
-  margin: 20px 60px;
 
+  /* top-bottom | left-right */
+  margin: 20px 30px;
 }
+
+
+
 
 .header-section {
   display: flex;
@@ -279,4 +282,18 @@
   color: #991b1b;
   padding: 14px;
   border-radius: 8px;
+}
+
+/* ================= ROW STRIPES ================= */
+.lead-table tbody tr:nth-child(odd) {
+  background-color: #bfd6edab;
+}
+
+.lead-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+/* Optional: hover override */
+.lead-table tbody tr:hover {
+  background-color: #f1f5f9 !important;
 }

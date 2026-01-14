@@ -385,8 +385,14 @@ export class InquiryComponent implements OnInit {
       if (!r['Date'] && !r['Lead'] && !r['Project']) return;
 
       const errors: string[] = [];
-      const panNo = String(r['PAN Number'] || '').trim();
-      const contactNo = this.parseNumber(r['Contact Number']);
+      const panNo = r['PAN Number']
+        ? String(r['PAN Number']).trim()
+        : null;
+
+      const contactNo = r['Contact Number']
+        ? this.parseNumber(r['Contact Number'])
+        : null;
+
       const projectBudget = this.parseNumber(r['Project Budget']);
 
       const date = r['Date'];
@@ -505,12 +511,14 @@ export class InquiryComponent implements OnInit {
       const leadPromise = r.leadObj._isNew
         ? this.leadService.createFromInquiry({
           customerName: r.leadObj.cName,
-          panNo: r.leadObj.panNo || null,
-          contactNo: r.leadObj.contactNo,
+          panNo: r.leadObj.panNo ?? null,
+          contactNo: r.leadObj.contactNo ?? null,
           stateId: null,
           cityId: null,
           budget: null
-        }).toPromise()
+        })
+
+          .toPromise()
         : Promise.resolve(r.leadObj);
 
       const projectPromise = r.projectObj._isNew

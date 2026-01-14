@@ -1,9 +1,9 @@
 /* PAGE CONTAINER */
 .root-master-container {
-    max-width: 1200px;
-    margin: 30px auto;
-    background: #ffffff;
-    padding: 30px;
+    max-width: 1480px;
+    margin: 20px auto;
+    background-color: #f1f4f8;
+    padding: 10px 20px;
     border-radius: 14px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
@@ -13,7 +13,7 @@
     text-align: center;
     font-size: 24px;
     font-weight: 600;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 /* FORM LAYOUT — SAME AS DISTRICT */
@@ -149,4 +149,96 @@ td {
     border-radius: 6px;
     border: 1px solid #d1d5db;
     cursor: pointer;
+}
+
+/* ================= TALUKA TABLE – MATCH ALL MASTERS ================= */
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+    border: 1px solid #e5e7eb;
+}
+
+/* HEADER */
+.table-wrapper thead {
+    background-color: #1e40af;
+    /* BLUE */
+}
+
+.table-wrapper thead th {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 16px;
+    text-transform: uppercase;
+    border-right: 1px solid #1e3a8a;
+}
+
+/* CELLS */
+.table-wrapper tbody td {
+    padding: 16px;
+    font-size: 15px;
+    border-right: 1px solid #e5e7eb;
+}
+
+/* STRIPED ROWS */
+.table-wrapper tbody tr:nth-child(odd) td {
+    background-color: #dbeaf7;
+}
+
+.table-wrapper tbody tr:nth-child(even) td {
+    background-color: #ffffff;
+}
+
+/* HOVER */
+.table-wrapper tbody tr:hover td {
+    background-color: #f1f5f9;
+}
+
+/* ACTION COLUMN CENTER */
+.table-wrapper tbody td:last-child {
+    text-align: center;
+}
+
+/* EDIT BUTTON – SAME GREEN STYLE */
+.table-wrapper .btn-edit {
+    background: #22c55e;
+    color: #ffffff;
+    padding: 6px 20px;
+    border-radius: 999px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.table-wrapper .btn-edit:hover {
+    background: #16a34a;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+    transform: translateY(-1px);
+}
+
+/* ================= PAGINATION – SAME LOOK ================= */
+.pagination {
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pagination button {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background: #e5e7eb;
+    color: #64748b;
+    cursor: not-allowed;
 }

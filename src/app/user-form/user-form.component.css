@@ -6,8 +6,8 @@
 
 .form-box {
     width: 480px;
-    padding: 30px 35px;
-    background: #ffffff;
+    padding: 10px 25px;
+    background-color: #f1f4f8;
     border-radius: 12px;
     box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
     border: 1px solid #eaeaea;
@@ -16,7 +16,7 @@
 
 .form-title {
     text-align: center;
-    margin-bottom: 2px;
+    margin-bottom: 5px;
     font-size: 26px;
     font-weight: 700;
     color: #333;

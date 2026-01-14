@@ -3,7 +3,7 @@
     <!-- ================= ORDERS LIST ================= -->
     <div *ngIf="!showOrderForm">
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
             <h2 class="mb-0">Sale Orders</h2>
 
             <button class="btn btn-primary" (click)="showOrderForm = true">
@@ -12,9 +12,10 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-striped table-bordered align-middle">
+            <table class="table table-bordered align-middle custom-table">
 
-                <thead class="table-dark">
+
+                <thead>
                     <tr>
                         <th>Order ID</th>
                         <th>Date</th>

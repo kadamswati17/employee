@@ -1,16 +1,16 @@
 .lead-wrapper {
     background-color: white;
-    padding: 30px;
+    padding: 20px;
     min-height: 100vh;
 }
 
 /* CARD */
 .lead-card {
-    max-width: 1400px;
+    max-width: 1450px;
     margin: auto;
     background-color: #f1f4f8;
     border-radius: 18px;
-    padding: 18px;
+    padding: 10px 20px;
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
 }
 
@@ -23,13 +23,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 28px;
+    margin-bottom: 15px;
 }
 
 .header h2 {
     margin: 0;
     font-size: 26px;
     color: #1e3a8a;
+    display: flex;
+    justify-content: center;
 }
 
 .toggle-btn {
@@ -128,7 +130,7 @@ button {
 /* HEADER */
 .lead-table th {
     background: blue;
-    font-size: 16px;
+    font-size: 18px;
     text-transform: uppercase;
     color: white;
 }
@@ -138,7 +140,7 @@ button {
 .lead-table td {
     padding: 14px;
     border: 1px solid #e5e7eb;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 /* ROW HOVER */
@@ -149,7 +151,7 @@ button {
 .badge {
     padding: 6px 14px;
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 20px;
     font-weight: 600;
 }
 
@@ -456,13 +458,13 @@ button {
         width: 150px;
         /* 🔽 reduced width */
         height: 34px;
-        font-size: 14px;
+        font-size: 18px;
         padding: 0 10px;
     }
 
     .filters .date-field.top-label label {
-        font-size: 12px;
-        top: -6px;
+        font-size: 16px;
+        top: -12px;
     }
 
     /* SELECT DROPDOWNS */
@@ -470,7 +472,7 @@ button {
         width: 140px;
         /* 🔽 compact */
         height: 34px;
-        font-size: 14px;
+        font-size: 18px;
         padding: 0 10px;
     }
 
@@ -485,18 +487,18 @@ button {
 
 /* ================= LEAD TABLE ROW COLORS ================= */
 
-/* .lead-table tbody tr:nth-child(odd) {
-    background-color: #bfd6ed;
-   
+.lead-table tbody tr:nth-child(odd) {
+    background-color: #bfd6edab;
+
 }
 
 .lead-table tbody tr:nth-child(even) {
-    background-color: #f1cece;
- 
+    background-color: white;
+
 }
 
 
 .lead-table tbody tr:hover {
     background-color: #e0f2fe;
     transition: background-color 0.2s ease;
-} */
+}

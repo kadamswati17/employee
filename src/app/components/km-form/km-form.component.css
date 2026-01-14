@@ -1,14 +1,14 @@
 /* MAIN CONTAINER */
 .employee-form-container {
-    max-width: 1200px;
-    margin: 20px auto;
+    max-width: 1490px;
+    margin: 5px 20px;
     padding: 20px;
 }
 
 /* CARD */
 .form-card {
-    background: #fff;
-    padding: 35px;
+    background-color: #f1f4f8;
+    padding: 10px 20px;
     border-radius: 18px;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
 }
@@ -17,8 +17,10 @@
 .form-header h2 {
     font-size: 32px;
     font-weight: 600;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     color: #222;
+    display: flex;
+    justify-content: center;
 }
 
 /* GRID — 3 columns */

@@ -9,7 +9,8 @@
             <!-- PARTY -->
             <div class="field custom-select">
 
-                <div class="select-input" (click)="togglePartyDropdown()" [class.open]="partyOpen">
+                <div class="select-input" (click)="togglePartyDropdown()" [class.open]="partyOpen"
+                    [class.filled]="form.get('party')?.value">
                     {{ form.get('party')?.value?.username || '' }}
                 </div>
 
@@ -23,10 +24,12 @@
 
             </div>
 
+
             <!-- PRODUCT -->
             <div class="field custom-select">
 
-                <div class="select-input" (click)="toggleProductDropdown()" [class.open]="productOpen">
+                <div class="select-input" (click)="toggleProductDropdown()" [class.open]="productOpen"
+                    [class.filled]="form.get('product')?.value">
                     {{ form.get('product')?.value?.name || '' }}
                 </div>
 
@@ -39,6 +42,7 @@
                 </div>
 
             </div>
+
 
             <!-- PRICE -->
             <div class="field">

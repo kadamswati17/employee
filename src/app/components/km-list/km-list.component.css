@@ -5,11 +5,13 @@
 
 /* Layout container */
 .employee-list-container {
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: 1450px;
+    margin: 15px 30px;
     padding: 18px;
     font-family: "Helvetica Neue", Arial, sans-serif;
     color: #2b2b2b;
+    background-color: #f1f4f8;
+    border-radius: 15px;
 }
 
 /* Top bar */
@@ -20,7 +22,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 15px;
-    margin-bottom: 1rem;
+    margin-bottom: 0rem;
 }
 
 .top-bar h2 {
@@ -447,4 +449,30 @@
         min-width: 1000px;
         /* better spacing for many columns */
     }
+}
+
+/* ================= KM BATCH LIST ================= */
+.lead-table tbody tr:nth-child(odd) {
+    background-color: #bfd6edab;
+}
+
+.lead-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.lead-table tbody tr:hover {
+    background-color: #f1f5f9 !important;
+}
+
+/* ================= MODAL TABLE STRIPES ================= */
+.employee-table tbody tr:nth-child(odd) {
+    background-color: #bfd6edab;
+}
+
+.employee-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.employee-table tbody tr:hover {
+    background-color: #f1f5f9 !important;
 }

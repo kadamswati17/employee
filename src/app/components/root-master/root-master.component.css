@@ -4,16 +4,16 @@
 
 .root-master-container {
     max-width: 100%;
-    margin: 25px 100px;
-    background: #ffffff;
-    padding: 25px;
+    margin: 20px 40px;
+    background-color: #f1f4f8;
+    padding: 15px;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .title {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     font-weight: 700;
 }
 
@@ -215,4 +215,17 @@
     table {
         min-width: 600px;
     }
+}
+
+/* ================= ROOT MASTER TABLE ================= */
+.root-master-container .lead-table tbody tr:nth-child(odd) {
+    background-color: #bfd6edab;
+}
+
+.root-master-container .lead-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.root-master-container .lead-table tbody tr:hover {
+    background-color: #f1f5f9 !important;
 }

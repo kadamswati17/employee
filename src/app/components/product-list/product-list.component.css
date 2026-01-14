@@ -237,7 +237,7 @@
     align-items: center;
     gap: 16px;
     padding: 0 12px;
-    margin-bottom: 20px;
+    margin: 10px 10px;
 }
 
 .header-left {
@@ -442,4 +442,53 @@
     color: #888;
     font-size: 16px;
     margin-top: 40px;
+}
+
+/* Make mat-form-field compact */
+.search-input {
+    width: 260px;
+    /* optional */
+}
+
+/* Reduce outline height */
+.search-input.mat-form-field-appearance-outline .mat-form-field-wrapper {
+    padding-bottom: 0;
+}
+
+/* Reduce field height */
+.search-input .mat-form-field-flex {
+    height: 36px;
+    /* 🔹 minimum clean height */
+    align-items: center;
+}
+
+/* Reduce input padding */
+.search-input .mat-input-element {
+    padding: 6px 8px !important;
+    font-size: 14px;
+}
+
+/* Reduce outline */
+.search-input .mat-form-field-outline-start,
+.search-input .mat-form-field-outline-end,
+.search-input .mat-form-field-outline-gap {
+    min-height: 36px;
+}
+
+/* Reduce suffix icon size */
+.search-input mat-icon {
+    font-size: 18px;
+}
+
+/* Reduce icon button padding */
+.search-input button.mat-icon-button {
+    width: 32px;
+    height: 32px;
+}
+
+.wrapper {
+    margin: 10px 30px;
+    background-color: #f1f4f8;
+    padding: 2px 15px;
+    border-radius: 15px;
 }

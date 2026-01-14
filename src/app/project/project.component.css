@@ -16,15 +16,17 @@
 /* ================= WRAPPER ================= */
 .project-wrapper {
     background-color: white;
-    padding: 12px;
+    /* padding: 12px; */
     min-height: 100vh;
     font-family: "Inter", "Segoe UI", sans-serif;
+    margin: 15px 20px;
+    /* padding: 10px 30px; */
 }
 
 /* ================= CARD ================= */
 .project-card {
-    max-width: 1400px;
-    margin: auto;
+    max-width: 1450px;
+    /* margin: 20px; */
     background: var(--card-bg);
     border-radius: 14px;
     padding: 10px 20px;
@@ -41,7 +43,7 @@
 .header {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 0px;
     margin-bottom: 10px;
 }
 
@@ -82,7 +84,7 @@
     transition: 0.25s ease;
     background-color: #2563eb;
     color: #e8e8f1;
-    margin: 15px 10px;
+    margin: 0px 10px;
 }
 
 .toggle-btn,
@@ -632,12 +634,12 @@ select:focus {
         width: 150px;
         /* 🔽 reduced date width */
         height: 34px;
-        font-size: 14px;
+        font-size: 17px;
         padding: 0 10px;
     }
 
     .filters .date-field.top-label label {
-        font-size: 12px;
+        font-size: 16px;
         top: -12px;
     }
 
@@ -646,7 +648,7 @@ select:focus {
         width: 140px;
         /* 🔽 compact width */
         height: 34px;
-        font-size: 14px;
+        font-size: 19px;
         padding: 0 10px;
     }
 
@@ -654,7 +656,7 @@ select:focus {
     .filters .clear-btn {
         height: 34px;
         padding: 0 18px;
-        font-size: 14px;
+        font-size: 20px;
         white-space: nowrap;
     }
 }
@@ -671,19 +673,19 @@ select:focus {
 
 .project-table th {
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: 18px;
 }
 
 /* Badge size reduced */
 .project-table .badge {
     padding: 6px 10px;
-    font-size: 13px;
+    font-size: 18px;
 }
 
 /* Edit button compact */
 .project-table .edit-btn {
-    padding: 8px 14px;
-    font-size: 13px;
+    padding: 8px 22px;
+    font-size: 18px;
     margin: 0;
 }
 
@@ -727,15 +729,15 @@ select:focus {
 
 /* ================= LEAD & PROJECT TABLE ROW COLORS ================= */
 
-/* .lead-table tbody tr:nth-child(odd),
+.lead-table tbody tr:nth-child(odd),
 .project-table tbody tr:nth-child(odd) {
-    background-color: #bfd6ed;
-  
+    background-color: #bfd6edab;
+
 }
 
 .lead-table tbody tr:nth-child(even),
 .project-table tbody tr:nth-child(even) {
-    background-color: #f1cece;
+    background-color: white;
 
 }
 
@@ -744,4 +746,76 @@ select:focus {
 .project-table tbody tr:hover {
     background-color: #e0f2fe;
     transition: background-color 0.2s ease;
-} */
+}
+
+/* ================= FILTERS – MOBILE RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+
+    .filters {
+        flex-wrap: wrap;
+        /* allow wrapping */
+        gap: 12px;
+        justify-content: flex-start;
+        overflow-x: visible;
+        /* remove horizontal scroll */
+    }
+
+    /* Each filter takes full width */
+    .filters>* {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    /* Date fields */
+    .filters .date-field.top-label {
+        width: 100%;
+    }
+
+    .filters .date-field.top-label input {
+        width: 100%;
+        height: 40px;
+        font-size: 15px;
+    }
+
+    /* Select dropdowns */
+    .filters select {
+        width: 100%;
+        height: 40px;
+        font-size: 15px;
+    }
+
+    /* Clear button */
+    .filters .clear-btn {
+        width: 100%;
+        height: 42px;
+        font-size: 16px;
+        text-align: center;
+    }
+}
+
+/* ================= GLOBAL DROPDOWN FIX (MOBILE) ================= */
+
+@media (max-width: 768px) {
+
+    /* 🔥 REMOVE ALL CLIPPING */
+    .project-wrapper,
+    .project-card,
+    .header,
+    .filters {
+        overflow: visible !important;
+    }
+
+    /* 🔥 FORCE SELECT TO USE VIEWPORT */
+    select {
+        position: relative !important;
+        z-index: 99999 !important;
+        max-width: 100%;
+    }
+
+    /* 🔥 iOS / Android native dropdown fix */
+    select {
+        -webkit-appearance: menulist !important;
+        appearance: menulist !important;
+    }
+}

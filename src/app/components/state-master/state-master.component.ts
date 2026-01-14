@@ -5,8 +5,9 @@ import { LocationService } from 'src/app/services/LocationService';
 @Component({
   selector: 'app-state-master',
   templateUrl: './state-master.component.html',
-  styleUrls: ['../root-master/root-master.component.css']
+  styleUrls: ['./state-master.component.css']
 })
+
 export class StateMasterComponent implements OnInit {
 
   form!: FormGroup;
@@ -97,4 +98,16 @@ export class StateMasterComponent implements OnInit {
   totalPages(): number {
     return Math.ceil(this.states.length / this.pageSize);
   }
+  prevPage(): void {
+    if (this.page > 1) {
+      this.setPage(this.page - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages()) {
+      this.setPage(this.page + 1);
+    }
+  }
+
 }

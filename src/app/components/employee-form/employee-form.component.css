@@ -2,12 +2,12 @@
 /* MAIN WRAPPER */
 /* ---------------------------- */
 .employee-form-container {
-  width: 100%;
-  max-width: 95%;
+  /* width: 1480px; */
+  max-width: 1480px;
   /* ❌ remove width limit */
   /* margin: 10px; */
   margin: 10px 30px;
-  padding: 30px 20px;
+  padding: 10px 20px;
 }
 
 /* ---------------------------- */
@@ -18,9 +18,11 @@
   /* ✅ full browser width */
   max-width: 100%;
   background-color: #f1f4f8;
-  padding: 30px;
+  padding: 10px 20px;
   border-radius: 12px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+
+
 }
 
 /* ---------------------------- */
@@ -153,4 +155,8 @@
     white-space: nowrap;
     /* ✅ text in one line */
   }
+}
+
+.form-header {
+  padding: 0px 0px;
 }

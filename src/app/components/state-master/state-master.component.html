@@ -2,7 +2,7 @@
 
     <h2 class="title">State Master</h2>
 
-    <!-- FORM -->
+    <!-- ================= FORM (UNCHANGED) ================= -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="root-form">
 
         <div class="field">
@@ -16,14 +16,16 @@
 
     </form>
 
-    <!-- TABLE -->
+    <!-- ================= TABLE ================= -->
     <div class="table-wrapper" *ngIf="paginatedStates.length > 0">
-        <table>
+
+        <table class="custom-table">
+
             <thead>
                 <tr>
-                    <th>Sr No</th>
-                    <th>State Name</th>
-                    <th>Action</th>
+                    <th>SR NO</th>
+                    <th>STATE NAME</th>
+                    <th>ACTION</th>
                 </tr>
             </thead>
 
@@ -36,15 +38,26 @@
                     </td>
                 </tr>
             </tbody>
+
         </table>
 
-        <!-- PAGINATION -->
-        <div style="margin-top:15px; text-align:center;">
-            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
-                [disabled]="page === i + 1" style="margin: 0 5px; padding: 5px 10px;">
-                {{ i + 1 }}
+        <div class="pagination" *ngIf="totalPages() > 1">
+
+            <button (click)="prevPage()" [disabled]="page === 1">
+                Prev
             </button>
+
+            <span>
+                Page {{ page }} of {{ totalPages() }}
+            </span>
+
+            <button (click)="nextPage()" [disabled]="page === totalPages()">
+                Next
+            </button>
+
         </div>
+
+
     </div>
 
 </div>

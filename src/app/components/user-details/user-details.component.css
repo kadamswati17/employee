@@ -4,9 +4,9 @@
 
 .user-details-container {
     max-width: 100%;
-    margin: auto;
-    background: #ffffff;
-    padding: 55px;
+    margin: 50px 30px;
+    /* background: #ffffff; */
+    /* padding: 55px; */
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     margin-top: 4px;
@@ -14,13 +14,18 @@
 
 .title {
     text-align: center;
-    margin-bottom: 25px;
+    /* margin-bottom: 25px; */
+    /* margin-top: 10px; */
     font-weight: 700;
+    padding-top: 10px;
 }
 
 /* FORM */
 .user-form {
-    margin-bottom: 30px;
+    margin: 10px 5px;
+    background-color: #f1f4f8;
+    padding: 10px 20px;
+    border-radius: 15px;
 }
 
 .form-row {
@@ -94,7 +99,12 @@
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+
+    /* ✅ center button */
+    display: block;
+    margin: 20px auto 0;
 }
+
 
 /* TABLE */
 /* ================= TABLE SCROLL (EMPLOYEE STYLE) ================= */
@@ -287,4 +297,18 @@
 
 .option:hover {
     background: #f1ecff;
+}
+
+/* ================= USER ROLE DETAILS TABLE ================= */
+.user-details-container .lead-table tbody tr:nth-child(odd) {
+    background-color: #bfd6edab;
+}
+
+.user-details-container .lead-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+/* Hover effect */
+.user-details-container .lead-table tbody tr:hover {
+    background-color: #f1f5f9 !important;
 }

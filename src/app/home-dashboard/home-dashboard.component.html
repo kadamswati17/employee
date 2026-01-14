@@ -3,7 +3,7 @@
 
         <!-- HEADER -->
         <div class="header-top">
-            <h2>Home Dashboard</h2>
+            <h2>Dashboard</h2>
         </div>
 
         <!-- FILTERS -->
@@ -42,35 +42,35 @@
 
             <div class="card open">
                 <h2>{{ summary.OPEN.count }}</h2>
-                <h4>Open</h4>
+                <h4>OPEN</h4>
 
                 <p>₹ {{ summary.OPEN.amount }}</p>
             </div>
 
             <div class="card progress">
                 <h2>{{ summary.IN_PROGRESS.count }}</h2>
-                <h4>In Progress</h4>
+                <h4>IN PROGRESS</h4>
 
                 <p>₹ {{ summary.IN_PROGRESS.amount }}</p>
             </div>
 
             <div class="card closed">
                 <h2>{{ summary.CLOSED.count }}</h2>
-                <h4>Closed</h4>
+                <h4>CLOSED</h4>
 
                 <p>₹ {{ summary.CLOSED.amount }}</p>
             </div>
 
             <div class="card success">
                 <h2>{{ summary.SUCCESS.count }}</h2>
-                <h4>Success</h4>
+                <h4>SUCCESS</h4>
 
                 <p>₹ {{ summary.SUCCESS.amount }}</p>
             </div>
 
             <div class="card cancel">
                 <h2>{{ summary.CANCELLED.count }}</h2>
-                <h4>Cancelled</h4>
+                <h4>CANCELLED</h4>
 
                 <p>₹ {{ summary.CANCELLED.amount }}</p>
             </div>
@@ -83,14 +83,28 @@
             <strong> ₹ {{ grandTotalAmount }}</strong>
         </div>
 
+        <hr class="custom-hr">
 
 
-        <!-- 🔽 ADD THIS -->
-        <div class="open-schedule-link">
-            <a [routerLink]="['/inquiry-schedule']">
-                ➕ Create Schedule
-            </a>
+        <!-- ================= SALES TREND HEADER ================= -->
+        <!-- ================= SALES TREND ================= -->
+        <div class="charts-grid">
+
+            <!-- CURRENT MONTH -->
+            <div class="chart-card">
+                <h3>Current Month Sales</h3>
+                <canvas id="currentMonthChart"></canvas>
+            </div>
+
+            <!-- LAST MONTH -->
+            <div class="chart-card">
+                <h3>Last Month Sales</h3>
+                <canvas id="lastMonthChart"></canvas>
+            </div>
+
         </div>
+
+
 
 
 

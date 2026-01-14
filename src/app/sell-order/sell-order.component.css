@@ -10,6 +10,10 @@
 .field,
 .custom-select {
     overflow: visible !important;
+    background-color: #f1f4f8;
+    max-width: 1470px;
+    padding: 10px 15px;
+    border-radius: 15px;
 }
 
 /* ==================================================
@@ -107,4 +111,45 @@
     .select-options {
         max-height: 180px;
     }
+}
+
+/* ================= GLOBAL CUSTOM TABLE ================= */
+.custom-table {
+    border-collapse: collapse;
+}
+
+/* HEADER */
+.custom-table thead {
+    background-color: #1e40af;
+    /* BLUE */
+}
+
+.custom-table thead th {
+    color: #ffffff;
+    font-weight: 600;
+    /* border-color: #1e3a8a; */
+    background-color: blue;
+}
+
+/* HEADER */
+.custom-table thead {
+    background-color: #1e40af;
+}
+
+.custom-table thead th {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* ROW COLORS */
+.custom-table tbody tr:nth-child(odd) td {
+    background-color: #bfd6edab;
+}
+
+.custom-table tbody tr:nth-child(even) td {
+    background-color: #ffffff;
+}
+
+.custom-table tbody tr:hover td {
+    background-color: #f1f5f9;
 }

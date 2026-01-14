@@ -4,16 +4,20 @@
 
 /* MAIN CONTAINER */
 .receipt-list-container {
-    width: 100%;
-    padding: 2px 40px;
+    max-width: 1480px;
+    padding: 2px 15px;
     box-sizing: border-box;
-    margin: 0;
+    margin: 10px 30px;
+    background-color: #f1f4f8;
+    border-radius: 15px;
 }
 
 .header-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 10px 0px;
+
 }
 
 .add-btn {
@@ -27,7 +31,7 @@
 
 /* TABLE WRAPPER */
 .table-wrapper {
-    background: white;
+    /* background-color: #f1f4f8; */
     padding: 15px;
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -40,7 +44,7 @@
 }
 
 .styled-table thead {
-    background: #3f51b5;
+    background-color: blue;
     color: white;
 }
 
@@ -373,4 +377,30 @@
         /* ✅ NAME RIGHT */
         white-space: nowrap;
     }
+}
+
+/* ================= RECEIPTS LIST TABLE ================= */
+.receipt-list-container .styled-table tbody tr:nth-child(odd) {
+    background-color: #bfd6edab;
+}
+
+.receipt-list-container .styled-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.receipt-list-container .styled-table tbody tr:hover {
+    background-color: #f1f5f9 !important;
+}
+
+/* ================= LEDGER MODAL TABLE ================= */
+.modal .premium-table tbody tr:nth-child(odd) {
+    background-color: #bfd6edab;
+}
+
+.modal .premium-table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.modal .premium-table tbody tr:hover {
+    background-color: #f1f5f9 !important;
 }
