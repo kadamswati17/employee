@@ -82,6 +82,7 @@ import { LeadComponent } from './lead/lead.component';
 import { InquiryComponent } from './inquiry/inquiry.component';
 import { InquiryScheduleComponent } from './inquiry-schedule/inquiry-schedule.component';
 import { HomeDashboardComponent } from './home-dashboard/home-dashboard.component';
+import { ProductionEntryComponent } from './production-entry/production-entry.component';
 
 @NgModule({
   declarations: [
@@ -142,7 +143,8 @@ import { HomeDashboardComponent } from './home-dashboard/home-dashboard.componen
     LeadComponent,
     InquiryComponent,
     InquiryScheduleComponent,
-    HomeDashboardComponent
+    HomeDashboardComponent,
+    ProductionEntryComponent
   ],
   imports: [
     BrowserModule,

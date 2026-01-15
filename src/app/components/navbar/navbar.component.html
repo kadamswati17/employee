@@ -35,9 +35,14 @@
       <option value="/projects">Project</option>
 
       <option value="/leads">Lead</option>
+    </select>
 
+    <select class="nav-select" (change)="navigate($event)">
+      <option value="" disabled selected hidden>Production</option>
+      <option value="/production-entry">Production</option>
 
     </select>
+
 
     <!-- TRANSACTION -->
     <select class="nav-select" (change)="navigate($event)">

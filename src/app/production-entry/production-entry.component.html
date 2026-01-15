@@ -1,0 +1,199 @@
+<div class="container">
+
+    <!-- HEADER -->
+    <!-- HEADER (SHOW ONLY FOR LIST) -->
+    <div class="main" *ngIf="!showForm">
+        <div class="header" *ngIf="!showForm">
+            <h2 class="page-title">Production Register</h2>
+
+            <button class="add-btn" (click)="openForm()">+ Add Production</button>
+        </div>
+
+        <div *ngIf="!showForm" class="table-card">
+
+            <table class="table custom-table">
+                <thead>
+                    <tr>
+                        <th>Batch No</th>
+                        <th>Shift</th>
+                        <th>Total Solid</th>
+                        <th>Production Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let p of productionList">
+                        <td>{{ p.batchNo }}</td>
+                        <td>Shift {{ p.shift }}</td>
+                        <td>{{ p.totalSolid }}</td>
+                        <td>{{ p.productionTime }}</td>
+                        <td>
+                            <button class="link-btn" (click)="edit(p)">Edit</button>
+                            <button class="link-btn danger" (click)="delete(p.id)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+    <!-- FORM -->
+    <form *ngIf="showForm" [formGroup]="productionForm" (ngSubmit)="submit()" class="card">
+
+        <!-- ROW 0 -->
+        <div class="row row-header">
+            <h2 class="page-title1">Production Register</h2>
+
+            <div class=" form-field date">
+                <input type="date" formControlName="productionDate">
+                <label>Date</label>
+            </div>
+
+            <div class="form-field shift">
+                <select formControlName="shift">
+                    <option value="" disabled></option>
+                    <option value="1">Shift 1</option>
+                    <option value="2">Shift 2</option>
+                    <option value="3">Shift 3</option>
+                    <option value="G">General Shift</option>
+                </select>
+                <label>Shift</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row row-1 total-layout">
+
+            <div class="form-field">
+                <select formControlName="siloNo1">
+                    <option value="" disabled></option>
+                    <option *ngFor="let s of siloList" [value]="s">{{ s }}</option>
+                </select>
+                <label>Silo No 1</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="literWeight1">
+                <label>Liter Weight 1</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="faSolid1">
+                <label>FA Solid 1</label>
+            </div>
+
+            <!-- TOTAL SOLID (SPAN 2 ROWS) -->
+            <div class="form-field total-solid">
+                <input type="number" [value]="calculateTotalSolid()" readonly placeholder=" ">
+                <label>Total Solid</label>
+            </div>
+
+            <div class="form-field">
+                <select formControlName="siloNo2">
+                    <option value="" disabled></option>
+                    <option *ngFor="let s of siloList" [value]="s">{{ s }}</option>
+                </select>
+                <label>Silo No 2</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="literWeight2">
+                <label>Liter Weight 2</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="faSolid2">
+                <label>FA Solid 2</label>
+            </div>
+
+        </div>
+
+
+
+
+
+        <hr>
+
+        <!-- ROW 3 -->
+        <div class="row row-3">
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="waterLiter">
+                <label>Water Liter</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="cementKg">
+                <label>Cement Kg</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="limeKg">
+                <label>Lime Kg</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="gypsumKg">
+                <label>Gypsum Kg</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="solOilKg">
+                <label>Sol. Oil Kg</label>
+            </div>
+
+
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="aiPowerGm">
+                <label>AI Power gm</label>
+            </div>
+            <div class="form-field production-time">
+                <input placeholder=" " formControlName="productionTime">
+                <label>Production Time</label>
+            </div>
+
+
+
+
+        </div>
+
+        <hr>
+
+        <!-- ROW 4 (ALL IN ONE ROW – FIXED) -->
+        <div class="row row-4">
+            <div class="form-field textarea">
+                <textarea placeholder=" " formControlName="productionRemark"></textarea>
+                <label>Production Remark</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="tempC">
+                <label>Temp °C</label>
+            </div>
+            <div class="form-field">
+                <input placeholder=" " formControlName="castingTime">
+                <label>Casting Time</label>
+            </div>
+
+
+            <div class="form-field textarea">
+                <textarea placeholder=" " formControlName="remark"></textarea>
+                <label>Remark</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 5 -->
+        <div class="actions">
+            <button type="submit">{{ editId ? 'Update' : 'Save' }}</button>
+            <button type="button" class="cancel" (click)="showForm = false">Cancel</button>
+        </div>
+
+    </form>
+
+</div>
