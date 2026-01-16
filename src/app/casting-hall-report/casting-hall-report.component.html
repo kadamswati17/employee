@@ -7,11 +7,35 @@
             <button class="add-btn" (click)="openForm()">+ Add Report</button>
         </div>
 
+        <div class="filters">
+
+            <div class="date-field top-label">
+                <label>From Date</label>
+                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+            </div>
+
+            <div class="date-field top-label">
+                <label>To Date</label>
+                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+            </div>
+
+            <select (change)="onExportChange($event)">
+                <option value="">Export</option>
+                <option value="pdf">Export PDF</option>
+                <option value="excel">Export Excel</option>
+            </select>
+
+
+            <button class="clear-btn" (click)="clearFilters()">Clear</button>
+        </div>
+
+
         <div class="table-card">
             <table class="table custom-table">
                 <thead>
                     <tr>
                         <th>Batch No</th>
+                        <th>Date</th>
                         <th>Size</th>
                         <th>Bed No</th>
                         <th>Mould No</th>
@@ -21,8 +45,10 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let r of reportList">
+                    <tr *ngFor="let r of filteredList">
                         <td>{{ r.batchNo }}</td>
+                        <td>{{ r.createdDate | date:'dd/MM/yyyy' }}</td>
+
                         <td>{{ r.size }}</td>
                         <td>{{ r.bedNo }}</td>
                         <td>{{ r.mouldNo }}</td>

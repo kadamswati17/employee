@@ -1,28 +1,64 @@
-import { HttpClient } from '@angular/common/http';
+// src/app/services/ProductionService.ts
+
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { APP_CONFIG } from '../config/config';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ProductionService {
 
-    private API = 'http://localhost:8080/api/production';
+    private baseUrl = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.PRODUCTION}`;
 
     constructor(private http: HttpClient) { }
 
-    save(data: any) {
-        return this.http.post(this.API, data);
+    // ================= AUTH HEADERS =================
+    private getAuthHeaders() {
+        const token = localStorage.getItem('token');
+        return {
+            headers: new HttpHeaders({
+                Authorization: token ? `Bearer ${token}` : ''
+            })
+        };
     }
 
-    update(id: number, data: any) {
-        return this.http.put(`${this.API}/${id}`, data);
+    // ================= CRUD =================
+    getAll(): Observable<any[]> {
+        return this.http.get<any[]>(
+            this.baseUrl,
+            this.getAuthHeaders()
+        );
     }
 
-    getAll() {
-        return this.http.get<any[]>(this.API);
+    getById(id: number): Observable<any> {
+        return this.http.get<any>(
+            `${this.baseUrl}/${id}`,
+            this.getAuthHeaders()
+        );
     }
 
-    delete(id: number) {
-        return this.http.delete(`${this.API}/${id}`);
+    save(data: any): Observable<any> {
+        return this.http.post(
+            this.baseUrl,
+            data,
+            this.getAuthHeaders()
+        );
+    }
+
+    update(id: number, data: any): Observable<any> {
+        return this.http.put(
+            `${this.baseUrl}/${id}`,
+            data,
+            this.getAuthHeaders()
+        );
+    }
+
+    delete(id: number): Observable<any> {
+        return this.http.delete(
+            `${this.baseUrl}/${id}`,
+            this.getAuthHeaders()
+        );
     }
 }

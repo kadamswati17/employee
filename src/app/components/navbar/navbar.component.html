@@ -100,6 +100,14 @@
     <option value="/leads">Lead</option>
   </select>
 
+  <select class="nav-select" (change)="navigate($event)">
+    <option value="" disabled selected hidden>Production</option>
+    <option value="/production-entry">Production</option>
+    <option value="casting-hall-report">Casting</option>
+    <option value="wire-cutting-report">Cutting</option>
+
+  </select>
+
   <!-- TRANSACTION -->
   <select class="nav-select" (change)="navigate($event); isMenuOpen = false">
     <option value="" disabled selected hidden>Transaction details</option>

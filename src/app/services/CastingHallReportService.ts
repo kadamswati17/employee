@@ -1,33 +1,64 @@
+// src/app/services/CastingHallReportService.ts
+
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { APP_CONFIG } from '../config/config';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CastingHallReportService {
 
-    private apiUrl = 'http://localhost:8080/api/casting-report';
+    private baseUrl = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.CASTING_REPORT}`;
 
     constructor(private http: HttpClient) { }
 
+    // ================= AUTH HEADERS =================
+    private getAuthHeaders() {
+        const token = localStorage.getItem('token');
+        return {
+            headers: new HttpHeaders({
+                Authorization: token ? `Bearer ${token}` : ''
+            })
+        };
+    }
+
+    // ================= CRUD =================
     getAll(): Observable<any[]> {
-        return this.http.get<any[]>(this.apiUrl);
+        return this.http.get<any[]>(
+            this.baseUrl,
+            this.getAuthHeaders()
+        );
+    }
+
+    getById(id: number): Observable<any> {
+        return this.http.get<any>(
+            `${this.baseUrl}/${id}`,
+            this.getAuthHeaders()
+        );
     }
 
     save(data: any): Observable<any> {
-        return this.http.post(this.apiUrl, data);
+        return this.http.post(
+            this.baseUrl,
+            data,
+            this.getAuthHeaders()
+        );
+    }
+
+    update(id: number, data: any): Observable<any> {
+        return this.http.put(
+            `${this.baseUrl}/${id}`,
+            data,
+            this.getAuthHeaders()
+        );
     }
 
     delete(id: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/${id}`);
+        return this.http.delete(
+            `${this.baseUrl}/${id}`,
+            this.getAuthHeaders()
+        );
     }
-
-    update(id: number, data: any) {
-        return this.http.put(`${this.apiUrl}/${id}`, data);
-    }
-
-    // getProductionList(): Observable<any[]> {
-    //     return this.http.get<any[]>(this.productionApi);
-    // }
 }

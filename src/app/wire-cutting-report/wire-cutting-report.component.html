@@ -7,6 +7,30 @@
             <button class="add-btn" (click)="openForm()">+ Add</button>
         </div>
 
+
+        <!-- FILTER BAR -->
+        <div class="filters">
+
+            <div class="date-field top-label">
+                <label>From Date</label>
+                <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
+            </div>
+
+            <div class="date-field top-label">
+                <label>To Date</label>
+                <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
+            </div>
+
+            <select (change)="onExportChange($event)">
+                <option value="">Export</option>
+                <option value="pdf">Export PDF</option>
+                <option value="excel">Export Excel</option>
+            </select>
+
+
+            <button class="clear-btn" (click)="clearFilters()">Clear</button>
+        </div>
+
         <table class="table custom-table">
             <thead>
                 <tr>
@@ -23,7 +47,8 @@
             </thead>
 
             <tbody>
-                <tr *ngFor="let r of list">
+                <tr *ngFor="let r of filteredList">
+
                     <td>{{ r.batchNo }}</td>
                     <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
                     <td>{{ r.cuttingDate | date:'dd-MM-yyyy' }}</td>

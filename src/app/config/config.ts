@@ -21,6 +21,9 @@ export const APP_CONFIG = {
         PROJECTS: '/api/projects',
         LEADS: '/api/leads',
         INQUIRIES: '/api/inquiries',
-        INQUIRY_SCHEDULE: '/api/inquiry-schedule'
+        INQUIRY_SCHEDULE: '/api/inquiry-schedule',
+        CASTING_REPORT: '/api/casting-report',
+        PRODUCTION: '/api/production',
+        WIRE_CUTTING: '/api/wire-cutting'
     }
 };
