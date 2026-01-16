@@ -1,0 +1,120 @@
+<div class="container">
+
+    <!-- ================= LIST VIEW ================= -->
+    <div class="main" *ngIf="!showForm">
+        <div class="header">
+            <h2 class="page-title">Wire Cutting Report</h2>
+            <button class="add-btn" (click)="openForm()">+ Add</button>
+        </div>
+
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th>Batch No</th>
+                    <th>Date</th>
+                    <th>Wire Cutting Date</th>
+                    <th>Mould No</th>
+                    <th>Size</th>
+                    <th>Ball Test (mm)</th>
+                    <th>Reason</th>
+                    <th>Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let r of list">
+                    <td>{{ r.batchNo }}</td>
+                    <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
+                    <td>{{ r.cuttingDate | date:'dd-MM-yyyy' }}</td>
+                    <td>{{ r.mouldNo }}</td>
+                    <td>{{ r.size }}</td>
+                    <td>{{ r.ballTestMm }}</td>
+                    <td>{{ r.otherReason }}</td>
+                    <td>{{ r.time }}</td>
+                    <td>
+                        <button class="link-btn" (click)="edit(r)">Edit</button>
+                        <button class="link-btn danger" (click)="delete(r.id)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ================= FORM ================= -->
+    <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="submit()" class="card">
+
+        <!-- HEADER ROW -->
+        <div class="row row-header">
+            <h2 class="page-title1">Wire Cutting Report</h2>
+
+            <!-- TODAY DATE (READ ONLY) -->
+            <div class="form-field date">
+                <input type="date" formControlName="reportDate">
+                <label>Date</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 1 -->
+        <div class="row row-3">
+            <!-- WIRE CUTTING DATE -->
+
+
+            <div class="form-field">
+                <select formControlName="batchNo">
+                    <option value="" disabled></option>
+                    <option *ngFor="let p of productionList" [value]="p.batchNo">
+                        {{ p.batchNo }}
+                    </option>
+                </select>
+                <label>Batch No</label>
+            </div>
+
+
+            <div class="form-field date">
+                <input type="date" formControlName="cuttingDate">
+                <label>Wire Cutting Date</label>
+            </div>
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="mouldNo">
+                <label>Mould No</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="size">
+                <label>Size</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 2 -->
+        <div class="row row-4">
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="ballTestMm">
+                <label>Ball Test (mm)</label>
+            </div>
+
+            <div class="form-field">
+                <input placeholder=" " formControlName="time">
+                <label>Time</label>
+            </div>
+
+            <div class="form-field textarea remark-full">
+                <textarea placeholder=" " formControlName="otherReason"></textarea>
+                <label>Other Reason</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+            <button type="submit">{{ editId ? 'Update' : 'Save' }}</button>
+            <button type="button" class="cancel" (click)="cancel()">Cancel</button>
+        </div>
+
+    </form>
+</div>

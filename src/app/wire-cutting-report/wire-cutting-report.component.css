@@ -1,0 +1,311 @@
+.container {
+    max-width: 1500px;
+    margin: auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.add-btn {
+    background: #16a34a;
+    color: #fff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* CARD */
+.card {
+    background-color: #f1f4f8;
+    padding: 10px 15px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+}
+
+/* ROW BASE */
+.row {
+    display: grid;
+    gap: 16px;
+    margin-bottom: -4px;
+    align-items: center;
+}
+
+/* ROW CONFIGS */
+.row-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+}
+
+
+
+
+
+/* ROW 1 FIX */
+.row-1 {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.row-1 .sub-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+
+.row-2 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.row-3 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* ⭐ FIXED ROW */
+.row-4 {
+    grid-template-columns: 2fr 2fr 2fr 2fr;
+}
+
+/* FORM FIELD */
+.form-field {
+    position: relative;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    padding: 14px 12px;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+}
+
+.form-field textarea {
+    height: 50px;
+}
+
+
+/* FLOATING LABEL */
+.form-field label {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    background: #fff;
+    padding: 0 6px;
+    color: gray;
+    font-size: 13px;
+    transition: .2s ease;
+    pointer-events: none;
+}
+
+.form-field input:focus+label,
+.form-field input:not(:placeholder-shown)+label,
+.form-field select:focus+label,
+.form-field textarea:focus+label,
+.form-field textarea:not(:placeholder-shown)+label {
+    top: 3px;
+    font-size: 12px;
+    color: #2563eb;
+
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    border: 1.5px solid #0a4995;
+    /* light blue-gray */
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+
+/* ACTIONS */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 5px;
+}
+
+.actions button {
+    padding: 12px 36px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.actions button:first-child {
+    background: #2563eb;
+    color: #fff;
+}
+
+.cancel {
+    background: #9ca3af;
+}
+
+/* TABLE WRAPPER */
+/* .table-card {
+    background-color: #f1f4f8;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+} */
+
+/* TABLE */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* HEADER */
+.custom-table thead tr {
+    background-color: #2563eb;
+}
+
+.custom-table thead th {
+    color: #fff;
+    font-weight: 600;
+    padding: 14px 16px;
+    text-align: left;
+    background-color: blue;
+}
+
+/* BODY */
+.custom-table tbody td {
+    padding: 14px 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ODD ROWS */
+.custom-table tbody tr:nth-child(odd) td {
+    background-color: #bfd6edab !important;
+}
+
+/* EVEN ROWS */
+.custom-table tbody tr:nth-child(even) td {
+    background-color: #ffffff !important;
+}
+
+/* HOVER */
+.custom-table tbody tr:hover td {
+    background-color: #bfdbfe !important;
+}
+
+
+/* ACTION BUTTONS */
+.link-btn {
+    background: blue;
+    border: none;
+    padding: 5px 15px;
+    margin-right: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    border-radius: 7px;
+}
+
+.link-btn.danger {
+    padding: 5px 20px;
+    margin-right: 12px;
+    background-color: red;
+    color: white;
+    border-radius: 10px;
+}
+
+.main {
+    background-color: #f1f4f8;
+    padding: 10px 15px;
+    border-radius: 15px;
+}
+
+/* TOTAL SOLID 2-ROW LAYOUT */
+.total-layout {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    gap: 16px;
+}
+
+/* Make Total Solid span both rows */
+.total-solid {
+    grid-row: span 2;
+    display: flex;
+    align-items: center;
+}
+
+/* TOTAL SOLID FIELD HEIGHT FIX */
+.total-solid input {
+    height: 100%;
+    min-height: 70px;
+    /* 🔥 adjust this (100–140px works best) */
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Center value vertically */
+.total-solid {
+    display: flex;
+    align-items: stretch;
+}
+
+.production-time {
+    grid-column: span 2;
+    /* takes width of 2 inputs */
+}
+
+.page-title {
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+
+    color: white;
+    padding: 3px 25px;
+    border-radius: 4px;
+}
+
+
+
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #2563eb;
+    /* blue */
+    margin: 18px 0;
+}
+
+/* 🔥 Make remark occupy remaining right space */
+.remark-full {
+    grid-column: span 2;
+}
+
+.page-title1 {
+    display: inline-block;
+    /* ⭐ KEY FIX */
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    color: white;
+    padding: 6px 25px;
+    border-radius: 6px;
+    margin-top: 5px;
+    margin-left: 10px;
+    white-space: nowrap;
+    width: 285px;
+}

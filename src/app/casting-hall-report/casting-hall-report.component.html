@@ -1,0 +1,174 @@
+<div class="container">
+
+    <!-- ================= LIST VIEW ================= -->
+    <div class="main" *ngIf="!showForm">
+        <div class="header">
+            <h2 class="page-title">Casting Hall Report</h2>
+            <button class="add-btn" (click)="openForm()">+ Add Report</button>
+        </div>
+
+        <div class="table-card">
+            <table class="table custom-table">
+                <thead>
+                    <tr>
+                        <th>Batch No</th>
+                        <th>Size</th>
+                        <th>Bed No</th>
+                        <th>Mould No</th>
+                        <th>Casting Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let r of reportList">
+                        <td>{{ r.batchNo }}</td>
+                        <td>{{ r.size }}</td>
+                        <td>{{ r.bedNo }}</td>
+                        <td>{{ r.mouldNo }}</td>
+                        <td>{{ r.castingTime }}</td>
+                        <td>
+                            <button class="link-btn" (click)="edit(r)">Edit</button>
+                            <button class="link-btn danger" (click)="delete(r.id)">Delete</button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= FORM ================= -->
+    <form *ngIf="showForm" [formGroup]="reportForm" (ngSubmit)="submit()" class="card">
+
+
+        <div class="row row-header">
+            <div class="row row-header">
+                <h2 class="page-title1">Casting Hall Report</h2>
+            </div>
+
+            <div class="form-field date">
+                <input type="date" formControlName="reportDate">
+                <label>Date</label>
+            </div>
+
+            <!-- <div class="form-field shift">
+                <select formControlName="shift">
+                    <option value="" disabled></option>
+                    <option value="1">Shift 1</option>
+                    <option value="2">Shift 2</option>
+                    <option value="3">Shift 3</option>
+                    <option value="G">General Shift</option>
+                </select>
+                <label>Shift</label>
+            </div> -->
+        </div>
+        <!-- HEADER -->
+
+
+        <hr>
+
+        <!-- ROW 1 -->
+        <div class="row row-3">
+            <div class="form-field">
+                <select formControlName="batchNo">
+                    <option value="" disabled></option>
+                    <option *ngFor="let p of productionList" [value]="p.batchNo">
+                        {{ p.batchNo }}
+                    </option>
+                </select>
+                <label>Batch No</label>
+            </div>
+
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="size">
+                <label>Size</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="bedNo">
+                <label>Bed No</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="mouldNo">
+                <label>Mould No</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 2 -->
+        <div class="row row-3">
+            <div class="form-field">
+                <input placeholder=" " formControlName="castingTime">
+                <label>Casting Time</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="consistency">
+                <label>Consistency</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="flowInCm">
+                <label>Flow (cm)</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="castingTempC">
+                <label>Casting Temp °C</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 3 -->
+        <div class="row row-3">
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="vt">
+                <label>V.T.</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="massTemp">
+                <label>Mass Temp</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="fallingTestMm">
+                <label>Falling Test (mm)</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="testTime">
+                <label>Test Time</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 4 -->
+        <div class="row row-4">
+            <div class="form-field">
+                <input type="number" placeholder=" " formControlName="hTime">
+                <label>H Time</label>
+            </div>
+            <div class="form-field textarea remark-full">
+                <textarea placeholder=" " formControlName="remark"></textarea>
+                <label>Remark</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+            <button type="submit">Save</button>
+            <button type="button" class="cancel" (click)="cancel()">Cancel</button>
+        </div>
+
+    </form>
+
+</div>

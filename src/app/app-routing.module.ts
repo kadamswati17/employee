@@ -36,6 +36,8 @@ import { InquiryComponent } from './inquiry/inquiry.component';
 import { InquiryScheduleComponent } from './inquiry-schedule/inquiry-schedule.component';
 import { HomeDashboardComponent } from './home-dashboard/home-dashboard.component';
 import { ProductionEntryComponent } from './production-entry/production-entry.component';
+import { CastingHallReportComponent } from './casting-hall-report/casting-hall-report.component';
+import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-report.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -90,6 +92,8 @@ const routes: Routes = [
   { path: 'inquiry-schedule', component: InquiryScheduleComponent },
   { path: 'home', component: HomeDashboardComponent },   // home dashboard
   { path: 'production-entry', component: ProductionEntryComponent },
+  { path: 'casting-hall-report', component: CastingHallReportComponent },
+  { path: 'wire-cutting-report', component: WireCuttingReportComponent },
 
   { path: '**', redirectTo: '/login' }
 ];

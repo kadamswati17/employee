@@ -83,6 +83,8 @@ import { InquiryComponent } from './inquiry/inquiry.component';
 import { InquiryScheduleComponent } from './inquiry-schedule/inquiry-schedule.component';
 import { HomeDashboardComponent } from './home-dashboard/home-dashboard.component';
 import { ProductionEntryComponent } from './production-entry/production-entry.component';
+import { CastingHallReportComponent } from './casting-hall-report/casting-hall-report.component';
+import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-report.component';
 
 @NgModule({
   declarations: [
@@ -144,7 +146,9 @@ import { ProductionEntryComponent } from './production-entry/production-entry.co
     InquiryComponent,
     InquiryScheduleComponent,
     HomeDashboardComponent,
-    ProductionEntryComponent
+    ProductionEntryComponent,
+    CastingHallReportComponent,
+    WireCuttingReportComponent
   ],
   imports: [
     BrowserModule,
