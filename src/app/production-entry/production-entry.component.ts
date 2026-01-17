@@ -134,6 +134,59 @@ export class ProductionEntryComponent implements OnInit {
     if (type === 'excel') this.exportExcel();
   }
 
+  // exportPDF() {
+  //   if (!this.filteredProductionList.length) {
+  //     alert('No data to export');
+  //     return;
+  //   }
+
+  //   const doc = new jsPDF({
+  //     orientation: 'landscape',
+  //     unit: 'mm',
+  //     format: 'a4'
+  //   });
+
+  //   doc.setFontSize(14);
+  //   doc.text('Production Register', doc.internal.pageSize.getWidth() / 2, 12, {
+  //     align: 'center'
+  //   });
+
+  //   const head = [
+  //     this.productionFieldConfig.map(f => f.label)
+  //   ];
+
+  //   const body = this.filteredProductionList.map(p =>
+  //     this.productionFieldConfig.map(f => {
+  //       let value = p[f.key];
+
+  //       if (f.format === 'date' && value) {
+  //         value = this.formatDate(value);
+  //       }
+
+  //       return value ?? '';
+  //     })
+  //   );
+
+  //   autoTable(doc, {
+  //     startY: 18,
+  //     head,
+  //     body,
+  //     styles: {
+  //       fontSize: 7,
+  //       cellPadding: 2,
+  //       overflow: 'linebreak'
+  //     },
+  //     headStyles: {
+  //       fillColor: [33, 150, 243],
+  //       textColor: 255,
+  //       halign: 'center'
+  //     },
+  //     margin: { left: 8, right: 8 }
+  //   });
+
+  //   doc.save('production-register.pdf');
+  // }
+
   exportPDF() {
     if (!this.filteredProductionList.length) {
       alert('No data to export');
@@ -142,25 +195,37 @@ export class ProductionEntryComponent implements OnInit {
 
     const doc = new jsPDF();
 
-    autoTable(doc, {
-      head: [[
-        'Batch No',
-        'Date',
-        'Shift',
-        'Total Solid',
-        'Production Time'
-      ]],
-      body: this.filteredProductionList.map(p => [
-        p.batchNo,
-        this.formatDate(p.createdDate),
-        `Shift ${p.shift}`,
-        p.totalSolid,
-        p.productionTime
-      ])
+    this.filteredProductionList.forEach((p, index) => {
+
+      if (index > 0) doc.addPage();
+
+      doc.setFontSize(16);
+      doc.text(`Production Register - Batch ${p.batchNo}`, 14, 15);
+
+      const body = this.productionFieldConfig.map(f => {
+        let value = p[f.key];
+        if (f.format === 'date' && value) {
+          value = this.formatDate(value);
+        }
+        return [f.label, value ?? ''];
+      });
+
+      autoTable(doc, {
+        startY: 22,
+        head: [['Field', 'Value']],
+        body,
+        styles: { fontSize: 10 },
+        headStyles: {
+          fillColor: [33, 150, 243],
+          textColor: 255
+        }
+      });
     });
 
     doc.save('production-register.pdf');
   }
+
+
 
   formatDate(date: any): string {
     if (!date) return '';
@@ -174,13 +239,21 @@ export class ProductionEntryComponent implements OnInit {
       return;
     }
 
-    const excelData = this.filteredProductionList.map(p => ({
-      'Batch No': p.batchNo,
-      'Date': this.formatDate(p.createdDate),
-      'Shift': `Shift ${p.shift}`,
-      'Total Solid': p.totalSolid,
-      'Production Time': p.productionTime
-    }));
+    const excelData = this.filteredProductionList.map(p => {
+      const row: any = {};
+
+      this.productionFieldConfig.forEach(f => {
+        let value = p[f.key];
+
+        if (f.format === 'date' && value) {
+          value = this.formatDate(value);
+        }
+
+        row[f.label] = value ?? '';
+      });
+
+      return row;
+    });
 
     const ws = XLSX.utils.json_to_sheet(excelData);
     const wb = XLSX.utils.book_new();
@@ -188,6 +261,7 @@ export class ProductionEntryComponent implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Production Register');
     XLSX.writeFile(wb, 'production-register.xlsx');
   }
+
 
 
   calculateTotalSolid(): number {
