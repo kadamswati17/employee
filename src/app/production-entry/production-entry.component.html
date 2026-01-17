@@ -39,6 +39,7 @@
                 <tr>
                     <th>Batch No</th>
                     <th>Date</th>
+                    <th>Created By</th>
                     <th>Shift</th>
                     <th>Total Solid</th>
                     <th>Production Time</th>
@@ -48,8 +49,13 @@
 
             <tbody>
                 <tr *ngFor="let p of filteredProductionList">
-                    <td>{{ p.batchNo }}</td>
+                    <td class="clickable" (click)="openProductionModal(p)">
+                        {{ p.batchNo }}
+                    </td>
+
                     <td>{{ p.createdDate | date:'dd-MM-yyyy' }}</td>
+                    <!-- ✅ CREATED BY -->
+                    <td>{{ p.createdByName || getUserName(p.userId) }}</td>
 
                     <td>Shift {{ p.shift }}</td>
                     <td>{{ p.totalSolid }}</td>
@@ -183,4 +189,178 @@
         </div>
 
     </form>
+
+
+    <!-- ================= PRODUCTION VIEW MODAL ================= -->
+    <div class="modal fade" id="productionModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header ">
+
+                    <!-- LEFT CONTENT -->
+                    <div class="d-flex align-items-center  modal-header-big">
+
+                        <h4 class="modal-title mb-0">
+                            Batch No - {{ selectedProduction?.batchNo }}
+                        </h4>
+
+                        <div class="meta-text">
+                            <strong>Date:</strong>
+                            {{ selectedProduction?.createdDate | date:'longDate' }}
+                        </div>
+
+                        <div class="meta-text">
+                            <strong>Created By:</strong>
+                            {{ selectedProduction?.createdByName || getUserName(selectedProduction?.userId) }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- CLOSE BUTTON -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                </div>
+
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    <!-- MATERIAL TABLE -->
+
+                    <table class="table custom-table">
+
+                        <thead>
+                            <tr>
+                                <th>Silo 1</th>
+                                <th>Water 1</th>
+                                <th>Solid 1</th>
+
+                                <th>Silo 2</th>
+                                <th>Water 2</th>
+                                <th>Solid 2</th>
+
+                                <th>Total Solid</th>
+                                <th>Production Time</th>
+                                <th>Temperature</th>
+                                <!-- <th>Casting Time</th> -->
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <!-- ================= ROW 1 : SILO + PRODUCTION ================= -->
+                            <tr>
+                                <td>{{ selectedProduction?.siloNo1 }}</td>
+                                <td>{{ selectedProduction?.literWeight1 }}</td>
+                                <td>{{ selectedProduction?.faSolid1 }}</td>
+
+                                <td>{{ selectedProduction?.siloNo2 }}</td>
+                                <td>{{ selectedProduction?.literWeight2 }}</td>
+                                <td>{{ selectedProduction?.faSolid2 }}</td>
+
+                                <td>{{ selectedProduction?.totalSolid }}</td>
+                                <td>{{ selectedProduction?.productionTime }}</td>
+                                <td>{{ selectedProduction?.tempC }}</td>
+                                <!-- <td>{{ selectedProduction?.castingTime }}</td> -->
+                            </tr>
+
+                            <!-- ================= ROW 2 : MATERIAL + REMARK ================= -->
+                            <tr class="section-header">
+                                <th>Casting Time</th>
+                                <th>Cement</th>
+                                <th>Lime</th>
+                                <th>Gypsum</th>
+                                <th>Sol Oil</th>
+                                <th>AI Power</th>
+                                <th colspan="1">Production Remark</th>
+                                <th colspan="1">Remark</th>
+                            </tr>
+
+
+                            <tr>
+                                <td>{{ selectedProduction?.castingTime }}</td>
+                                <td>{{ selectedProduction?.cementKg }}</td>
+                                <td>{{ selectedProduction?.limeKg }}</td>
+                                <td>{{ selectedProduction?.gypsumKg }}</td>
+                                <td>{{ selectedProduction?.solOilKg }}</td>
+                                <td>{{ selectedProduction?.aiPowerGm }}</td>
+                                <td colspan="1">{{ selectedProduction?.productionRemark || '—' }}</td>
+                                <td colspan="1">{{ selectedProduction?.remark || '—' }}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+
+
+
+                </div>
+                <table class="table1">
+                    <thead class="tablehead">
+                        <tr>
+                            <th style="padding: 8px; color: white;">CHECKED BY</th>
+                            <th style="padding: 8px; color: white;">REVIEWED BY</th>
+                            <th style="padding: 8px; color: white;">APPROVED BY</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td class="level-text">
+                                <div>{{ getApprovalLevels(selectedProduction).checkedBy.name || '—' }}</div>
+                                <div>
+                                    {{ getApprovalLevels(selectedProduction).checkedBy.level || '' }}
+                                </div>
+                            </td>
+
+                            <td>
+                                <div>{{ getApprovalLevels(selectedProduction).reviewedBy.name || '—' }}</div>
+                                <div>
+                                    {{ getApprovalLevels(selectedProduction).reviewedBy.level || '' }}
+                                </div>
+                            </td>
+
+                            <td>
+                                <div>{{ getApprovalLevels(selectedProduction).approvedBy.name || '—' }}</div>
+                                <div class="level-text">
+                                    {{ getApprovalLevels(selectedProduction).approvedBy.level || '' }}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="modal-footer ">
+
+                    <button class="btn btn-primary btn-sm" (click)="edit(selectedProduction); closeModal()">
+                        Edit
+                    </button>
+
+                    <button class="btn btn-info btn-sm" (click)="downloadProduction()">
+                        Download
+                    </button>
+
+                    <button class="btn btn-success btn-sm" *ngIf="canApprove(selectedProduction)"
+                        (click)="approveProduction()">
+                        Approve
+                    </button>
+
+                    <button class="btn btn-warning btn-sm" *ngIf="canReject(selectedProduction)"
+                        (click)="rejectProduction()">
+                        Reject
+                    </button>
+
+                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                        Close
+                    </button>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
 </div>

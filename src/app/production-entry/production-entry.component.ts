@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ProductionService } from '../services/ProductionService';
+import * as bootstrap from 'bootstrap';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -12,6 +13,7 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./production-entry.component.css']
 })
 export class ProductionEntryComponent implements OnInit {
+  selectedProduction: any = null;
 
   productionForm!: FormGroup;
 
@@ -71,6 +73,17 @@ export class ProductionEntryComponent implements OnInit {
 
     this.setShiftByTime();
     this.loadData();
+  }
+
+
+  openProductionModal(p: any) {
+    this.selectedProduction = p;
+
+    const modalEl = document.getElementById('productionModal');
+    if (!modalEl) return;
+
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
   }
 
   loadData() {
@@ -182,6 +195,18 @@ export class ProductionEntryComponent implements OnInit {
       (+this.productionForm.value.faSolid2 || 0);
   }
 
+  // TEMP USER MAP (until backend sends name)
+  userMap: { [key: number]: string } = {
+    1: 'Admin',
+    2: 'Supervisor',
+    3: 'Operator'
+  };
+
+  getUserName(userId: number): string {
+    return this.userMap[userId] || `User-${userId}`;
+  }
+
+
   setShiftByTime() {
     const hour = new Date().getHours();
     if (hour >= 9 && hour < 18) this.productionForm.patchValue({ shift: 'G' });
@@ -224,4 +249,177 @@ export class ProductionEntryComponent implements OnInit {
       this.service.delete(id).subscribe(() => this.loadData());
     }
   }
+
+  // enableModalEdit = false;
+
+  getApprovalLevels(p: any) {
+    return {
+      checkedBy: {
+        name: p?.approvedByL1 || 'swati',
+        level: p?.approvedByL1 ? 'L1' : 'L1'
+      },
+      reviewedBy: {
+        name: p?.approvedByL2 || '',
+        level: p?.approvedByL2 ? 'L2' : ''
+      },
+      approvedBy: {
+        name: p?.approvedByL3 || '',
+        level: p?.approvedByL3 ? 'L3' : ''
+      }
+    };
+  }
+
+
+  private buildExportRows(p: any): any[] {
+    return this.productionFieldConfig.map(f => {
+      let value = p?.[f.key];
+
+      if (f.format === 'date' && value) {
+        value = this.formatDate(value);
+      }
+
+      return [
+        f.label,
+        value !== null && value !== undefined && value !== '' ? value : ''
+      ];
+    });
+  }
+
+  private productionFieldConfig = [
+    { label: 'Batch No', key: 'batchNo' },
+    { label: 'Date', key: 'createdDate', format: 'date' },
+    { label: 'Shift', key: 'shift' },
+
+    { label: 'Silo No 1', key: 'siloNo1' },
+    { label: 'Liter Weight 1', key: 'literWeight1' },
+    { label: 'FA Solid 1', key: 'faSolid1' },
+
+    { label: 'Silo No 2', key: 'siloNo2' },
+    { label: 'Liter Weight 2', key: 'literWeight2' },
+    { label: 'FA Solid 2', key: 'faSolid2' },
+
+    { label: 'Total Solid', key: 'totalSolid' },
+
+    { label: 'Water Liter', key: 'waterLiter' },
+    { label: 'Cement Kg', key: 'cementKg' },
+    { label: 'Lime Kg', key: 'limeKg' },
+    { label: 'Gypsum Kg', key: 'gypsumKg' },
+    { label: 'Sol Oil Kg', key: 'solOilKg' },
+    { label: 'AI Power gm', key: 'aiPowerGm' },
+
+    { label: 'Temperature (°C)', key: 'tempC' },
+    { label: 'Casting Time', key: 'castingTime' },
+    { label: 'Production Time', key: 'productionTime' },
+
+    { label: 'Production Remark', key: 'productionRemark' },
+    { label: 'Remark', key: 'remark' },
+
+    { label: 'Approval Stage', key: 'approvalStage' },
+    { label: 'Approved By L1', key: 'approvedByL1' },
+    { label: 'Approved By L2', key: 'approvedByL2' },
+    { label: 'Approved By L3', key: 'approvedByL3' }
+    // { label: 'Approved By L4', key: 'approvedByL4' },
+    // { label: 'Approved By L5', key: 'approvedByL5' },
+    // { label: 'Approved By L6', key: 'approvedByL6' },
+    // { label: 'Approved By L7', key: 'approvedByL7' }
+  ];
+
+
+  downloadProduction() {
+    const p = this.selectedProduction;
+    if (!p) return;
+
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text('Production Register', 14, 15);
+
+    autoTable(doc, {
+      startY: 25,
+      head: [['Field', 'Value']],
+      body: this.buildExportRows(p),
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [41, 128, 185] },
+      columnStyles: {
+        0: { cellWidth: 60 },
+        1: { cellWidth: 120 }
+      }
+    });
+
+    doc.save(`Production-${p.batchNo}.pdf`);
+  }
+
+
+
+  // ================= APPROVAL LOGIC (BASIC SAFE VERSION) =================
+
+  // TEMP: always allow approve/reject (you can tighten later)
+  canApprove(p: any): boolean {
+    return !!p;
+  }
+
+  canReject(p: any): boolean {
+    return !!p;
+  }
+
+  approveProduction() {
+    if (!this.selectedProduction) return;
+
+    this.service.approve(this.selectedProduction.id).subscribe({
+      next: () => {
+        alert('Approved successfully');
+        this.loadData();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Approve failed');
+      }
+    });
+  }
+
+
+  rejectProduction() {
+    if (!this.selectedProduction) return;
+
+    const reason = prompt('Enter rejection reason');
+    if (!reason) return;
+
+    this.service.reject(this.selectedProduction.id, reason).subscribe({
+      next: () => {
+        alert('Rejected successfully');
+        this.loadData();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Reject failed');
+      }
+    });
+  }
+  // saveModalEdit() {
+  //   if (!this.selectedProduction) return;
+
+  //   this.service.update(
+  //     this.selectedProduction.id,
+  //     this.selectedProduction
+  //   ).subscribe({
+  //     next: () => {
+  //       alert('Updated successfully');
+  //       this.enableModalEdit = false;
+  //       this.loadData();
+  //     },
+  //     error: () => alert('Update failed')
+  //   });
+  // }
+  closeModal() {
+    const modalEl = document.getElementById('productionModal');
+    if (!modalEl) return;
+
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    modalInstance?.hide();
+  }
+
+
+
+
+
 }
