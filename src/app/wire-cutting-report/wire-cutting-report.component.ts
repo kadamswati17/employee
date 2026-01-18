@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WireCuttingReportService } from '../services/WireCuttingReportService';
 import { ProductionService } from '../services/ProductionService';
+import * as bootstrap from 'bootstrap';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -22,10 +23,14 @@ export class WireCuttingReportComponent implements OnInit {
   productionList: any[] = [];
 
   editId: number | null = null;
+  selected: any = null;
 
-  // 🔹 FILTER STATE
   filterFromDate = '';
   filterToDate = '';
+
+  allProductionList: any[] = [];
+  availableProductionList: any[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -35,11 +40,11 @@ export class WireCuttingReportComponent implements OnInit {
 
   ngOnInit(): void {
     const today = new Date().toISOString().substring(0, 10);
+
     this.filterFromDate = today;
     this.filterToDate = today;
 
     this.form = this.fb.group({
-      reportDate: [today],
       cuttingDate: [today, Validators.required],
       batchNo: ['', Validators.required],
       mouldNo: [0],
@@ -53,22 +58,36 @@ export class WireCuttingReportComponent implements OnInit {
     this.loadProduction();
   }
 
+  // ================= LOAD =================
   load() {
     this.service.getAll().subscribe(res => {
-      this.list = res;
+      this.list = res || [];
       this.applyFilters();
+      this.filterAvailableBatches();   // ⭐ IMPORTANT
     });
   }
+
 
   loadProduction() {
     this.productionService.getAll().subscribe(res => {
-      this.productionList = res;
+      this.allProductionList = res || [];
+      this.filterAvailableBatches();   // ⭐ IMPORTANT
     });
   }
 
-  applyFilters() {
 
-    // 🚫 VALIDATION: To Date cannot be less than From Date
+  filterAvailableBatches() {
+    if (!this.allProductionList.length) return;
+
+    const usedBatchNos = this.list.map(r => r.batchNo);
+
+    this.availableProductionList = this.allProductionList.filter(
+      p => !usedBatchNos.includes(p.batchNo)
+    );
+  }
+
+  // ================= FILTER =================
+  applyFilters() {
     if (
       this.filterFromDate &&
       this.filterToDate &&
@@ -78,26 +97,17 @@ export class WireCuttingReportComponent implements OnInit {
       return;
     }
 
-    const from = this.filterFromDate
-      ? new Date(this.filterFromDate).getTime()
-      : null;
-
+    const from = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
     const to = this.filterToDate
       ? new Date(this.filterToDate + 'T23:59:59').getTime()
       : null;
 
     this.filteredList = this.list.filter(r => {
-
-      // ✅ FILTER ON CREATED DATE (DATE COLUMN)
       if (!r.createdDate) return false;
-
-      const recordDate = new Date(r.createdDate).getTime();
-
-      return (!from || recordDate >= from) &&
-        (!to || recordDate <= to);
+      const d = new Date(r.createdDate).getTime();
+      return (!from || d >= from) && (!to || d <= to);
     });
   }
-
 
   clearFilters() {
     this.filterFromDate = '';
@@ -105,74 +115,33 @@ export class WireCuttingReportComponent implements OnInit {
     this.filteredList = [...this.list];
   }
 
-  // ================= EXPORT =================
-  exportPDF() {
-    if (!this.filteredList.length) {
-      alert('No data to export');
-      return;
-    }
-
-    const doc = new jsPDF();
-
-    autoTable(doc, {
-      head: [['Batch', 'Date', 'Cutting Date', 'Size', 'Ball Test']],
-      body: this.filteredList.map(r => [
-        r.batchNo,
-        this.formatDate(r.createdDate),
-        this.formatDate(r.cuttingDate),
-        r.size,
-        r.ballTestMm
-      ])
-    });
-
-    doc.save('wire-cutting-report.pdf');
-  }
-
-
-  formatDate(date: any): string {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('en-GB'); // dd/MM/yyyy
-  }
-
-  exportExcel() {
-    if (!this.filteredList.length) {
-      alert('No data to export');
-      return;
-    }
-
-    const excelData = this.filteredList.map(r => ({
-      'Batch No': r.batchNo,
-      'Date': this.formatDate(r.createdDate),
-      'Wire Cutting Date': this.formatDate(r.cuttingDate),
-      'Mould No': r.mouldNo,
-      'Size': r.size,
-      'Ball Test (mm)': r.ballTestMm,
-      // 'Reason': r.otherReason,
-      // 'Time': r.time
-    }));
-
-    const ws = XLSX.utils.json_to_sheet(excelData);
-    const wb = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(wb, ws, 'Wire Cutting Report');
-    XLSX.writeFile(wb, 'wire-cutting-report.xlsx');
-  }
-
-
   // ================= CRUD =================
   openForm() {
     this.showForm = true;
     this.editId = null;
+
+    this.form.reset({
+      cuttingDate: new Date().toISOString().substring(0, 10)
+    });
+
+    // ✅ ADD MODE → show ONLY unused batches
+    this.productionList = [...this.availableProductionList];
   }
+
 
   edit(row: any) {
     this.editId = row.id;
     this.showForm = true;
+
     this.form.patchValue(row);
+
+    // ✅ EDIT MODE → show ALL batches
+    this.productionList = [...this.allProductionList];
   }
 
+
   delete(id: number) {
-    if (confirm('Delete this wire cutting record?')) {
+    if (confirm('Delete this wire cutting entry?')) {
       this.service.delete(id).subscribe(() => this.load());
     }
   }
@@ -191,27 +160,152 @@ export class WireCuttingReportComponent implements OnInit {
 
     req$.subscribe(() => {
       this.showForm = false;
+      this.editId = null;
+      this.load();           // recalculates available batches
+    });
+
+  }
+
+  cancel() {
+    this.showForm = false;
+    this.editId = null;
+  }
+
+  // ================= MODAL =================
+  openModal(r: any) {
+    this.selected = r;
+    const el = document.getElementById('wireCuttingModal');
+    if (!el) return;
+    new bootstrap.Modal(el).show();
+  }
+
+  closeModal() {
+    const el = document.getElementById('wireCuttingModal');
+    if (!el) return;
+    bootstrap.Modal.getInstance(el)?.hide();
+  }
+
+  // ================= APPROVAL =================
+  getApprovalLevels(r: any) {
+    return {
+      checkedBy: {
+        name: r?.approvedByL1Name || '—',
+        level: r?.approvedByL1 ? 'L1' : ''
+      },
+      reviewedBy: {
+        name: r?.approvedByL2Name || '—',
+        level: r?.approvedByL2 ? 'L2' : ''
+      },
+      approvedBy: {
+        name: r?.approvedByL3Name || '—',
+        level: r?.approvedByL3 ? 'L3' : ''
+      }
+    };
+  }
+
+  approve() {
+    this.service.approve(this.selected.id).subscribe(() => {
+      alert('Approved successfully');
       this.load();
     });
   }
 
-  // ================= EXPORT HANDLER =================
-  onExportChange(event: Event) {
-    const value = (event.target as HTMLSelectElement)?.value;
+  reject() {
+    const reason = prompt('Enter rejection reason');
+    if (!reason) return;
 
-    if (value === 'pdf') {
-      this.exportPDF();
-    } else if (value === 'excel') {
-      this.exportExcel();
+    this.service.reject(this.selected.id, reason).subscribe(() => {
+      alert('Rejected successfully');
+      this.load();
+    });
+  }
+
+  // ================= EXPORT =================
+  formatDate(d: any) {
+    return d ? new Date(d).toLocaleDateString('en-GB') : '';
+  }
+
+  exportPDF() {
+    if (!this.filteredList.length) {
+      alert('No data to export');
+      return;
     }
 
+    const doc = new jsPDF({ orientation: 'landscape' });
+
+    autoTable(doc, {
+      head: [[
+        'Batch No',
+        'Date',
+        'Cutting Date',
+        'Mould',
+        'Size',
+        'Ball Test',
+        'Time'
+      ]],
+      body: this.filteredList.map(r => [
+        r.batchNo,
+        this.formatDate(r.createdDate),
+        this.formatDate(r.cuttingDate),
+        r.mouldNo,
+        r.size,
+        r.ballTestMm,
+        r.time
+      ])
+    });
+
+    doc.save('wire-cutting-register.pdf');
+  }
+
+  exportExcel() {
+    const data = this.filteredList.map(r => ({
+      'Batch No': r.batchNo,
+      'Date': this.formatDate(r.createdDate),
+      'Cutting Date': this.formatDate(r.cuttingDate),
+      'Mould No': r.mouldNo,
+      'Size': r.size,
+      'Ball Test': r.ballTestMm,
+      'Time': r.time
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Wire Cutting');
+    XLSX.writeFile(wb, 'wire-cutting.xlsx');
+  }
+
+  onExportChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    if (value === 'pdf') this.exportPDF();
+    if (value === 'excel') this.exportExcel();
     (event.target as HTMLSelectElement).value = '';
   }
 
-  // ================= CANCEL =================
-  cancel() {
-    this.showForm = false;
-    this.editId = null;
+  // ================= DOWNLOAD SINGLE =================
+  download() {
+    const r = this.selected;
+    if (!r) return;
+
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Wire Cutting Report', 14, 15);
+
+    autoTable(doc, {
+      startY: 25,
+      head: [['Field', 'Value']],
+      body: [
+        ['Batch No', r.batchNo],
+        ['Date', this.formatDate(r.createdDate)],
+        ['Cutting Date', this.formatDate(r.cuttingDate)],
+        ['Mould No', r.mouldNo],
+        ['Size', r.size],
+        ['Ball Test', r.ballTestMm],
+        ['Time', r.time],
+        ['Reason', r.otherReason || '—']
+      ]
+    });
+
+    doc.save(`Wire-Cutting-${r.batchNo}.pdf`);
   }
 
 }

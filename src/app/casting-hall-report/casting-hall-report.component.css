@@ -294,11 +294,6 @@ hr {
     margin: 18px 0;
 }
 
-/* 🔥 Make remark occupy remaining right space */
-.remark-full {
-    grid-column: span 3;
-}
-
 .filters {
     display: flex;
     align-items: center;
@@ -564,4 +559,55 @@ hr {
     .clear-btn {
         justify-content: center;
     }
+}
+
+.table1 {
+    margin: 15px;
+}
+
+.tablehead {
+    background-color: blue;
+    padding: 10px 0px;
+}
+
+.section-header th {
+    background-color: blue;
+    /* or blue */
+    color: white;
+    text-align: center;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 5px;
+}
+
+.level-text {
+    font-size: 20px;
+    padding: 15px;
+}
+
+.modal-header {
+    display: flex;
+    gap: 25px;
+}
+
+.modal-header-big {
+    font-size: 18px;
+    gap: 80px;
+}
+
+.modal-header-big .modal-title {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.modal-header-big .meta-text {
+    font-size: 18px;
+    font-weight: 500;
 }

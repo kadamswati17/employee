@@ -41,14 +41,9 @@
 
 /* ROW CONFIGS */
 .row-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr 180px 180px;
     align-items: center;
-    gap: 16px;
 }
-
-
-
 
 
 /* ROW 1 FIX */
@@ -97,7 +92,6 @@
 .form-field textarea {
     height: 50px;
 }
-
 
 /* FLOATING LABEL */
 .form-field label {
@@ -279,8 +273,18 @@
     border-radius: 4px;
 }
 
+.page-title1 {
+    font-size: 26px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
 
-
+    color: white;
+    padding: 3px 25px;
+    border-radius: 4px;
+    width: 300px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
 
 hr {
     border: none;
@@ -288,26 +292,6 @@ hr {
     background-color: #2563eb;
     /* blue */
     margin: 18px 0;
-}
-
-/* 🔥 Make remark occupy remaining right space */
-.remark-full {
-    grid-column: span 2;
-}
-
-.page-title1 {
-    display: inline-block;
-    /* ⭐ KEY FIX */
-    font-size: 26px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
-    color: white;
-    padding: 6px 25px;
-    border-radius: 6px;
-    margin-top: 5px;
-    margin-left: 10px;
-    white-space: nowrap;
-    width: 285px;
 }
 
 .filters {
@@ -575,4 +559,55 @@ hr {
     .clear-btn {
         justify-content: center;
     }
+}
+
+.table1 {
+    margin: 15px;
+}
+
+.tablehead {
+    background-color: blue;
+    padding: 10px 0px;
+}
+
+.section-header th {
+    background-color: blue;
+    /* or blue */
+    color: white;
+    text-align: center;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 5px;
+}
+
+.level-text {
+    font-size: 20px;
+    padding: 15px;
+}
+
+.modal-header {
+    display: flex;
+    gap: 25px;
+}
+
+.modal-header-big {
+    font-size: 18px;
+    gap: 80px;
+}
+
+.modal-header-big .modal-title {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.modal-header-big .meta-text {
+    font-size: 18px;
+    font-weight: 500;
 }

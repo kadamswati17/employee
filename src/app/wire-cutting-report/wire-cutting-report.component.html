@@ -2,15 +2,14 @@
 
     <!-- ================= LIST VIEW ================= -->
     <div class="main" *ngIf="!showForm">
+
         <div class="header">
             <h2 class="page-title">Wire Cutting Report</h2>
             <button class="add-btn" (click)="openForm()">+ Add</button>
         </div>
 
-
-        <!-- FILTER BAR -->
+        <!-- FILTERS -->
         <div class="filters">
-
             <div class="date-field top-label">
                 <label>From Date</label>
                 <input type="date" [(ngModel)]="filterFromDate" (change)="applyFilters()" />
@@ -27,20 +26,19 @@
                 <option value="excel">Export Excel</option>
             </select>
 
-
             <button class="clear-btn" (click)="clearFilters()">Clear</button>
         </div>
 
+        <!-- TABLE -->
         <table class="table custom-table">
             <thead>
                 <tr>
                     <th>Batch No</th>
                     <th>Date</th>
-                    <th>Wire Cutting Date</th>
-                    <th>Mould No</th>
+                    <th>Cutting Date</th>
+                    <th>Mould</th>
                     <th>Size</th>
-                    <th>Ball Test (mm)</th>
-                    <th>Reason</th>
+                    <th>Ball Test</th>
                     <th>Time</th>
                     <th>Action</th>
                 </tr>
@@ -48,14 +46,12 @@
 
             <tbody>
                 <tr *ngFor="let r of filteredList">
-
-                    <td>{{ r.batchNo }}</td>
+                    <td class="clickable" (click)="openModal(r)">{{ r.batchNo }}</td>
                     <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
                     <td>{{ r.cuttingDate | date:'dd-MM-yyyy' }}</td>
                     <td>{{ r.mouldNo }}</td>
                     <td>{{ r.size }}</td>
                     <td>{{ r.ballTestMm }}</td>
-                    <td>{{ r.otherReason }}</td>
                     <td>{{ r.time }}</td>
                     <td>
                         <button class="link-btn" (click)="edit(r)">Edit</button>
@@ -69,77 +65,140 @@
     <!-- ================= FORM ================= -->
     <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="submit()" class="card">
 
-        <!-- HEADER ROW -->
         <div class="row row-header">
             <h2 class="page-title1">Wire Cutting Report</h2>
-
-            <!-- TODAY DATE (READ ONLY) -->
             <div class="form-field date">
-                <input type="date" formControlName="reportDate">
+                <input type="date" formControlName="cuttingDate">
                 <label>Date</label>
             </div>
+            <div></div>
         </div>
 
         <hr>
 
-        <!-- ROW 1 -->
         <div class="row row-3">
-            <!-- WIRE CUTTING DATE -->
-
-
             <div class="form-field">
                 <select formControlName="batchNo">
                     <option value="" disabled></option>
-                    <option *ngFor="let p of productionList" [value]="p.batchNo">
-                        {{ p.batchNo }}
-                    </option>
+                    <option *ngFor="let p of productionList" [value]="p.batchNo">{{ p.batchNo }}</option>
                 </select>
                 <label>Batch No</label>
             </div>
 
-
-            <div class="form-field date">
-                <input type="date" formControlName="cuttingDate">
-                <label>Wire Cutting Date</label>
-            </div>
             <div class="form-field">
-                <input type="number" placeholder=" " formControlName="mouldNo">
+                <input type="number" formControlName="mouldNo">
                 <label>Mould No</label>
             </div>
 
             <div class="form-field">
-                <input type="number" placeholder=" " formControlName="size">
+                <input type="number" formControlName="size">
                 <label>Size</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="ballTestMm">
+                <label>Ball Test (mm)</label>
             </div>
         </div>
 
         <hr>
 
-        <!-- ROW 2 -->
         <div class="row row-4">
             <div class="form-field">
-                <input type="number" placeholder=" " formControlName="ballTestMm">
-                <label>Ball Test (mm)</label>
-            </div>
-
-            <div class="form-field">
-                <input placeholder=" " formControlName="time">
+                <input formControlName="time">
                 <label>Time</label>
             </div>
 
-            <div class="form-field textarea remark-full">
-                <textarea placeholder=" " formControlName="otherReason"></textarea>
+            <div class="form-field textarea">
+                <textarea formControlName="otherReason"></textarea>
                 <label>Other Reason</label>
             </div>
+            <div></div>
+            <div></div>
         </div>
 
         <hr>
 
-        <!-- ACTIONS -->
         <div class="actions">
             <button type="submit">{{ editId ? 'Update' : 'Save' }}</button>
             <button type="button" class="cancel" (click)="cancel()">Cancel</button>
         </div>
 
     </form>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div class="modal fade" id="wireCuttingModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header modal-header-big">
+                <h4 class="modal-title">Batch No - {{ selected?.batchNo }}</h4>
+                <div class="meta-text"><b>Date:</b> {{ selected?.createdDate | date:'longDate' }}</div>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th>Mould</th>
+                            <th>Size</th>
+                            <th>Ball Test</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ selected?.mouldNo }}</td>
+                            <td>{{ selected?.size }}</td>
+                            <td>{{ selected?.ballTestMm }}</td>
+                            <td>{{ selected?.time }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <!-- ================= APPROVAL TABLE ================= -->
+                <table class="table1">
+                    <thead class="tablehead">
+                        <tr>
+                            <th style="padding:8px;color:white">CHECKED BY</th>
+                            <th style="padding:8px;color:white">REVIEWED BY</th>
+                            <th style="padding:8px;color:white">APPROVED BY</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td class="level-text">
+                                <div>{{ getApprovalLevels(selected).checkedBy.name }}</div>
+                                <div>{{ getApprovalLevels(selected).checkedBy.level }}</div>
+                            </td>
+                            <td class="level-text">
+                                <div>{{ getApprovalLevels(selected).reviewedBy.name }}</div>
+                                <div>{{ getApprovalLevels(selected).reviewedBy.level }}</div>
+                            </td>
+                            <td class="level-text">
+                                <div>{{ getApprovalLevels(selected).approvedBy.name }}</div>
+                                <div>{{ getApprovalLevels(selected).approvedBy.level }}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" (click)="edit(selected); closeModal()">Edit</button>
+                <button class="btn btn-info" (click)="download()">Download</button>
+                <button class="btn btn-success" (click)="approve()">Approve</button>
+                <button class="btn btn-warning" (click)="reject()">Reject</button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
 </div>

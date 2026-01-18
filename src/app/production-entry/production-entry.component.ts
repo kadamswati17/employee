@@ -134,96 +134,96 @@ export class ProductionEntryComponent implements OnInit {
     if (type === 'excel') this.exportExcel();
   }
 
-  // exportPDF() {
-  //   if (!this.filteredProductionList.length) {
-  //     alert('No data to export');
-  //     return;
-  //   }
-
-  //   const doc = new jsPDF({
-  //     orientation: 'landscape',
-  //     unit: 'mm',
-  //     format: 'a4'
-  //   });
-
-  //   doc.setFontSize(14);
-  //   doc.text('Production Register', doc.internal.pageSize.getWidth() / 2, 12, {
-  //     align: 'center'
-  //   });
-
-  //   const head = [
-  //     this.productionFieldConfig.map(f => f.label)
-  //   ];
-
-  //   const body = this.filteredProductionList.map(p =>
-  //     this.productionFieldConfig.map(f => {
-  //       let value = p[f.key];
-
-  //       if (f.format === 'date' && value) {
-  //         value = this.formatDate(value);
-  //       }
-
-  //       return value ?? '';
-  //     })
-  //   );
-
-  //   autoTable(doc, {
-  //     startY: 18,
-  //     head,
-  //     body,
-  //     styles: {
-  //       fontSize: 7,
-  //       cellPadding: 2,
-  //       overflow: 'linebreak'
-  //     },
-  //     headStyles: {
-  //       fillColor: [33, 150, 243],
-  //       textColor: 255,
-  //       halign: 'center'
-  //     },
-  //     margin: { left: 8, right: 8 }
-  //   });
-
-  //   doc.save('production-register.pdf');
-  // }
-
   exportPDF() {
     if (!this.filteredProductionList.length) {
       alert('No data to export');
       return;
     }
 
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
 
-    this.filteredProductionList.forEach((p, index) => {
+    doc.setFontSize(14);
+    doc.text('Production Register', doc.internal.pageSize.getWidth() / 2, 12, {
+      align: 'center'
+    });
 
-      if (index > 0) doc.addPage();
+    const head = [
+      this.productionFieldConfig.map(f => f.label)
+    ];
 
-      doc.setFontSize(16);
-      doc.text(`Production Register - Batch ${p.batchNo}`, 14, 15);
-
-      const body = this.productionFieldConfig.map(f => {
+    const body = this.filteredProductionList.map(p =>
+      this.productionFieldConfig.map(f => {
         let value = p[f.key];
+
         if (f.format === 'date' && value) {
           value = this.formatDate(value);
         }
-        return [f.label, value ?? ''];
-      });
 
-      autoTable(doc, {
-        startY: 22,
-        head: [['Field', 'Value']],
-        body,
-        styles: { fontSize: 10 },
-        headStyles: {
-          fillColor: [33, 150, 243],
-          textColor: 255
-        }
-      });
+        return value ?? '';
+      })
+    );
+
+    autoTable(doc, {
+      startY: 18,
+      head,
+      body,
+      styles: {
+        fontSize: 7,
+        cellPadding: 2,
+        overflow: 'linebreak'
+      },
+      headStyles: {
+        fillColor: [33, 150, 243],
+        textColor: 255,
+        halign: 'center'
+      },
+      margin: { left: 8, right: 8 }
     });
 
     doc.save('production-register.pdf');
   }
+
+  // exportPDF() {
+  //   if (!this.filteredProductionList.length) {
+  //     alert('No data to export');
+  //     return;
+  //   }
+
+  //   const doc = new jsPDF();
+
+  //   this.filteredProductionList.forEach((p, index) => {
+
+  //     if (index > 0) doc.addPage();
+
+  //     doc.setFontSize(16);
+  //     doc.text(`Production Register - Batch ${p.batchNo}`, 14, 15);
+
+  //     const body = this.productionFieldConfig.map(f => {
+  //       let value = p[f.key];
+  //       if (f.format === 'date' && value) {
+  //         value = this.formatDate(value);
+  //       }
+  //       return [f.label, value ?? ''];
+  //     });
+
+  //     autoTable(doc, {
+  //       startY: 22,
+  //       head: [['Field', 'Value']],
+  //       body,
+  //       styles: { fontSize: 10 },
+  //       headStyles: {
+  //         fillColor: [33, 150, 243],
+  //         textColor: 255
+  //       }
+  //     });
+  //   });
+
+  //   doc.save('production-register.pdf');
+  // }
 
 
 
@@ -329,7 +329,7 @@ export class ProductionEntryComponent implements OnInit {
   getApprovalLevels(p: any) {
     return {
       checkedBy: {
-        name: p?.approvedByL1 || 'swati',
+        name: p?.approvedByL1 || '',
         level: p?.approvedByL1 ? 'L1' : 'L1'
       },
       reviewedBy: {

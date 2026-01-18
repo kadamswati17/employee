@@ -1,20 +1,15 @@
-// src/app/services/WireCuttingReportService.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APP_CONFIG } from '../config/config';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class WireCuttingReportService {
 
     private baseUrl = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.WIRE_CUTTING}`;
 
     constructor(private http: HttpClient) { }
 
-    // ================= AUTH HEADERS =================
     private getAuthHeaders() {
         const token = localStorage.getItem('token');
         return {
@@ -24,41 +19,27 @@ export class WireCuttingReportService {
         };
     }
 
-    // ================= CRUD =================
     getAll(): Observable<any[]> {
-        return this.http.get<any[]>(
-            this.baseUrl,
-            this.getAuthHeaders()
-        );
+        return this.http.get<any[]>(this.baseUrl, this.getAuthHeaders());
     }
 
-    getById(id: number): Observable<any> {
-        return this.http.get<any>(
-            `${this.baseUrl}/${id}`,
-            this.getAuthHeaders()
-        );
+    save(data: any) {
+        return this.http.post(this.baseUrl, data, this.getAuthHeaders());
     }
 
-    save(data: any): Observable<any> {
-        return this.http.post(
-            this.baseUrl,
-            data,
-            this.getAuthHeaders()
-        );
+    update(id: number, data: any) {
+        return this.http.put(`${this.baseUrl}/${id}`, data, this.getAuthHeaders());
     }
 
-    update(id: number, data: any): Observable<any> {
-        return this.http.put(
-            `${this.baseUrl}/${id}`,
-            data,
-            this.getAuthHeaders()
-        );
+    delete(id: number) {
+        return this.http.delete(`${this.baseUrl}/${id}`, this.getAuthHeaders());
     }
 
-    delete(id: number): Observable<any> {
-        return this.http.delete(
-            `${this.baseUrl}/${id}`,
-            this.getAuthHeaders()
-        );
+    approve(id: number) {
+        return this.http.put(`${this.baseUrl}/${id}/approve`, {}, this.getAuthHeaders());
+    }
+
+    reject(id: number, reason: string) {
+        return this.http.post(`${this.baseUrl}/${id}/reject`, { reason }, this.getAuthHeaders());
     }
 }

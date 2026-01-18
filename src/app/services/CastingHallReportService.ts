@@ -61,4 +61,21 @@ export class CastingHallReportService {
             this.getAuthHeaders()
         );
     }
+
+    approve(id: number): Observable<any> {
+        return this.http.put(
+            `${this.baseUrl}/${id}/approve`,
+            {},
+            this.getAuthHeaders()
+        );
+    }
+
+    reject(id: number, reason: string): Observable<any> {
+        return this.http.post(
+            `${this.baseUrl}/reject/${id}`,
+            { reason },
+            this.getAuthHeaders()
+        );
+    }
+
 }
