@@ -73,11 +73,12 @@ export class ProductionService {
 
     reject(id: number, reason: string): Observable<any> {
         return this.http.post(
-            `${this.baseUrl}/reject/${id}`,
-            { reason },
+            `${this.baseUrl}/${id}/reject?reason=${encodeURIComponent(reason)}`,
+            {},
             this.getAuthHeaders()
         );
     }
+
 
 
 

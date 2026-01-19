@@ -45,22 +45,27 @@
             </thead>
 
             <tbody>
-                <tr *ngFor="let r of filteredList">
-                    <td class="clickable" (click)="openCastingModal(r)">
-                        {{ r.batchNo }}
-                    </td>
+                <ng-container *ngFor="let r of filteredList">
+                    <tr *ngIf="canViewCasting(r)">
 
-                    <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
-                    <td>{{ r.size }}</td>
-                    <td>{{ r.bedNo }}</td>
-                    <td>{{ r.mouldNo }}</td>
-                    <td>{{ r.castingTime }}</td>
-                    <td>
-                        <button class="link-btn" (click)="edit(r)">Edit</button>
-                        <button class="link-btn danger" (click)="delete(r.id)">Delete</button>
-                    </td>
-                </tr>
+
+                        <td class="clickable" (click)="openCastingModal(r)">
+                            {{ r.batchNo }}
+                        </td>
+
+                        <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
+                        <td>{{ r.size }}</td>
+                        <td>{{ r.bedNo }}</td>
+                        <td>{{ r.mouldNo }}</td>
+                        <td>{{ r.castingTime }}</td>
+                        <td>
+                            <button class="link-btn" (click)="edit(r)">Edit</button>
+                            <button class="link-btn danger" (click)="delete(r.id)">Delete</button>
+                        </td>
+                    </tr>
+                </ng-container>
             </tbody>
+
         </table>
 
     </div>
@@ -313,13 +318,16 @@
                     Download
                 </button>
 
-                <button class="btn btn-success btn-sm" (click)="approveCasting()">
+                <button class="btn btn-success btn-sm" *ngIf="canApproveCasting(selectedCasting)"
+                    (click)="approveCasting()">
                     Approve
                 </button>
 
-                <button class="btn btn-warning btn-sm" (click)="rejectCasting()">
+                <button class="btn btn-warning btn-sm" *ngIf="canRejectCasting(selectedCasting)"
+                    (click)="rejectCasting()">
                     Reject
                 </button>
+
 
                 <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
                     Close

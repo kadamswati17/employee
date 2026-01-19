@@ -48,23 +48,27 @@
             </thead>
 
             <tbody>
-                <tr *ngFor="let p of filteredProductionList">
-                    <td class="clickable" (click)="openProductionModal(p)">
-                        {{ p.batchNo }}
-                    </td>
+                <ng-container *ngFor="let p of filteredProductionList">
+                    <tr *ngIf="canViewProduction(p)">
+                        <td class="clickable" (click)="openProductionModal(p)">
+                            {{ p.batchNo }}
+                        </td>
+                        <td>{{ p.createdDate | date:'dd-MM-yyyy' }}</td>
+                        <td>{{ p.createdByName || getUserName(p.userId) }}</td>
+                        <td>Shift {{ p.shift }}</td>
+                        <td>{{ p.totalSolid }}</td>
+                        <td>{{ p.productionTime }}</td>
+                        <td>
+                            <button class="link-btn" *ngIf="canEditDelete()" (click)="edit(p)">
+                                Edit
+                            </button>
+                            <button class="link-btn danger" *ngIf="canEditDelete()" (click)="delete(p.id)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                </ng-container>
 
-                    <td>{{ p.createdDate | date:'dd-MM-yyyy' }}</td>
-                    <!-- ✅ CREATED BY -->
-                    <td>{{ p.createdByName || getUserName(p.userId) }}</td>
-
-                    <td>Shift {{ p.shift }}</td>
-                    <td>{{ p.totalSolid }}</td>
-                    <td>{{ p.productionTime }}</td>
-                    <td>
-                        <button class="link-btn" (click)="edit(p)">Edit</button>
-                        <button class="link-btn danger" (click)="delete(p.id)">Delete</button>
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -334,9 +338,11 @@
 
                 <div class="modal-footer ">
 
-                    <button class="btn btn-primary btn-sm" (click)="edit(selectedProduction); closeModal()">
+                    <button class="btn btn-primary btn-sm" *ngIf="canEditDelete()"
+                        (click)="edit(selectedProduction); closeModal()">
                         Edit
                     </button>
+
 
                     <button class="btn btn-info btn-sm" (click)="downloadProduction()">
                         Download

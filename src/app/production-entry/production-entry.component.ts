@@ -13,6 +13,9 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./production-entry.component.css']
 })
 export class ProductionEntryComponent implements OnInit {
+
+  currentUserRole = '';
+
   selectedProduction: any = null;
 
   productionForm!: FormGroup;
@@ -34,6 +37,14 @@ export class ProductionEntryComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+
+    console.log('ROLE IN COMPONENT:', this.currentUserRole);
+
+    this.loadCurrentUserRole();
+
+
+
 
     this.siloList = Array.from({ length: 5 }, (_, i) => i + 1);
 
@@ -76,9 +87,20 @@ export class ProductionEntryComponent implements OnInit {
   }
 
 
+  loadCurrentUserRole() {
+    const role = localStorage.getItem('role') || '';
+
+    this.currentUserRole = role.startsWith('ROLE_')
+      ? role
+      : `ROLE_${role}`;
+
+    console.log('ROLE IN COMPONENT:', this.currentUserRole);
+  }
+
+
   openProductionModal(p: any) {
     this.selectedProduction = p;
-
+    this.loadCurrentUserRole();
     const modalEl = document.getElementById('productionModal');
     if (!modalEl) return;
 
@@ -94,8 +116,6 @@ export class ProductionEntryComponent implements OnInit {
   }
 
   applyFilters() {
-
-    // 🚫 VALIDATION FIRST
     if (
       this.filterFromDate &&
       this.filterToDate &&
@@ -114,12 +134,37 @@ export class ProductionEntryComponent implements OnInit {
       : null;
 
     this.filteredProductionList = this.productionList.filter(p => {
-      const date = new Date(p.createdDate).getTime();
 
-      return (!from || date >= from) &&
+      // ✅ DATE FILTER
+      const date = new Date(p.createdDate).getTime();
+      const dateOk =
+        (!from || date >= from) &&
         (!to || date <= to);
+
+      if (!dateOk) return false;
+
+      // ✅ ROLE FILTER
+      const stage = p.approvalStage || 'NONE';
+
+      switch (this.currentUserRole) {
+        case 'ROLE_L1':
+          return true; // sees all
+
+        case 'ROLE_L2':
+          return stage === 'L1';
+
+        case 'ROLE_L3':
+          return stage === 'L2';
+
+        case 'ROLE_ADMIN':
+          return true;
+
+        default:
+          return false;
+      }
     });
   }
+
 
 
 
@@ -424,16 +469,39 @@ export class ProductionEntryComponent implements OnInit {
   }
 
 
-
-  // ================= APPROVAL LOGIC (BASIC SAFE VERSION) =================
-
-  // TEMP: always allow approve/reject (you can tighten later)
   canApprove(p: any): boolean {
-    return !!p;
+    if (!p) return false;
+
+    const stage = p.approvalStage || 'NONE';
+
+    return (
+      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+    );
   }
 
+
   canReject(p: any): boolean {
-    return !!p;
+    if (!p) return false;
+
+    const stage = p.approvalStage;
+
+    if (stage === 'L3') return false; // final approved cannot reject
+
+    return (
+      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+    );
+  }
+
+
+  canEditDelete(): boolean {
+    return (
+      this.currentUserRole === 'ROLE_ADMIN' ||
+      this.currentUserRole === 'ROLE_L1'
+    );
   }
 
   approveProduction() {
@@ -442,12 +510,10 @@ export class ProductionEntryComponent implements OnInit {
     this.service.approve(this.selectedProduction.id).subscribe({
       next: () => {
         alert('Approved successfully');
+        this.closeModal();
         this.loadData();
       },
-      error: (err) => {
-        console.error(err);
-        alert('Approve failed');
-      }
+      error: () => alert('Approve failed')
     });
   }
 
@@ -461,14 +527,13 @@ export class ProductionEntryComponent implements OnInit {
     this.service.reject(this.selectedProduction.id, reason).subscribe({
       next: () => {
         alert('Rejected successfully');
+        this.closeModal();
         this.loadData();
       },
-      error: (err) => {
-        console.error(err);
-        alert('Reject failed');
-      }
+      error: () => alert('Reject failed')
     });
   }
+
   // saveModalEdit() {
   //   if (!this.selectedProduction) return;
 
@@ -492,6 +557,34 @@ export class ProductionEntryComponent implements OnInit {
     modalInstance?.hide();
   }
 
+
+
+  canViewProduction(p: any): boolean {
+    if (!p) return false;
+
+    const stage = p.approvalStage || 'NONE';
+
+    switch (this.currentUserRole) {
+
+      case 'ROLE_L1':
+        // ✅ pending + rejected
+        return stage === 'NONE';
+
+      case 'ROLE_L2':
+        // ✅ only L1 approved
+        return stage === 'L1';
+
+      case 'ROLE_L3':
+        // ✅ L2 approved + final approved
+        return stage === 'L2' || stage === 'L3';
+
+      case 'ROLE_ADMIN':
+        return true;
+
+      default:
+        return false;
+    }
+  }
 
 
 

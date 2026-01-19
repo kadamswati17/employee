@@ -44,19 +44,17 @@ export class AuthService {
             role: response.role
           });
 
-          // Save user (local)
-          UserService.saveUser({
-            id: response.id,
-            username: response.username,
-            email: response.email,
-            role: response.role
-          });
+          // 🔴 ADD THESE LINES
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('role', response.role);
+          localStorage.setItem('username', response.username);
 
           this.loginStatus.next(true);
         }
       })
     );
   }
+
 
   // =======================================
   // 🆕 REGISTER USER (ADMIN ONLY)

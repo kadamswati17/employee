@@ -14,6 +14,7 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./casting-hall-report.component.css']
 })
 export class CastingHallReportComponent implements OnInit {
+  currentUserRole = '';
 
   showForm = false;
   reportForm!: FormGroup;
@@ -43,11 +44,9 @@ export class CastingHallReportComponent implements OnInit {
 
   // ================= INIT =================
   ngOnInit(): void {
-
-
+    this.loadCurrentUserRole(); // 🔥 REQUIRED
 
     const today = new Date().toISOString().substring(0, 10);
-
     this.filterFromDate = today;
     this.filterToDate = today;
 
@@ -72,6 +71,7 @@ export class CastingHallReportComponent implements OnInit {
     this.loadReports();
     this.loadProductionBatches();
   }
+
 
   // ================= LOAD =================
   loadProductionBatches() {
@@ -253,49 +253,49 @@ export class CastingHallReportComponent implements OnInit {
   getCastingApprovalLevels(c: any) {
     return {
       checkedBy: {
-        name: c?.approvedByL1Name ?? null,
-        level: c?.approvedByL1 ? 'L1' : null
+        name: c?.approvedByL1 || '',
+        level: c?.approvedByL1 ? 'L1' : ''
       },
       reviewedBy: {
-        name: c?.approvedByL2Name ?? null,
-        level: c?.approvedByL2 ? 'L2' : null
+        name: c?.approvedByL2 || '',
+        level: c?.approvedByL2 ? 'L2' : ''
       },
       approvedBy: {
-        name: c?.approvedByL3Name ?? null,
-        level: c?.approvedByL3 ? 'L3' : null
+        name: c?.approvedByL3 || '',
+        level: c?.approvedByL3 ? 'L3' : ''
       }
     };
   }
 
 
-  // ================= ROLE LOGIC =================
-  getCurrentUserRole(): string {
-    const role = localStorage.getItem('role') || '';
-    return role.replace('ROLE_', '').toUpperCase(); // ⭐ FIX
-  }
+
 
   canApproveCasting(c: any): boolean {
     if (!c) return false;
 
-    const role = this.getCurrentUserRole();
+    const stage = c.approvalStage || 'NONE';
 
-    if (c.approvalStage === 'APPROVED') return false;
-
-    if (role === 'ADMIN') return true;
-    if (role === 'L1') return !c.approvedByL1;
-    if (role === 'L2') return c.approvedByL1 && !c.approvedByL2;
-    if (role === 'L3') return c.approvedByL2 && !c.approvedByL3;
-
-    return false;
+    return (
+      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+    );
   }
 
   canRejectCasting(c: any): boolean {
     if (!c) return false;
-    if (c.approvalStage === 'APPROVED') return false;
 
-    const role = this.getCurrentUserRole();
-    return ['ADMIN', 'L1', 'L2', 'L3'].includes(role);
+    const stage = c.approvalStage;
+
+    if (stage === 'L3') return false;
+
+    return (
+      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+    );
   }
+
 
   // ================= ACTIONS =================
   approveCasting() {
@@ -392,5 +392,38 @@ export class CastingHallReportComponent implements OnInit {
     { label: 'Approved By L2', key: 'approvedByL2' },
     { label: 'Approved By L3', key: 'approvedByL3' }
   ];
+  canViewCasting(c: any): boolean {
+    if (!c) return false;
+
+    const stage = c.approvalStage || 'NONE';
+
+    switch (this.currentUserRole) {
+
+      case 'ROLE_L1':
+        return stage === 'NONE'; // pending + rejected
+
+      case 'ROLE_L2':
+        return stage === 'L1';
+
+      case 'ROLE_L3':
+        return stage === 'L2' || stage === 'L3';
+
+      case 'ROLE_ADMIN':
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+
+
+
+  loadCurrentUserRole() {
+    const role = localStorage.getItem('role') || '';
+    this.currentUserRole = role.startsWith('ROLE_')
+      ? role
+      : `ROLE_${role}`;
+  }
 
 }
