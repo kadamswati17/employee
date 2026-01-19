@@ -26,6 +26,8 @@ export class CastingHallReportComponent implements OnInit {
   availableProductionList: any[] = [];
   allProductionList: any[] = [];
 
+  // 🔥 NEW: merged export will use this
+  mergedExportList: any[] = [];
 
 
   // selectedCasting: any = null;
@@ -70,6 +72,20 @@ export class CastingHallReportComponent implements OnInit {
 
     this.loadReports();
     this.loadProductionBatches();
+  }
+  private buildMergedExportData() {
+    return this.filteredList.map(casting => {
+
+      const production = this.allProductionList.find(
+        p => p.batchNo === casting.batchNo
+      ) || {};
+
+      // 🔥 merge production + casting
+      return {
+        ...production,
+        ...casting
+      };
+    });
   }
 
 
@@ -232,23 +248,92 @@ export class CastingHallReportComponent implements OnInit {
     doc.save('casting-report.pdf');
   }
 
+
+
+  private excelFieldConfig = [
+
+    // ===== COMMON (once) =====
+    { label: 'Batch No', key: 'batchNo' },
+    { label: 'Production Date', key: 'createdDate', format: 'date' },
+    { label: 'Shift', key: 'shift' },
+
+    // ===== PRODUCTION =====
+    { label: 'Silo No 1', key: 'siloNo1' },
+    { label: 'Liter Weight 1', key: 'literWeight1' },
+    { label: 'FA Solid 1', key: 'faSolid1' },
+
+    { label: 'Silo No 2', key: 'siloNo2' },
+    { label: 'Liter Weight 2', key: 'literWeight2' },
+    { label: 'FA Solid 2', key: 'faSolid2' },
+
+    { label: 'Total Solid', key: 'totalSolid' },
+    { label: 'Water Liter', key: 'waterLiter' },
+    { label: 'Cement Kg', key: 'cementKg' },
+    { label: 'Lime Kg', key: 'limeKg' },
+    { label: 'Gypsum Kg', key: 'gypsumKg' },
+    { label: 'Sol Oil Kg', key: 'solOilKg' },
+    { label: 'AI Power (gm)', key: 'aiPowerGm' },
+    { label: 'Temperature (°C)', key: 'tempC' },
+
+    { label: 'Casting Time', key: 'castingTime' },
+    { label: 'Production Time', key: 'productionTime' },
+    { label: 'Production Remark', key: 'productionRemark' },
+
+    // ===== CASTING =====
+    { label: 'Size', key: 'size' },
+    { label: 'Bed No', key: 'bedNo' },
+    { label: 'Mould No', key: 'mouldNo' },
+    { label: 'Consistency', key: 'consistency' },
+    { label: 'Flow (cm)', key: 'flowInCm' },
+    { label: 'Casting Temp (°C)', key: 'castingTempC' },
+    { label: 'V.T.', key: 'vt' },
+    { label: 'Mass Temp', key: 'massTemp' },
+    { label: 'Falling Test (mm)', key: 'fallingTestMm' },
+    { label: 'Test Time', key: 'testTime' },
+    { label: 'H Time', key: 'hTime' },
+    { label: 'Casting Remark', key: 'remark' },
+
+    // ===== APPROVAL =====
+    { label: 'Approval Stage', key: 'approvalStage' },
+    { label: 'Approved By L1', key: 'approvedByL1' },
+    { label: 'Approved By L2', key: 'approvedByL2' },
+    { label: 'Approved By L3', key: 'approvedByL3' }
+  ];
+
+
   exportExcel() {
-    if (!this.filteredList.length) return;
+    if (!this.filteredList.length) {
+      alert('No data to export');
+      return;
+    }
 
-    const data = this.filteredList.map(r => ({
-      'Batch No': r.batchNo,
-      'Date': this.formatDate(r.createdDate),
-      'Size': r.size,
-      'Bed No': r.bedNo,
-      'Mould No': r.mouldNo,
-      'Casting Time': r.castingTime
-    }));
+    // 🔥 USE MERGED DATA (IMPORTANT)
+    const mergedRows = this.buildMergedExportData();
 
-    const ws = XLSX.utils.json_to_sheet(data);
+    const excelData = mergedRows.map(row => {
+      const obj: any = {};
+
+      this.excelFieldConfig.forEach(f => {
+        let value = row[f.key];
+
+        if (f.format === 'date' && value) {
+          value = this.formatDate(value);
+        }
+
+        obj[f.label] =
+          value !== null && value !== undefined ? value : '';
+      });
+
+      return obj;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(excelData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Casting Report');
-    XLSX.writeFile(wb, 'casting-report.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Production + Casting');
+    XLSX.writeFile(wb, 'production-casting.xlsx');
   }
+
+
 
   getCastingApprovalLevels(c: any) {
     return {

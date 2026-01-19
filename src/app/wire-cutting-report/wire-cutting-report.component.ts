@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WireCuttingReportService } from '../services/WireCuttingReportService';
 import { ProductionService } from '../services/ProductionService';
 import * as bootstrap from 'bootstrap';
+import { CastingHallReportService } from '../services/CastingHallReportService';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -14,6 +15,7 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./wire-cutting-report.component.css']
 })
 export class WireCuttingReportComponent implements OnInit {
+  currentUserRole = '';
 
   showForm = false;
   form!: FormGroup;
@@ -27,6 +29,7 @@ export class WireCuttingReportComponent implements OnInit {
 
   filterFromDate = '';
   filterToDate = '';
+  castingList: any[] = [];
 
   allProductionList: any[] = [];
   availableProductionList: any[] = [];
@@ -35,11 +38,13 @@ export class WireCuttingReportComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: WireCuttingReportService,
-    private productionService: ProductionService
+    private productionService: ProductionService,
+    private castingService: CastingHallReportService
   ) { }
 
   ngOnInit(): void {
     const today = new Date().toISOString().substring(0, 10);
+    this.loadCurrentUserRole();
 
     this.filterFromDate = today;
     this.filterToDate = today;
@@ -56,6 +61,27 @@ export class WireCuttingReportComponent implements OnInit {
 
     this.load();
     this.loadProduction();
+    this.loadCasting();
+  }
+
+
+  private buildMergedExportData() {
+    return this.filteredList.map(cutting => {
+
+      const production = this.allProductionList.find(
+        p => p.batchNo === cutting.batchNo
+      ) || {};
+
+      const casting = this.castingList.find(
+        c => c.batchNo === cutting.batchNo
+      ) || {};
+
+      return {
+        ...production,
+        ...casting,
+        ...cutting
+      };
+    });
   }
 
   // ================= LOAD =================
@@ -64,6 +90,11 @@ export class WireCuttingReportComponent implements OnInit {
       this.list = res || [];
       this.applyFilters();
       this.filterAvailableBatches();   // ⭐ IMPORTANT
+    });
+  }
+  loadCasting() {
+    this.castingService.getAll().subscribe(res => {
+      this.castingList = res || [];
     });
   }
 
@@ -184,24 +215,23 @@ export class WireCuttingReportComponent implements OnInit {
     if (!el) return;
     bootstrap.Modal.getInstance(el)?.hide();
   }
-
-  // ================= APPROVAL =================
   getApprovalLevels(r: any) {
     return {
       checkedBy: {
-        name: r?.approvedByL1Name || '—',
+        name: r?.approvedByL1 || '—',
         level: r?.approvedByL1 ? 'L1' : ''
       },
       reviewedBy: {
-        name: r?.approvedByL2Name || '—',
+        name: r?.approvedByL2 || '—',
         level: r?.approvedByL2 ? 'L2' : ''
       },
       approvedBy: {
-        name: r?.approvedByL3Name || '—',
+        name: r?.approvedByL3 || '—',
         level: r?.approvedByL3 ? 'L3' : ''
       }
     };
   }
+
 
   approve() {
     this.service.approve(this.selected.id).subscribe(() => {
@@ -257,22 +287,96 @@ export class WireCuttingReportComponent implements OnInit {
     doc.save('wire-cutting-register.pdf');
   }
 
-  exportExcel() {
-    const data = this.filteredList.map(r => ({
-      'Batch No': r.batchNo,
-      'Date': this.formatDate(r.createdDate),
-      'Cutting Date': this.formatDate(r.cuttingDate),
-      'Mould No': r.mouldNo,
-      'Size': r.size,
-      'Ball Test': r.ballTestMm,
-      'Time': r.time
-    }));
 
-    const ws = XLSX.utils.json_to_sheet(data);
+  private excelFieldConfig = [
+
+    // ===== COMMON (once) =====
+    { label: 'Batch No', key: 'batchNo' },
+    { label: 'Production Date', key: 'createdDate', format: 'date' },
+    { label: 'Shift', key: 'shift' },
+
+    // ===== PRODUCTION =====
+    { label: 'Silo No 1', key: 'siloNo1' },
+    { label: 'Liter Weight 1', key: 'literWeight1' },
+    { label: 'FA Solid 1', key: 'faSolid1' },
+
+    { label: 'Silo No 2', key: 'siloNo2' },
+    { label: 'Liter Weight 2', key: 'literWeight2' },
+    { label: 'FA Solid 2', key: 'faSolid2' },
+
+    { label: 'Total Solid', key: 'totalSolid' },
+    { label: 'Water Liter', key: 'waterLiter' },
+    { label: 'Cement Kg', key: 'cementKg' },
+    { label: 'Lime Kg', key: 'limeKg' },
+    { label: 'Gypsum Kg', key: 'gypsumKg' },
+    { label: 'Sol Oil Kg', key: 'solOilKg' },
+    { label: 'AI Power (gm)', key: 'aiPowerGm' },
+    { label: 'Temperature (°C)', key: 'tempC' },
+
+    { label: 'Casting Time', key: 'castingTime' },
+    { label: 'Production Time', key: 'productionTime' },
+    { label: 'Production Remark', key: 'productionRemark' },
+
+    // ===== CASTING =====
+    { label: 'Size', key: 'size' },
+    { label: 'Bed No', key: 'bedNo' },
+    { label: 'Mould No', key: 'mouldNo' },
+    { label: 'Consistency', key: 'consistency' },
+    { label: 'Flow (cm)', key: 'flowInCm' },
+    { label: 'Casting Temp (°C)', key: 'castingTempC' },
+    { label: 'V.T.', key: 'vt' },
+    { label: 'Mass Temp', key: 'massTemp' },
+    { label: 'Falling Test (mm)', key: 'fallingTestMm' },
+    { label: 'Test Time', key: 'testTime' },
+    { label: 'H Time', key: 'hTime' },
+    { label: 'Casting Remark', key: 'remark' },
+
+    // ===== WIRE CUTTING =====
+    { label: 'Cutting Date', key: 'cuttingDate', format: 'date' },
+    { label: 'Ball Test (mm)', key: 'ballTestMm' },
+    { label: 'Cutting Time', key: 'time' },
+    { label: 'Cutting Reason', key: 'otherReason' },
+
+    // ===== APPROVAL =====
+    { label: 'Approval Stage', key: 'approvalStage' },
+    { label: 'Approved By L1', key: 'approvedByL1' },
+    { label: 'Approved By L2', key: 'approvedByL2' },
+    { label: 'Approved By L3', key: 'approvedByL3' }
+  ];
+
+  exportExcel() {
+    if (!this.filteredList.length) {
+      alert('No data to export');
+      return;
+    }
+
+    const mergedRows = this.buildMergedExportData(); // 🔥 IMPORTANT
+
+    const excelData = mergedRows.map(row => {
+      const obj: any = {};
+
+      this.excelFieldConfig.forEach(f => {
+        let value = row[f.key];
+
+        if (f.format === 'date' && value) {
+          value = this.formatDate(value);
+        }
+
+        obj[f.label] =
+          value !== null && value !== undefined ? value : '';
+      });
+
+      return obj;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(excelData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Wire Cutting');
-    XLSX.writeFile(wb, 'wire-cutting.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Full Production Flow');
+    XLSX.writeFile(wb, 'production-casting-cutting.xlsx');
   }
+
+
+
 
   onExportChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
@@ -306,6 +410,63 @@ export class WireCuttingReportComponent implements OnInit {
     });
 
     doc.save(`Wire-Cutting-${r.batchNo}.pdf`);
+  }
+
+  loadCurrentUserRole() {
+    const role = localStorage.getItem('role') || '';
+    this.currentUserRole = role.startsWith('ROLE_')
+      ? role
+      : `ROLE_${role}`;
+  }
+
+  canViewWireCutting(r: any): boolean {
+    if (!r) return false;
+
+    const stage = r.approvalStage || 'NONE';
+
+    switch (this.currentUserRole) {
+
+      case 'ROLE_L1':
+        return stage === 'NONE'; // pending + rejected
+
+      case 'ROLE_L2':
+        return stage === 'L1';
+
+      case 'ROLE_L3':
+        return stage === 'L2' || stage === 'L3';
+
+      case 'ROLE_ADMIN':
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  canApproveWireCutting(r: any): boolean {
+    if (!r) return false;
+
+    const stage = r.approvalStage || 'NONE';
+
+    return (
+      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+    );
+  }
+
+  canRejectWireCutting(r: any): boolean {
+    if (!r) return false;
+
+    const stage = r.approvalStage;
+
+    if (stage === 'L3') return false;
+
+    return (
+      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+    );
   }
 
 }

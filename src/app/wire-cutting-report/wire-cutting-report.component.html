@@ -45,20 +45,25 @@
             </thead>
 
             <tbody>
-                <tr *ngFor="let r of filteredList">
-                    <td class="clickable" (click)="openModal(r)">{{ r.batchNo }}</td>
-                    <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
-                    <td>{{ r.cuttingDate | date:'dd-MM-yyyy' }}</td>
-                    <td>{{ r.mouldNo }}</td>
-                    <td>{{ r.size }}</td>
-                    <td>{{ r.ballTestMm }}</td>
-                    <td>{{ r.time }}</td>
-                    <td>
-                        <button class="link-btn" (click)="edit(r)">Edit</button>
-                        <button class="link-btn danger" (click)="delete(r.id)">Delete</button>
-                    </td>
-                </tr>
+                <ng-container *ngFor="let r of filteredList">
+                    <tr *ngIf="canViewWireCutting(r)">
+                        <td class="clickable" (click)="openModal(r)">
+                            {{ r.batchNo }}
+                        </td>
+                        <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
+                        <td>{{ r.cuttingDate | date:'dd-MM-yyyy' }}</td>
+                        <td>{{ r.mouldNo }}</td>
+                        <td>{{ r.size }}</td>
+                        <td>{{ r.ballTestMm }}</td>
+                        <td>{{ r.time }}</td>
+                        <td>
+                            <button class="link-btn" (click)="edit(r)">Edit</button>
+                            <button class="link-btn danger" (click)="delete(r.id)">Delete</button>
+                        </td>
+                    </tr>
+                </ng-container>
             </tbody>
+
         </table>
     </div>
 
@@ -194,8 +199,14 @@
             <div class="modal-footer">
                 <button class="btn btn-primary" (click)="edit(selected); closeModal()">Edit</button>
                 <button class="btn btn-info" (click)="download()">Download</button>
-                <button class="btn btn-success" (click)="approve()">Approve</button>
-                <button class="btn btn-warning" (click)="reject()">Reject</button>
+                <button class="btn btn-success" *ngIf="canApproveWireCutting(selected)" (click)="approve()">
+                    Approve
+                </button>
+
+                <button class="btn btn-warning" *ngIf="canRejectWireCutting(selected)" (click)="reject()">
+                    Reject
+                </button>
+
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
 
