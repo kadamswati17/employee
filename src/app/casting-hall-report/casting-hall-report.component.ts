@@ -28,6 +28,11 @@ export class CastingHallReportComponent implements OnInit {
 
   // 🔥 NEW: merged export will use this
   mergedExportList: any[] = [];
+  // ================= PAGINATION =================
+  pageSize = 5;
+  currentPage = 1;
+  totalPages = 0;
+  pagedList: any[] = [];
 
 
   // selectedCasting: any = null;
@@ -102,7 +107,8 @@ export class CastingHallReportComponent implements OnInit {
     this.service.getAll().subscribe(res => {
       this.reportList = res;
       this.applyFilters();
-      this.filterAvailableBatches();         // ⭐ important
+      this.filterAvailableBatches();
+      this.updatePagination();      // ⭐ important
     });
   }
 
@@ -139,12 +145,44 @@ export class CastingHallReportComponent implements OnInit {
       const recordDate = new Date(dateValue).getTime();
       return (!from || recordDate >= from) && (!to || recordDate <= to);
     });
+    this.currentPage = 1;
+    this.updatePagination();
   }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredList.length / this.pageSize);
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.pagedList = this.filteredList.slice(start, end);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
 
   clearFilters() {
     this.filterFromDate = '';
     this.filterToDate = '';
     this.filteredList = [...this.reportList];
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   // ================= CRUD =================

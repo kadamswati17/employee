@@ -34,6 +34,12 @@ export class WireCuttingReportComponent implements OnInit {
   allProductionList: any[] = [];
   availableProductionList: any[] = [];
 
+  // ================= PAGINATION =================
+  pageSize = 5;
+  currentPage = 1;
+  totalPages = 0;
+  pagedList: any[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -90,7 +96,10 @@ export class WireCuttingReportComponent implements OnInit {
       this.list = res || [];
       this.applyFilters();
       this.filterAvailableBatches();   // ⭐ IMPORTANT
+      this.updatePagination();
     });
+
+
   }
   loadCasting() {
     this.castingService.getAll().subscribe(res => {
@@ -138,12 +147,44 @@ export class WireCuttingReportComponent implements OnInit {
       const d = new Date(r.createdDate).getTime();
       return (!from || d >= from) && (!to || d <= to);
     });
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredList.length / this.pageSize);
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.pagedList = this.filteredList.slice(start, end);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
   }
 
   clearFilters() {
     this.filterFromDate = '';
     this.filterToDate = '';
     this.filteredList = [...this.list];
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   // ================= CRUD =================

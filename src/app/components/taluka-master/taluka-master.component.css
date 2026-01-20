@@ -8,12 +8,21 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
 
-/* TITLE */
 .title {
     text-align: center;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 10px 10px;
+    border-radius: 5px;
+    width: 250px;
+    color: white;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
 }
 
 /* FORM LAYOUT — SAME AS DISTRICT */
@@ -22,6 +31,7 @@
     grid-template-columns: 1fr 1fr auto;
     gap: 24px;
     align-items: center;
+    margin-top: 5px;
 }
 
 /* FIELD */
@@ -66,7 +76,7 @@
     top: 50%;
     left: 16px;
     transform: translateY(-50%);
-    font-size: 13px;
+    font-size: 20px;
     color: #6b7280;
     background: #fff;
     padding: 0 6px;
@@ -80,7 +90,7 @@
 .field select:focus+label,
 .field select:valid+label {
     top: -8px;
-    font-size: 12px;
+    font-size: 18px;
     color: #4f46e5;
 }
 
@@ -98,7 +108,7 @@
     color: #fff;
     border: none;
     border-radius: 12px;
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 600;
     cursor: pointer;
 }
@@ -168,7 +178,7 @@ td {
 
 .table-wrapper thead th {
     color: #ffffff;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 700;
     padding: 16px;
     text-transform: uppercase;
@@ -178,7 +188,7 @@ td {
 /* CELLS */
 .table-wrapper tbody td {
     padding: 16px;
-    font-size: 15px;
+    font-size: 20px;
     border-right: 1px solid #e5e7eb;
 }
 
@@ -208,7 +218,7 @@ td {
     padding: 6px 20px;
     border-radius: 999px;
     border: none;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.25s ease;

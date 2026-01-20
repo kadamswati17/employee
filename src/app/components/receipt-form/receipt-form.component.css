@@ -42,6 +42,11 @@
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 25px;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 10px 10px;
+    border-radius: 5px;
+    width: 250px;
+    color: white;
 }
 
 /* ==================================================
@@ -92,6 +97,7 @@
     padding: 0 6px;
     pointer-events: none;
     transition: .25s;
+    font-size: 20px;
 }
 
 /* FLOAT LABEL */
@@ -100,7 +106,7 @@
 .field textarea:focus+label,
 .custom-select .select-input.open+label {
     top: -8px;
-    font-size: 12px;
+    font-size: 18px;
     color: #3f51b5;
 }
 

@@ -48,7 +48,7 @@
   padding: 18px 14px 8px;
   border: 2px solid #d4d4d4;
   border-radius: 14px;
-  font-size: 16px;
+  font-size: 20px;
   background: #ffffff;
   transition: 0.25s ease;
   outline: none;
@@ -64,7 +64,7 @@
   top: 16px;
   left: 18px;
   padding: 0 6px;
-  font-size: 16px;
+  font-size: 20px;
   background: #ffffff;
   color: #7a7a7a;
   transition: 0.25s ease;
@@ -75,7 +75,7 @@
 .floating-group input:not(:placeholder-shown)+label {
   top: -10px;
   left: 14px;
-  font-size: 13px;
+  font-size: 20px;
   color: #8a5cff;
 }
 
@@ -94,7 +94,7 @@
   padding: 14px 28px;
   border-radius: 10px;
   border: none;
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.25s ease;
@@ -151,7 +151,7 @@
     width: auto;
     flex: 1;
     padding: 12px 16px;
-    font-size: 14px;
+    font-size: 20px;
     white-space: nowrap;
     /* ✅ text in one line */
   }
@@ -159,4 +159,14 @@
 
 .form-header {
   padding: 0px 0px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+  color: white;
+  padding: 7px 25px;
+  border-radius: 4px;
+  width: 230px;
 }

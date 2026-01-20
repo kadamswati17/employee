@@ -15,6 +15,16 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
+.title {
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 200px;
+}
+
 /* -------------------------------------------------- */
 /* HEADER */
 /* -------------------------------------------------- */
@@ -25,7 +35,11 @@
 .form-header h2 {
     font-size: 28px;
     font-weight: 700;
-    color: #1f1f1f;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 200px;
+    color: white;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -131,6 +145,7 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
     cursor: pointer;
     font-weight: 500;
     transition: 0.25s ease;
+    /* background-color: blue; */
 }
 
 .btn-primary {
@@ -144,7 +159,7 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
 }
 
 .btn-secondary {
-    background: #6b7280;
+    background: red;
     color: #fff;
     margin-right: 20px;
 }
@@ -156,6 +171,7 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
 .btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    background: blue;
 }
 
 /* -------------------------------------------------- */

@@ -21,7 +21,7 @@
 /* BRAND */
 .navbar-brand a {
   color: white;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: bold;
   text-decoration: none;
   /* margin-right: 20px; */
@@ -44,7 +44,7 @@
   border: none;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  font-size: 14px;
+  font-size: 20px;
   cursor: pointer;
   outline: none;
   appearance: none;
@@ -74,6 +74,7 @@
 .username {
   color: white;
   cursor: pointer;
+  font-size: 20px;
 }
 
 /* LOGOUT */
@@ -84,6 +85,7 @@
   color: white;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 20px;
 }
 
 /* HAMBURGER (HIDDEN ON DESKTOP) */

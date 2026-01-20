@@ -2,7 +2,7 @@
   <div class="form-card">
 
     <div class="form-header">
-      <h2>{{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}</h2>
+      <h2 class="page-title">{{ isEditMode ? 'Edit Employee' : 'AddEmployee' }}</h2>
     </div>
 
     <div *ngIf="errorMessage" class="alert alert-danger">
@@ -65,7 +65,7 @@
       <div class="form-actions">
         <button type="button" class="btn-secondary" (click)="cancel()">Cancel</button>
         <button type="submit" class="btn-primary" [disabled]="employeeForm.invalid || isLoading">
-          {{ isEditMode ? 'Update' : 'Create' }} Employee
+          {{ isEditMode ? 'Update' : 'Add' }} Employee
         </button>
       </div>
 

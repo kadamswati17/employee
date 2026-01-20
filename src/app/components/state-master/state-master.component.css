@@ -29,7 +29,7 @@
 
 .custom-table thead th {
     color: #ffffff;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 700;
     padding: 16px;
     text-transform: uppercase;
@@ -39,7 +39,7 @@
 /* CELLS */
 .custom-table td {
     padding: 16px;
-    font-size: 15px;
+    font-size: 19px;
     border-right: 1px solid #e5e7eb;
 }
 
@@ -69,7 +69,7 @@
     padding: 6px 22px;
     border-radius: 999px;
     border: none;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.25s ease;
@@ -114,8 +114,18 @@
 .title {
     text-align: center;
     font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 10px 10px;
+    border-radius: 5px;
+    width: 250px;
+    color: white;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
 }
 
 /* FORM – EXACT SAME GRID */
@@ -179,7 +189,7 @@
     color: white;
     border: none;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 600;
     cursor: pointer;
 }
@@ -219,7 +229,7 @@
     border-radius: 999px;
     border: none;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 20px;
 
     background-color: #1e40af;
     /* BLUE */
@@ -249,4 +259,5 @@
     font-weight: 600;
     font-size: 15px;
     color: #0f172a;
+    font-size: 20px;
 }

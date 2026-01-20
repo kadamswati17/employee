@@ -4,7 +4,7 @@
     <div class="lead-card" *ngIf="showLeads">
 
         <div class="header">
-            <h2>Lead List</h2>
+            <h2 class="title">Lead List</h2>
             <button class="toggle-btn" (click)="openCreate()">+ Add Lead</button>
         </div>
 
@@ -97,7 +97,7 @@
     <div class="lead-card" *ngIf="!showLeads">
 
         <div class="header">
-            <h2>{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h2>
+            <h2 class="title">{{ isEditMode ? 'Edit Lead' : 'Create Lead' }}</h2>
             <button class="toggle-btn" (click)="backToList()">Back to List</button>
         </div>
 

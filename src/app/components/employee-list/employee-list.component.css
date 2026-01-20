@@ -19,7 +19,7 @@
 }
 
 .header-section h1 {
-  color: #333;
+  color: white;
   font-size: 32px;
   margin: 0;
 }
@@ -42,7 +42,7 @@
 /* HEADER */
 .lead-table th {
   background: blue;
-  font-size: 16px;
+  font-size: 18px;
   text-transform: uppercase;
   color: white;
 }
@@ -52,7 +52,7 @@
 .lead-table td {
   padding: 14px;
   border: 1px solid #e5e7eb;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 /* ROW HOVER */
@@ -70,6 +70,7 @@
   color: white;
   cursor: pointer;
   margin-right: 10px;
+  font-size: 20px;
 }
 
 .delete-btn {
@@ -80,6 +81,7 @@
   background: #dc2626;
   color: white;
   cursor: pointer;
+  font-size: 20px;
 }
 
 /* ================= MOBILE ================= */
@@ -87,7 +89,7 @@
 
   .lead-table th,
   .lead-table td {
-    font-size: 13px;
+    font-size: 15px;
     padding: 10px 12px;
     white-space: nowrap;
   }
@@ -99,11 +101,13 @@
   }
 }
 
+
+
 .btn {
   padding: 12px 24px;
   border: none;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
@@ -115,6 +119,15 @@
 .btn-primary {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+  color: white;
+  padding: 7px 25px;
+  border-radius: 4px;
 }
 
 .btn-primary:hover {
@@ -168,7 +181,7 @@
   padding: 15px;
   text-align: left;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 18px;
   text-transform: uppercase;
 }
 
@@ -184,7 +197,7 @@
 .employee-table td {
   padding: 15px;
   color: #333;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .actions {
@@ -196,7 +209,7 @@
   background-color: #28a745;
   color: white;
   padding: 8px 16px;
-  font-size: 14px;
+  font-size: 18px;
 }
 
 .btn-edit:hover {
@@ -207,7 +220,7 @@
   background-color: #dc3545;
   color: white;
   padding: 8px 16px;
-  font-size: 14px;
+  font-size: 18px;
 }
 
 .btn-delete:hover {
@@ -234,13 +247,13 @@
 
   .header-section button {
     padding: 6px 12px;
-    font-size: 13px;
+    font-size: 17px;
     white-space: nowrap;
     /* ✅ keeps "+ Add Employee" in one line */
   }
 
   .employee-table {
-    font-size: 12px;
+    font-size: 17px;
   }
 
   .employee-table th,
@@ -254,6 +267,7 @@
   justify-content: center;
   gap: 14px;
   margin-top: 24px;
+  font-size: 20px;
 }
 
 .pagination button {
@@ -263,6 +277,7 @@
   font-weight: 600;
   background: #1e40af;
   color: white;
+  font-size: 20px;
 }
 
 .pagination button:disabled {
@@ -274,7 +289,7 @@
 .empty-state {
   text-align: center;
   padding: 60px;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .alert-danger {

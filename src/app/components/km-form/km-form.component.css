@@ -18,7 +18,7 @@
     font-size: 32px;
     font-weight: 600;
     margin-bottom: 20px;
-    color: #222;
+    color: white;
     display: flex;
     justify-content: center;
 }
@@ -29,6 +29,16 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
     margin-bottom: 28px;
+}
+
+.title {
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 200px;
 }
 
 /* ---------------------------- */
@@ -44,7 +54,7 @@
 .form-group.floating .big-input {
     width: 100%;
     padding: 18px 14px 8px;
-    font-size: 16px;
+    font-size: 20px;
     border: 2px solid #d4d4d4;
     border-radius: 14px;
     background: white;
@@ -65,7 +75,7 @@
     left: 18px;
     background: #ffffff;
     padding: 0px 6px;
-    font-size: 16px;
+    font-size: 20px;
     color: #777;
     transition: 0.25s ease;
     pointer-events: none;
@@ -96,7 +106,7 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
 
 .form-group.floating .file-input:not(:focus)+label {
     top: -10px !important;
-    font-size: 13px !important;
+    font-size: 20px !important;
     color: #777 !important;
 }
 
@@ -114,7 +124,7 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
     color: white;
     padding: 10px 26px;
     border-radius: 25px;
-    font-size: 16px;
+    font-size: 25px;
     border: none;
     cursor: pointer;
     transition: 0.25s ease;
@@ -127,7 +137,7 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
 /* DETAILS TITLE */
 .details-title {
     margin-top: 30px;
-    font-size: 22px;
+    font-size: 25px;
     font-weight: 600;
     color: #222;
 }
@@ -160,7 +170,7 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
     padding: 20px;
     border-radius: 12px;
     color: #777;
-    font-size: 15px;
+    font-size: 19px;
 }
 
 /* FOOTER BUTTONS */
@@ -172,19 +182,21 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
 }
 
 .cancel-btn {
-    background: #6c757d;
+    background: red;
     padding: 10px 26px;
     border-radius: 25px;
     color: #fff;
     cursor: pointer;
+    font-size: 20px;
 }
 
 .submit-btn {
-    background: linear-gradient(135deg, #8e98ff, #b08cff);
+    background: blue;
     padding: 10px 26px;
     border-radius: 25px;
     color: #fff;
     cursor: pointer;
+    font-size: 20px;
 }
 
 /* MOBILE RESPONSIVE */

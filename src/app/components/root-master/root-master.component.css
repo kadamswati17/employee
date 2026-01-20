@@ -15,6 +15,17 @@
     text-align: center;
     margin-bottom: 10px;
     font-weight: 700;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 12px 10px;
+    border-radius: 5px;
+    width: 250px;
+    color: white;
+}
+
+
+.parent {
+    display: flex;
+    justify-content: center;
 }
 
 /* FORM */
@@ -33,7 +44,7 @@
 .field input {
     width: 100%;
     padding: 12px 10px;
-    font-size: 15px;
+    font-size: 20px;
     border: 1px solid #ccc;
     border-radius: 6px;
     outline: none;
@@ -57,7 +68,7 @@
 .field input:focus+label,
 .field input:not(:placeholder-shown)+label {
     top: -6px;
-    font-size: 12px;
+    font-size: 18px;
     color: #6a11cb;
 }
 
@@ -70,6 +81,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+    font-size: 20px;
 }
 
 /* TABLE */
@@ -91,7 +103,7 @@
 /* HEADER */
 .lead-table th {
     background: blue;
-    font-size: 16px;
+    font-size: 20px;
     text-transform: uppercase;
     color: white;
 }
@@ -101,7 +113,7 @@
 .lead-table td {
     padding: 14px;
     border: 1px solid #e5e7eb;
-    font-size: 16px;
+    font-size: 20px;
     text-align: center;
 }
 
@@ -126,7 +138,7 @@
 
     .lead-table th,
     .lead-table td {
-        font-size: 13px;
+        font-size: 16px;
         padding: 10px 12px;
         white-space: nowrap;
     }
@@ -187,7 +199,7 @@
 
     th,
     td {
-        font-size: 13px;
+        font-size: 16px;
         padding: 10px;
     }
 }
@@ -220,10 +232,12 @@
 /* ================= ROOT MASTER TABLE ================= */
 .root-master-container .lead-table tbody tr:nth-child(odd) {
     background-color: #bfd6edab;
+    font-size: 20px;
 }
 
 .root-master-container .lead-table tbody tr:nth-child(even) {
     background-color: #ffffff;
+    font-size: 20px;
 }
 
 .root-master-container .lead-table tbody tr:hover {

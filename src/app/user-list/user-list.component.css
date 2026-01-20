@@ -21,8 +21,12 @@
 }
 
 .title {
+    color: white;
     font-size: 26px;
     font-weight: bold;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
 /* ================= TABLE SCROLL ================= */
@@ -43,7 +47,7 @@
 /* HEADER */
 .project-table th {
     background: blue;
-    font-size: 16px;
+    font-size: 20px;
     text-transform: uppercase;
     color: white;
 }
@@ -53,7 +57,7 @@
 .project-table td {
     padding: 14px;
     border: 1px solid #e5e7eb;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 /* ROW HOVER */
@@ -65,7 +69,7 @@
 .badge {
     padding: 6px 14px;
     border-radius: 999px;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 600;
     background: #dcfce7;
     color: #166534;
@@ -74,7 +78,7 @@
 /* ACTION BUTTON */
 .edit-btn {
     /* padding: 6px 14px; */
-    padding: 6px 30px;
+    padding: 10px 30px;
     border-radius: 999px;
     border: none;
     font-weight: 600;
@@ -101,6 +105,7 @@
     color: white;
     background-color: #1e40af;
     cursor: pointer;
+    font-size: 20px;
 }
 
 .pagination button:disabled {
@@ -109,7 +114,7 @@
 }
 
 .pagination span {
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 600;
 }
 
@@ -118,7 +123,7 @@
 
     .project-table th,
     .project-table td {
-        font-size: 13px;
+        font-size: 16px;
         padding: 10px 12px;
         white-space: nowrap;
     }
@@ -162,7 +167,7 @@
     color: #fff;
     border: none;
     padding: 10px 18px;
-    font-size: 15px;
+    font-size: 18px;
     border-radius: 6px;
     cursor: pointer;
     transition: 0.3s ease;
@@ -195,7 +200,7 @@
     text-align: left;
     border-bottom: 2px solid #b3c5ff;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 18px;
     position: sticky;
     top: 0;
     z-index: 5;
@@ -204,7 +209,7 @@
 .excel-table td {
     padding: 12px;
     border-bottom: 1px solid #e5e5e5;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .excel-table tr:hover {
@@ -216,7 +221,7 @@
     padding: 5px 10px;
     border-radius: 6px;
     color: #fff;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
 }
 
@@ -261,7 +266,7 @@
 
 .btn {
     padding: 6px 14px;
-    font-size: 13px;
+    font-size: 18px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -289,7 +294,7 @@
 .no-data {
     padding: 20px;
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     color: #777;
 }
 
@@ -310,7 +315,7 @@
     }
 
     .btn-add {
-        font-size: 14px;
+        font-size: 16px;
         padding: 8px 14px;
         white-space: nowrap;
     }
@@ -327,7 +332,7 @@
 
     .excel-table td,
     .excel-table th {
-        font-size: 13px;
+        font-size: 15px;
         padding: 10px;
     }
 
@@ -382,7 +387,7 @@
     .actions .btn {
         padding: 6px 8px;
         /* smaller buttons */
-        font-size: 12px;
+        font-size: 15px;
         white-space: nowrap;
         /* prevent text break */
         flex-shrink: 0;
@@ -408,7 +413,7 @@
 
     .actions .btn {
         padding: 6px 10px;
-        font-size: 13px;
+        font-size: 15px;
         white-space: nowrap;
         flex-shrink: 0;
     }

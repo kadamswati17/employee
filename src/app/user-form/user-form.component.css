@@ -19,7 +19,10 @@
     margin-bottom: 5px;
     font-size: 26px;
     font-weight: 700;
-    color: #333;
+    color: white;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
 /* ================= FLOATING GROUP ================= */
@@ -35,7 +38,7 @@
     border-radius: 10px;
     border: 1px solid #d0d0d0;
     background: #fff;
-    font-size: 15px;
+    font-size: 20px;
     outline: none;
     transition: 0.25s ease;
 }
@@ -45,7 +48,7 @@
     position: absolute;
     left: 14px;
     top: 16px;
-    font-size: 15px;
+    font-size: 20px;
     color: #666;
     background: #fff;
     padding: 0 5px;
@@ -58,7 +61,7 @@
 .floating-group input:not(:placeholder-shown)+label {
     top: -8px;
     left: 10px;
-    font-size: 12px;
+    font-size: 18px;
     color: #8a5cff;
 }
 
@@ -80,7 +83,7 @@
     border-radius: 10px;
     border: 1px solid #d0d0d0;
     background: #fff;
-    font-size: 15px;
+    font-size: 20px;
     cursor: pointer;
     transition: 0.25s ease;
 }
@@ -96,7 +99,7 @@
 .custom-select .select-input:not(:empty)+label {
     top: -8px;
     left: 10px;
-    font-size: 12px;
+    font-size: 20px;
     color: #8a5cff;
 }
 
@@ -141,6 +144,7 @@
     border: none;
     cursor: pointer;
     transition: 0.3s ease;
+    font-size: 20px;
 }
 
 .btn-submit:hover {
@@ -156,6 +160,7 @@
     border: none;
     cursor: pointer;
     transition: 0.3s ease;
+    font-size: 20px;
 }
 
 .btn-cancel:hover {

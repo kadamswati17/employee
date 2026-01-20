@@ -31,6 +31,13 @@ export class ProductionEntryComponent implements OnInit {
   filterFromDate = '';
   filterToDate = '';
 
+  // ================= PAGINATION =================
+  pageSize = 10;
+  currentPage = 1;
+  totalPages = 0;
+  pagedProductionList: any[] = [];
+
+
   constructor(
     private fb: FormBuilder,
     private service: ProductionService
@@ -112,6 +119,7 @@ export class ProductionEntryComponent implements OnInit {
     this.service.getAll().subscribe(res => {
       this.productionList = res || [];
       this.applyFilters();
+      this.updatePagination();
     });
   }
 
@@ -163,8 +171,42 @@ export class ProductionEntryComponent implements OnInit {
           return false;
       }
     });
+
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
+  updatePagination() {
+    this.totalPages = Math.ceil(
+      this.filteredProductionList.length / this.pageSize
+    );
+
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.pagedProductionList =
+      this.filteredProductionList.slice(start, end);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePagination();
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
 
 
 
@@ -172,6 +214,8 @@ export class ProductionEntryComponent implements OnInit {
     this.filterFromDate = '';
     this.filterToDate = '';
     this.filteredProductionList = [...this.productionList];
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   exportData(type: string) {

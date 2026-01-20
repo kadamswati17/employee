@@ -16,13 +16,20 @@
     justify-content: space-between;
     gap: 15px;
     flex-wrap: wrap;
+
 }
 
 .header-section h1 {
     margin: 0;
     font-size: 26px;
     font-weight: 700;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 200px;
+    color: white;
 }
+
 
 /* BUTTON CONTAINER */
 .header-actions {
@@ -81,7 +88,7 @@
     padding: 6px 10px;
     border: none;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 19px;
     font-weight: 400;
     cursor: pointer;
     transition: all 0.3s;
@@ -93,6 +100,8 @@
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
+    padding: 4px 25px;
+    font-size: 25px;
 }
 
 .btn-primary:hover {
@@ -117,6 +126,16 @@
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
+}
+
+.title {
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 200px;
 }
 
 .alert-danger {
@@ -150,6 +169,7 @@
     font-weight: 600;
     font-size: 16px;
     text-transform: uppercase;
+    font-size: 20px;
 }
 
 .employee-table tbody tr {
@@ -264,6 +284,7 @@
 .employee-table th {
     border: 1px solid #c8c8c8;
     padding: 8px;
+    font-size: 20px;
 }
 
 /* Hover row */
@@ -337,6 +358,8 @@
 .filter-btn.active {
     background: #4f46e5;
     color: white;
+    padding: 10px 25px;
+    font-size: 25px;
 }
 
 .filter-btn:hover {

@@ -28,10 +28,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
 }
 
 /* FILTER BAR */
-
+h2 {
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 188px;
+    color: white;
+}
 
 /* GRID */
 .grid {
@@ -57,17 +64,18 @@ textarea {
     border-radius: 10px;
     border: 1.5px solid #cbd5e1;
     background: #f8fafc;
+    font-size: 18px;
 }
 
 /* FLOATING LABEL */
 .field.floating label {
     position: absolute;
     left: 14px;
-    top: 50%;
+    top: -7%;
     transform: translateY(-50%);
     background: #fff;
     padding: 0 6px;
-    font-size: 15px;
+    font-size: 18px;
     color: #64748b;
     transition: .2s;
 }
@@ -127,9 +135,10 @@ textarea {
     color: white;
     border: none;
     border-radius: 999px;
-    padding: 10px 22px;
+    padding: 12px 22px;
     font-weight: 600;
     cursor: pointer;
+    font-size: 20px;
 }
 
 .actions {
@@ -290,7 +299,7 @@ textarea {
     margin-bottom: 15px;
     font-weight: 600;
     font-size: 26px;
-    color: var(--text-main);
+    color: white;
 }
 
 .field.span-3 {

@@ -32,6 +32,18 @@
     background-color: #f1f4f8;
 }
 
+.title1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+    padding: 10px 10px;
+    border-radius: 5px;
+    width: 250px;
+    color: white;
+}
+
 .project-card.mt {
     margin-top: 8px;
 }
@@ -63,7 +75,7 @@
     margin: 0;
     font-weight: 600;
     font-size: 26px;
-    color: var(--text-main);
+    color: white;
 }
 
 /* ================= BUTTONS ================= */
@@ -79,12 +91,14 @@
     transition: 0.25s ease;
     background-color: #2563eb;
     color: #e8e8f1;
+    font-size: 20px;
 }
 
 .toggle-btn,
 .edit-btn {
-    padding: 10px 15px;
+    padding: 15px 15px;
     white-space: nowrap;
+    font-size: 20px;
 }
 
 
@@ -131,7 +145,7 @@ select {
     padding: 14px;
     border-radius: 10px;
     border: 1.5px solid var(--border);
-    font-size: 14px;
+    font-size: 18px;
     background: #f8fafc;
     transition: 0.2s ease;
     border: 1.5px solid #93c5fd;
@@ -161,7 +175,7 @@ select:focus {
     background: #ffffff;
     padding: 0 6px;
 
-    font-size: 16px;
+    font-size: 19px;
     font-weight: 500;
     color: #64748b;
 
@@ -178,7 +192,7 @@ select:focus {
 .field.floating select.ng-valid+label {
     top: -6px;
     /* sits on border */
-    font-size: 18px;
+    font-size: 19px;
     /* smaller text */
     color: #2563eb;
     /* blue */
@@ -208,7 +222,7 @@ select:focus {
 
 .project-table th {
     background: blue;
-    font-size: 16px;
+    font-size: 19px;
     text-transform: uppercase;
     color: white;
 }
@@ -217,7 +231,7 @@ select:focus {
 .project-table td {
     padding: 14px;
     border: 1px solid #e5e7eb;
-    font-size: 17px;
+    font-size: 19px;
     text-align: center;
 }
 
@@ -229,7 +243,7 @@ select:focus {
 .badge {
     padding: 6px 14px;
     border-radius: 999px;
-    font-size: 16px;
+    font-size: 19px;
     font-weight: 600;
 }
 
@@ -250,6 +264,7 @@ select:focus {
     align-items: center;
     gap: 14px;
     margin-top: 24px;
+    font-size: 20px;
 }
 
 .pagination button {
@@ -260,6 +275,7 @@ select:focus {
     color: white;
     background-color: #1e40af;
     cursor: pointer;
+    font-size: 20px;
 }
 
 .pagination button:disabled {
@@ -334,7 +350,7 @@ select:focus {
 
 /* LABEL */
 .date-field label {
-    font-size: 12px;
+    font-size: 19px;
     font-weight: 500;
     color: #374151;
 }
@@ -349,7 +365,7 @@ select:focus {
     /* ✅ same width everywhere */
 
     padding: 0 14px;
-    font-size: 16px;
+    font-size: 19px;
 
     border-radius: 10px;
     border: 1px solid #d1d5db;
@@ -389,7 +405,7 @@ select:focus {
     border-radius: 999px;
     border: none;
 
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
 
     background: #ff0000;
@@ -441,7 +457,7 @@ select:focus {
     /* cuts border behind */
     padding: 0 6px;
 
-    font-size: 14px;
+    font-size: 19px;
     font-weight: 600;
     color: #2563eb;
     z-index: 2;
@@ -452,7 +468,7 @@ select:focus {
     width: 100%;
     height: 42px;
     padding: 0 14px;
-    font-size: 16px;
+    font-size: 19px;
 
     border-radius: 12px;
     border: 1.5px solid #cbd5e1;
@@ -596,7 +612,7 @@ select:focus {
     }
 
     .filters .date-field.top-label label {
-        font-size: 16px;
+        font-size: 18px;
         top: -10px;
     }
 
@@ -605,7 +621,7 @@ select:focus {
         width: 140px;
         /* 🔽 smaller select */
         height: 34px;
-        font-size: 14px;
+        font-size: 18px;
         padding: 0 10px;
     }
 
@@ -621,10 +637,12 @@ select:focus {
 .project-table tbody tr:nth-child(odd) {
     background-color: #bfd6edab;
 
+    font-size: 20px;
 }
 
 .project-table tbody tr:nth-child(even) {
     background-color: white;
+    font-size: 20px;
 
 }
 
@@ -657,11 +675,11 @@ select:focus {
     .filters .date-field.top-label input {
         width: 100%;
         height: 40px;
-        font-size: 15px;
+        font-size: 18px;
     }
 
     .filters .date-field.top-label label {
-        font-size: 13px;
+        font-size: 18px;
         top: -10px;
     }
 
@@ -669,14 +687,14 @@ select:focus {
     .filters select {
         width: 100%;
         height: 40px;
-        font-size: 15px;
+        font-size: 18px;
     }
 
     /* CLEAR BUTTON */
     .filters .clear-btn {
         width: 100%;
         height: 42px;
-        font-size: 16px;
+        font-size: 20px;
         text-align: center;
     }
 }
