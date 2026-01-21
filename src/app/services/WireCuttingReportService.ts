@@ -42,4 +42,13 @@ export class WireCuttingReportService {
     reject(id: number, reason: string) {
         return this.http.post(`${this.baseUrl}/${id}/reject`, { reason }, this.getAuthHeaders());
     }
+
+    importWireCutting(payload: any) {
+        return this.http.post(
+            `${this.baseUrl}/import`,
+            payload,
+            this.getAuthHeaders()
+        );
+    }
+
 }

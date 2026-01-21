@@ -18,6 +18,14 @@ export class CastingHallReportComponent implements OnInit {
 
   showForm = false;
   reportForm!: FormGroup;
+  // ================= IMPORT =================
+  showImportModal = false;
+  // importPreviewList: any[] = [];
+  pagedImportPreview: any[] = [];
+
+  importPageSize = 5;
+  importCurrentPage = 1;
+  importTotalPages = 0;
 
   reportList: any[] = [];
   filteredList: any[] = [];
@@ -38,6 +46,8 @@ export class CastingHallReportComponent implements OnInit {
   // selectedCasting: any = null;
 
   editId: number | null = null;
+  importColumns: string[] = [];   // Excel headers (unique)
+  importPreviewList: any[] = [];  // Excel rows
 
   filterFromDate = '';
   filterToDate = '';
@@ -547,6 +557,179 @@ export class CastingHallReportComponent implements OnInit {
     this.currentUserRole = role.startsWith('ROLE_')
       ? role
       : `ROLE_${role}`;
+  }
+  openImportModal() {
+    this.showImportModal = true;
+  }
+
+  closeImportModal() {
+    this.showImportModal = false;
+    this.importPreviewList = [];
+    this.pagedImportPreview = [];
+  }
+
+  // 🔥 Excel → DTO field mapping
+  private excelToDtoMap: Record<string, string> = {
+    'Batch No': 'batchNo',
+    'Size': 'size',
+    'Bed No': 'bedNo',
+    'Mould No': 'mouldNo',
+    'Casting Time': 'castingTime',
+    'Consistency': 'consistency',
+    'Flow (cm)': 'flowInCm',
+    'Casting Temp (°C)': 'castingTempC',
+    'V.T.': 'vt',
+    'Mass Temp': 'massTemp',
+    'Falling Test (mm)': 'fallingTestMm',
+    'Test Time': 'testTime',
+    'H Time': 'hTime',
+    'Casting Remark': 'remark'
+  };
+  // Columns to show in Import Preview Modal
+  importPreviewFields = [
+    { label: 'Batch No', key: 'batchNo' },
+    { label: 'Size', key: 'size' },
+    { label: 'Bed No', key: 'bedNo' },
+    { label: 'Mould No', key: 'mouldNo' },
+    { label: 'Casting Time', key: 'castingTime' },
+    { label: 'Consistency', key: 'consistency' },
+    { label: 'Flow (cm)', key: 'flowInCm' },
+    { label: 'Casting Temp (°C)', key: 'castingTempC' },
+    { label: 'V.T.', key: 'vt' },
+    { label: 'Mass Temp', key: 'massTemp' },
+    { label: 'Falling Test (mm)', key: 'fallingTestMm' },
+    { label: 'Test Time', key: 'testTime' },
+    { label: 'H Time', key: 'hTime' },
+    { label: 'Remark', key: 'remark' }
+  ];
+
+  onExcelSelect(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.showImportModal = true;   // OPEN MODAL FIRST
+
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const workbook = XLSX.read(e.target.result, { type: 'binary' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      // 1️⃣ Read raw rows
+      const rawRows: any[] = XLSX.utils.sheet_to_json(sheet, {
+        defval: '',
+        raw: false
+      });
+
+      if (!rawRows.length) {
+        alert('Excel file is empty');
+        return;
+      }
+
+      // 2️⃣ Extract & REMOVE duplicate columns
+      const columnSet = new Set<string>();
+
+      rawRows.forEach(row => {
+        Object.keys(row).forEach(key => columnSet.add(key.trim()));
+      });
+
+      this.importPreviewList = rawRows.map(row => {
+        const dto: any = {};
+
+        Object.keys(this.excelToDtoMap).forEach(excelCol => {
+          const dtoField = this.excelToDtoMap[excelCol];
+          dto[dtoField] = row[excelCol] ?? null;
+        });
+
+        // 🔥 REQUIRED DEFAULTS
+        dto.userId = 1;
+        dto.branchId = 1;
+        dto.orgId = 1;
+
+        return dto;
+      });
+
+
+      // 4️⃣ Pagination
+      this.importCurrentPage = 1;
+      this.updateImportPagination();
+    };
+
+    reader.readAsBinaryString(file);
+
+    // reset input so same file can be re-selected
+    event.target.value = '';
+  }
+
+
+
+  updateImportPagination() {
+    this.importTotalPages = Math.ceil(
+      this.importPreviewList.length / this.importPageSize
+    );
+
+    const start = (this.importCurrentPage - 1) * this.importPageSize;
+    const end = start + this.importPageSize;
+
+    this.pagedImportPreview =
+      this.importPreviewList.slice(start, end);
+  }
+
+  goToImportPage(p: number) {
+    this.importCurrentPage = p;
+    this.updateImportPagination();
+  }
+
+  nextImportPage() {
+    if (this.importCurrentPage < this.importTotalPages) {
+      this.importCurrentPage++;
+      this.updateImportPagination();
+    }
+  }
+
+  prevImportPage() {
+    if (this.importCurrentPage > 1) {
+      this.importCurrentPage--;
+      this.updateImportPagination();
+    }
+  }
+  saveImportedCasting() {
+    if (!this.importPreviewList.length) {
+      alert('No data to save');
+      return;
+    }
+
+    const payload = {
+      castings: this.importPreviewList
+    };
+
+
+    this.service.importCasting(payload).subscribe({
+      next: (res) => {
+        alert(`Saved: ${res.savedCount}, Failed: ${res.errorCount}`);
+
+        this.closeImportModal();
+        this.loadReports();
+      },
+      error: () => {
+        alert('Import failed');
+      }
+    });
+  }
+
+  onImportSelect(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+
+    if (value === 'excel') {
+      const fileInput = document.querySelector(
+        'input[type="file"][accept=".xlsx,.xls"]'
+      ) as HTMLInputElement;
+
+      fileInput?.click();
+    }
+
+    // reset dropdown
+    (event.target as HTMLSelectElement).value = '';
   }
 
 }

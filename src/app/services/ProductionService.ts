@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APP_CONFIG } from '../config/config';
+import { ProductionImportResponse } from '../models/ProductionImportResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -80,6 +81,13 @@ export class ProductionService {
     }
 
 
+    importProduction(payload: any): Observable<ProductionImportResponse> {
+        return this.http.post<ProductionImportResponse>(
+            `${this.baseUrl}/import`,
+            payload,
+            this.getAuthHeaders()   // 🔥 REQUIRED (JWT)
+        );
+    }
 
 
 }

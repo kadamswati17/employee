@@ -8,7 +8,7 @@ import { CastingHallReportService } from '../services/CastingHallReportService';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-
+import { WireCuttingReport } from '../models/wire-cutting';
 @Component({
   selector: 'app-wire-cutting-report',
   templateUrl: './wire-cutting-report.component.html',
@@ -20,12 +20,22 @@ export class WireCuttingReportComponent implements OnInit {
   showForm = false;
   form!: FormGroup;
 
-  list: any[] = [];
-  filteredList: any[] = [];
+  // list: any[] = [];
+  // filteredList: any[] = [];
   productionList: any[] = [];
 
   editId: number | null = null;
-  selected: any = null;
+  // selected: any = null;
+
+
+  list: WireCuttingReport[] = [];
+  filteredList: WireCuttingReport[] = [];
+  // pagedList: WireCuttingReport[] = [];
+
+  selected: WireCuttingReport | null = null;
+
+  // importPreviewList: WireCuttingReport[] = [];
+  // pagedImportPreview: WireCuttingReport[] = [];
 
   filterFromDate = '';
   filterToDate = '';
@@ -33,6 +43,15 @@ export class WireCuttingReportComponent implements OnInit {
 
   allProductionList: any[] = [];
   availableProductionList: any[] = [];
+  // ================= IMPORT =================
+  showImportModal = false;
+  importColumns: string[] = [];
+  importPreviewList: any[] = [];
+  pagedImportPreview: any[] = [];
+
+  importPageSize = 5;
+  importCurrentPage = 1;
+  importTotalPages = 0;
 
   // ================= PAGINATION =================
   pageSize = 5;
@@ -275,13 +294,24 @@ export class WireCuttingReportComponent implements OnInit {
 
 
   approve() {
+    if (!this.selected || this.selected.id == null) {
+      alert('No record selected');
+      return;
+    }
+
     this.service.approve(this.selected.id).subscribe(() => {
       alert('Approved successfully');
       this.load();
     });
   }
 
+
   reject() {
+    if (!this.selected || this.selected.id == null) {
+      alert('No record selected');
+      return;
+    }
+
     const reason = prompt('Enter rejection reason');
     if (!reason) return;
 
@@ -290,6 +320,25 @@ export class WireCuttingReportComponent implements OnInit {
       this.load();
     });
   }
+
+  private toBackendDate(value: any): string {
+    if (!value) return '';
+
+    // already yyyy-MM-dd
+    if (typeof value === 'string' && value.includes('-')) {
+      return value;
+    }
+
+    // dd/MM/yyyy → yyyy-MM-dd
+    const parts = value.split('/');
+    if (parts.length === 3) {
+      const [dd, mm, yyyy] = parts;
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    return '';
+  }
+
 
   // ================= EXPORT =================
   formatDate(d: any) {
@@ -508,6 +557,153 @@ export class WireCuttingReportComponent implements OnInit {
       (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
       (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
     );
+  }
+  private excelToDtoMap: Record<string, string> = {
+    'Batch No': 'batchNo',
+    'Cutting Date': 'cuttingDate',
+    'Mould No': 'mouldNo',
+    'Size': 'size',
+    'Ball Test (mm)': 'ballTestMm',
+    'Cutting Time': 'time',
+    'Other Reason': 'otherReason'
+  };
+
+  onImportSelect(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+
+    if (value === 'excel') {
+      const fileInput = document.querySelector(
+        'input[type="file"][accept=".xlsx,.xls"]'
+      ) as HTMLInputElement;
+
+      fileInput?.click();
+    }
+
+    (event.target as HTMLSelectElement).value = '';
+  }
+  private wireCuttingExcelColumns = [
+    'Batch No',
+    'Cutting Date',
+    'Mould No',
+    'Size',
+    'Ball Test (mm)',
+    'Cutting Time',
+    'Other Reason'
+  ];
+
+  onExcelSelect(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.showImportModal = true;
+
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const workbook = XLSX.read(e.target.result, { type: 'binary' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      const rawRows: any[] = XLSX.utils.sheet_to_json(sheet, {
+        defval: '',
+        raw: false
+      });
+
+      if (!rawRows.length) {
+        alert('Excel is empty');
+        return;
+      }
+
+      // ✅ SHOW ONLY WIRE CUTTING COLUMNS IN PREVIEW
+      this.importColumns = this.wireCuttingExcelColumns;
+
+      // ✅ MAP ONLY WIRE CUTTING DATA
+      this.importPreviewList = rawRows.map(row => {
+        const dto: WireCuttingReport = {
+          batchNo: row['Batch No'],
+          cuttingDate: this.toBackendDate(row['Cutting Date']),
+          mouldNo: Number(row['Mould No']),
+          size: Number(row['Size']),
+          ballTestMm: Number(row['Ball Test (mm)']),
+          time: row['Cutting Time'],
+          otherReason: row['Other Reason'],
+          userId: 1,
+          branchId: 1,
+          orgId: 1
+        };
+
+        return dto;
+      });
+
+
+      this.importCurrentPage = 1;
+      this.updateImportPagination();
+    };
+
+    reader.readAsBinaryString(file);
+    event.target.value = '';
+  }
+  colToKey: Record<string, string> = {
+    'Batch No': 'batchNo',
+    'Cutting Date': 'cuttingDate',
+    'Mould No': 'mouldNo',
+    'Size': 'size',
+    'Ball Test (mm)': 'ballTestMm',
+    'Cutting Time': 'time',
+    'Other Reason': 'otherReason'
+  };
+
+  updateImportPagination() {
+    this.importTotalPages = Math.ceil(
+      this.importPreviewList.length / this.importPageSize
+    );
+
+    const start = (this.importCurrentPage - 1) * this.importPageSize;
+    const end = start + this.importPageSize;
+
+    this.pagedImportPreview =
+      this.importPreviewList.slice(start, end);
+  }
+
+  goToImportPage(p: number) {
+    this.importCurrentPage = p;
+    this.updateImportPagination();
+  }
+
+  nextImportPage() {
+    if (this.importCurrentPage < this.importTotalPages) {
+      this.importCurrentPage++;
+      this.updateImportPagination();
+    }
+  }
+
+  prevImportPage() {
+    if (this.importCurrentPage > 1) {
+      this.importCurrentPage--;
+      this.updateImportPagination();
+    }
+  }
+  saveImportedWireCutting() {
+    if (!this.importPreviewList.length) {
+      alert('No data to save');
+      return;
+    }
+
+    this.service.importWireCutting({
+      wireCuttings: this.importPreviewList
+    }).subscribe({
+      next: () => {
+        alert('Wire Cutting imported successfully');
+        this.closeImportModal();
+        this.load();
+      },
+      error: () => alert('Import failed')
+    });
+  }
+
+  closeImportModal() {
+    this.showImportModal = false;
+    this.importPreviewList = [];
+    this.pagedImportPreview = [];
   }
 
 }

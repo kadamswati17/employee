@@ -28,6 +28,12 @@
                 <option value="pdf">Export PDF</option>
                 <option value="excel">Export Excel</option>
             </select>
+            <select (change)="onImportSelect($event, fileInput)">
+                <option value="">Import</option>
+                <option value="excel">Import Excel</option>
+            </select>
+
+            <input type="file" hidden #fileInput accept=".xlsx,.xls" (change)="importExcel($event)" />
 
             <button class="clear-btn" (click)="clearFilters()">Clear</button>
 
@@ -48,7 +54,8 @@
             </thead>
 
             <tbody>
-                <ng-container *ngFor="let p of filteredProductionList">
+                <ng-container *ngFor="let p of pagedProductionList">
+
                     <tr *ngIf="canViewProduction(p)">
                         <td class="clickable" (click)="openProductionModal(p)">
                             {{ p.batchNo }}
@@ -71,6 +78,59 @@
 
             </tbody>
         </table>
+        <div class="import-backdrop" *ngIf="showImportModal"></div>
+
+        <div class="import-modal" *ngIf="showImportModal">
+
+
+            <div class="modal-card">
+
+                <div *ngIf="apiMessage" class="error-banner">
+                    {{ apiMessage }}
+                </div>
+
+                <div class="modal-header">
+                    <h1>Production Excel Preview</h1>
+                </div>
+
+                <div class="modal-body table-scroll">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let h of excelHeaders">{{ h }}</th>
+                                <th>Status</th>
+                                <th>Error</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let r of excelRows" [class.success-row]="r.importStatus === 'SUCCESS'"
+                                [class.error-row]="r.importStatus === 'FAILED'">
+
+                                <td *ngFor="let h of excelHeaders">
+                                    {{ r[h] }}
+                                </td>
+
+                                <td>{{ r.importStatus }}</td>
+                                <td>{{ r.errorMessage }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="add-btn1" [disabled]="hasExcelErrors" (click)="saveExcelToDB()">
+                        Save Imported Production
+                    </button>
+
+                    <button class="clear-btn" (click)="clearExcelPreview()">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </div>
 
         <!-- ================= PAGINATION ================= -->
         <div class="pagination-bar" *ngIf="totalPages > 1">

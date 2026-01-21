@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { APP_CONFIG } from '../config/config';
+import { CastingImportResponse } from '../models/CastingImportResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -74,6 +75,14 @@ export class CastingHallReportService {
         return this.http.post(
             `${this.baseUrl}/reject/${id}`,
             { reason },
+            this.getAuthHeaders()
+        );
+    }
+
+    importCasting(payload: any) {
+        return this.http.post<CastingImportResponse>(
+            `${this.baseUrl}/import`,
+            payload,
             this.getAuthHeaders()
         );
     }

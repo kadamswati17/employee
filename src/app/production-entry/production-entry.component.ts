@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ProductionService } from '../services/ProductionService';
 import * as bootstrap from 'bootstrap';
-
+import { ProductionImportResponse } from '../models/ProductionImportResponse';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -27,12 +27,18 @@ export class ProductionEntryComponent implements OnInit {
   editId: number | null = null;
 
   siloList: number[] = [];
+  showImportModal = false;   // 🔥 ADD THIS
+  excelHeaders: string[] = [];
+  excelRows: any[] = [];
 
   filterFromDate = '';
   filterToDate = '';
+  excelPreview: any[] = [];
+  hasExcelErrors = false;
+  apiMessage = '';
 
   // ================= PAGINATION =================
-  pageSize = 10;
+  pageSize = 5;
   currentPage = 1;
   totalPages = 0;
   pagedProductionList: any[] = [];
@@ -219,9 +225,15 @@ export class ProductionEntryComponent implements OnInit {
   }
 
   exportData(type: string) {
+
+    // 🔥 force close import modal before export
+    this.showImportModal = false;
+    this.excelPreview = [];
+
     if (type === 'pdf') this.exportPDF();
     if (type === 'excel') this.exportExcel();
   }
+
 
   exportPDF() {
     if (!this.filteredProductionList.length) {
@@ -630,7 +642,127 @@ export class ProductionEntryComponent implements OnInit {
     }
   }
 
+  importExcel(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const workbook = XLSX.read(e.target.result, { type: 'binary' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+
+      // 🔥 Read ALL rows as-is
+      const rows = XLSX.utils.sheet_to_json<any>(sheet, {
+        defval: '' // important → do not skip empty cells
+      });
+
+      if (!rows.length) {
+        alert('Excel file is empty');
+        return;
+      }
+
+      // 🔥 Extract ALL column headers dynamically
+      this.excelHeaders = Object.keys(rows[0]);
+
+      // 🔥 Store ALL rows (no filtering)
+      this.excelRows = rows.map(r => ({
+        ...r,
+        importStatus: 'PENDING',
+        errorMessage: ''
+      }));
+
+      this.showImportModal = true;
+    };
+
+    reader.readAsBinaryString(file);
+  }
 
 
+  normalizeRow(row: any) {
+    const obj: any = {};
+    Object.keys(row).forEach(k => {
+      const key = k.toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
+      obj[key] = row[k];
+    });
+    return obj;
+  }
+  formatExcelDate(value: any): string | null {
+    if (!value) return null;
+
+    if (typeof value === 'number') {
+      const d = XLSX.SSF.parse_date_code(value);
+      return `${d.y}-${String(d.m).padStart(2, '0')}-${String(d.d).padStart(2, '0')}`;
+    }
+
+    if (typeof value === 'string' && value.includes('/')) {
+      const [d, m, y] = value.split('/');
+      return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    }
+
+    return value;
+  }
+  saveExcelToDB() {
+    const payload = {
+      productions: this.excelRows.map(r => ({
+        shift: r['Shift'],
+        siloNo1: r['Silo No 1'],
+        literWeight1: Number(r['Liter Weight 1'] || 0),
+        faSolid1: Number(r['FA Solid 1'] || 0),
+
+        siloNo2: r['Silo No 2'],
+        literWeight2: Number(r['Liter Weight 2'] || 0),
+        faSolid2: Number(r['FA Solid 2'] || 0),
+
+        waterLiter: Number(r['Water Liter'] || 0),
+        cementKg: Number(r['Cement Kg'] || 0),
+        limeKg: Number(r['Lime Kg'] || 0),
+        gypsumKg: Number(r['Gypsum Kg'] || 0),
+        solOilKg: Number(r['Sol Oil Kg'] || 0),
+        aiPowerGm: Number(r['AI Power gm'] || 0),
+        tempC: Number(r['Temperature (°C)'] || 0),
+
+        castingTime: r['Casting Time'],
+        productionTime: r['Production Time'],
+        productionRemark: r['Production Remark'],
+        remark: r['Remark']
+      })),
+      uploadedBy: 1,
+      branchId: 1,
+      orgId: 1
+    };
+
+    this.service.importProduction(payload).subscribe(res => {
+
+      this.excelRows.forEach((row, index) => {
+        row.importStatus = res.results[index]?.status;
+        row.errorMessage = res.results[index]?.error || '';
+      });
+
+      this.apiMessage =
+        `${res.savedCount} saved, ${res.errorCount} failed`;
+
+      /* 🔥 ADD THESE 3 LINES */
+      this.showImportModal = false;   // close modal
+      this.loadData();               // reload list
+      this.currentPage = 1;          // reset pagination
+    });
+  }
+
+
+
+
+  clearExcelPreview() {
+    this.excelPreview = [];
+    this.hasExcelErrors = false;
+    this.apiMessage = '';
+    this.showImportModal = false;   // 🔥 VERY IMPORTANT
+  }
+
+  onImportSelect(event: any, fileInput: HTMLInputElement) {
+    if (event.target.value === 'excel') fileInput.click();
+    event.target.value = '';
+  }
 
 }
