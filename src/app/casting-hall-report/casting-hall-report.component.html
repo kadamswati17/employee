@@ -97,6 +97,126 @@
 
 
     </div>
+
+    <form *ngIf="showForm" [formGroup]="reportForm" (ngSubmit)="submit()" class="card">
+
+        <!-- HEADER ROW (EXACT SAME AS PRODUCTION) -->
+        <div class="row row-header">
+            <h2 class="page-title1">Casting Hall Report</h2>
+
+            <div class="form-field date">
+                <input type="date" formControlName="reportDate">
+                <label>Date</label>
+            </div>
+
+            <div></div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 1 -->
+        <div class="row row-3">
+            <div class="form-field">
+                <select formControlName="batchNo">
+                    <option value="" disabled></option>
+                    <option *ngFor="let p of productionList" [value]="p.batchNo">{{ p.batchNo }}</option>
+                </select>
+                <label>Batch No</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="size">
+                <label>Size</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="bedNo">
+                <label>Bed No</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="mouldNo">
+                <label>Mould No</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 2 -->
+        <div class="row row-3">
+            <div class="form-field">
+                <input formControlName="castingTime">
+                <label>Casting Time</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="consistency">
+                <label>Consistency</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="flowInCm">
+                <label>Flow (cm)</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="castingTempC">
+                <label>Casting Temp °C</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 3 -->
+        <div class="row row-3">
+            <div class="form-field">
+                <input type="number" formControlName="vt">
+                <label>V.T.</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="massTemp">
+                <label>Mass Temp</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="fallingTestMm">
+                <label>Falling Test (mm)</label>
+            </div>
+
+            <div class="form-field">
+                <input type="number" formControlName="testTime">
+                <label>Test Time</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ROW 4 -->
+        <div class="row row-4">
+            <div class="form-field">
+                <input type="number" formControlName="hTime">
+                <label>H Time</label>
+            </div>
+
+            <div class="form-field textarea">
+                <textarea formControlName="remark"></textarea>
+                <label>Remark</label>
+            </div>
+
+            <div></div>
+            <div></div>
+        </div>
+
+        <hr>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+            <button type="submit">{{ editId ? 'Update' : 'Save' }}</button>
+            <button type="button" class="cancel" (click)="cancel()">Cancel</button>
+        </div>
+
+    </form>
     <!-- ================= CASTING IMPORT MODAL ================= -->
     <ng-container *ngIf="showImportModal">
 
@@ -167,125 +287,7 @@
         </div>
 
         <!-- ================= FORM ================= -->
-        <form *ngIf="showForm" [formGroup]="reportForm" (ngSubmit)="submit()" class="card">
 
-            <!-- HEADER ROW (EXACT SAME AS PRODUCTION) -->
-            <div class="row row-header">
-                <h2 class="page-title1">Casting Hall Report</h2>
-
-                <div class="form-field date">
-                    <input type="date" formControlName="reportDate">
-                    <label>Date</label>
-                </div>
-
-                <div></div>
-            </div>
-
-            <hr>
-
-            <!-- ROW 1 -->
-            <div class="row row-3">
-                <div class="form-field">
-                    <select formControlName="batchNo">
-                        <option value="" disabled></option>
-                        <option *ngFor="let p of productionList" [value]="p.batchNo">{{ p.batchNo }}</option>
-                    </select>
-                    <label>Batch No</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="size">
-                    <label>Size</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="bedNo">
-                    <label>Bed No</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="mouldNo">
-                    <label>Mould No</label>
-                </div>
-            </div>
-
-            <hr>
-
-            <!-- ROW 2 -->
-            <div class="row row-3">
-                <div class="form-field">
-                    <input formControlName="castingTime">
-                    <label>Casting Time</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="consistency">
-                    <label>Consistency</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="flowInCm">
-                    <label>Flow (cm)</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="castingTempC">
-                    <label>Casting Temp °C</label>
-                </div>
-            </div>
-
-            <hr>
-
-            <!-- ROW 3 -->
-            <div class="row row-3">
-                <div class="form-field">
-                    <input type="number" formControlName="vt">
-                    <label>V.T.</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="massTemp">
-                    <label>Mass Temp</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="fallingTestMm">
-                    <label>Falling Test (mm)</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="number" formControlName="testTime">
-                    <label>Test Time</label>
-                </div>
-            </div>
-
-            <hr>
-
-            <!-- ROW 4 -->
-            <div class="row row-4">
-                <div class="form-field">
-                    <input type="number" formControlName="hTime">
-                    <label>H Time</label>
-                </div>
-
-                <div class="form-field textarea">
-                    <textarea formControlName="remark"></textarea>
-                    <label>Remark</label>
-                </div>
-
-                <div></div>
-                <div></div>
-            </div>
-
-            <hr>
-
-            <!-- ACTIONS -->
-            <div class="actions">
-                <button type="submit">{{ editId ? 'Update' : 'Save' }}</button>
-                <button type="button" class="cancel" (click)="cancel()">Cancel</button>
-            </div>
-
-        </form>
 
 
 
