@@ -85,6 +85,7 @@ import { HomeDashboardComponent } from './home-dashboard/home-dashboard.componen
 import { ProductionEntryComponent } from './production-entry/production-entry.component';
 import { CastingHallReportComponent } from './casting-hall-report/casting-hall-report.component';
 import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-report.component';
+import { AutoclaveComponent } from './autoclave/autoclave.component';
 
 @NgModule({
   declarations: [
@@ -148,7 +149,8 @@ import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-r
     HomeDashboardComponent,
     ProductionEntryComponent,
     CastingHallReportComponent,
-    WireCuttingReportComponent
+    WireCuttingReportComponent,
+    AutoclaveComponent
   ],
   imports: [
     BrowserModule,

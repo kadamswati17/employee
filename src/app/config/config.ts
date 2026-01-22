@@ -24,6 +24,7 @@ export const APP_CONFIG = {
         INQUIRY_SCHEDULE: '/api/inquiry-schedule',
         CASTING_REPORT: '/api/casting-report',
         PRODUCTION: '/api/production',
-        WIRE_CUTTING: '/api/wire-cutting'
+        WIRE_CUTTING: '/api/wire-cutting',
+        AUTOCLAVE: '/api/autoclave'
     }
 };

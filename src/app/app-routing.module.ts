@@ -38,6 +38,7 @@ import { HomeDashboardComponent } from './home-dashboard/home-dashboard.componen
 import { ProductionEntryComponent } from './production-entry/production-entry.component';
 import { CastingHallReportComponent } from './casting-hall-report/casting-hall-report.component';
 import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-report.component';
+import { AutoclaveComponent } from './autoclave/autoclave.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -94,7 +95,10 @@ const routes: Routes = [
   { path: 'production-entry', component: ProductionEntryComponent },
   { path: 'casting-hall-report', component: CastingHallReportComponent },
   { path: 'wire-cutting-report', component: WireCuttingReportComponent },
-
+  {
+    path: 'autoclave',
+    component: AutoclaveComponent
+  },
   { path: '**', redirectTo: '/login' }
 ];
 
