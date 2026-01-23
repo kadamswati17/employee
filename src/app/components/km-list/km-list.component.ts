@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { KmService } from 'src/app/services/KmService';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { APP_CONFIG } from 'src/app/config/config';
 
 
 
@@ -445,7 +446,7 @@ export class KmListComponent implements OnInit {
       return trimmed;
     }
     // Otherwise assume server relative path and prefix host
-    return `http://localhost:8080/${trimmed}`;
+    return `${APP_CONFIG.BASE_URL}/${trimmed}`;
   }
 
   /** OPEN IMAGE: open in new tab (works for base64 too) */

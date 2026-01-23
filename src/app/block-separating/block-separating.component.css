@@ -11,17 +11,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+    font-size: 20px;
 }
 
 .add-btn {
     background: #16a34a;
     color: #fff;
-    padding: 10px 18px;
+    padding: 15px 30px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 25px;
+    margin-bottom: 15px;
 }
 
 /* CARD */
@@ -36,8 +38,19 @@
 .row {
     display: grid;
     gap: 16px;
-    margin-bottom: -4px;
+    margin-bottom: -26px;
     align-items: center;
+}
+
+/* 🔥 Full width textarea inside grid rows */
+.form-field.textarea {
+    grid-column: 1 / -1;
+    /* spans all columns */
+}
+
+.form-field.textarea textarea {
+    height: 50px;
+    /* optional – nicer UX */
 }
 
 /* ROW CONFIGS */
@@ -87,7 +100,7 @@
     border: 1px solid #cfcfcf;
     border-radius: 8px;
     background: #fff;
-    font-size: 19px;
+    font-size: 14px;
 }
 
 .form-field textarea {
@@ -97,7 +110,7 @@
 /* FLOATING LABEL */
 .form-field label {
     position: absolute;
-    top: 50%;
+    top: 0%;
     left: 20px;
     transform: translateY(-50%);
     background: #fff;
@@ -114,7 +127,7 @@
 .form-field textarea:focus+label,
 .form-field textarea:not(:placeholder-shown)+label {
     top: 3px;
-    font-size: 20px;
+    font-size: 19px;
     color: #2563eb;
 
 }
@@ -122,10 +135,10 @@
 .form-field input,
 .form-field select,
 .form-field textarea {
+    font-size: 19px;
     border: 1.5px solid #0a4995;
     /* light blue-gray */
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
-    font-size: 20px;
 }
 
 
@@ -148,12 +161,10 @@
 .actions button:first-child {
     background: #2563eb;
     color: #fff;
-    font-size: 25px;
 }
 
 .cancel {
     background: #9ca3af;
-    font-size: 25px;
 }
 
 /* TABLE WRAPPER */
@@ -176,12 +187,12 @@
 }
 
 .custom-table thead th {
+    font-size: 20px;
     color: #fff;
     font-weight: 600;
     padding: 14px 16px;
     text-align: left;
     background-color: blue;
-    font-size: 20px;
 }
 
 /* BODY */
@@ -218,7 +229,6 @@
     cursor: pointer;
     color: white;
     border-radius: 7px;
-    font-size: 20px;
 }
 
 .link-btn.danger {
@@ -227,7 +237,6 @@
     background-color: red;
     color: white;
     border-radius: 10px;
-    font-size: 20px;
 }
 
 .main {
@@ -273,12 +282,13 @@
 }
 
 .page-title {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 700;
     background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+
     color: white;
-    padding: 7px 25px;
-    border-radius: 4px;
+    padding: 12px 25px;
+    border-radius: 10px
 }
 
 .page-title1 {
@@ -287,9 +297,9 @@
     background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
 
     color: white;
-    padding: 10px 25px;
-    border-radius: 4px;
-    width: 300px;
+    padding: 13px 25px;
+    border-radius: 10px;
+    width: 360px;
     margin-top: 5px;
     margin-left: 10px;
 }
@@ -316,6 +326,7 @@ hr {
 
     flex-wrap: nowrap;
     overflow-x: auto;
+    margin-bottom: 10px;
 }
 
 /* ================= DATE FIELD (LABEL + INPUT) ================= */
@@ -414,7 +425,7 @@ hr {
 
 .date-field.top-label {
     position: relative;
-    min-width: 280px;
+    min-width: 220px;
 }
 
 /* LABEL CUTTING BORDER */
@@ -428,7 +439,7 @@ hr {
     /* hides border behind */
     padding: 0 6px;
 
-    font-size: 20px;
+    font-size: 13px;
     font-weight: 600;
     color: #2563eb;
 
@@ -441,7 +452,7 @@ hr {
     height: 42px;
     padding: 0 14px;
 
-    font-size: 15px;
+    font-size: 18px;
 
     border-radius: 12px;
     border: 1.5px solid #cbd5e1;
@@ -464,7 +475,7 @@ hr {
 .filters select {
     height: 42px;
     /* ✅ same height everywhere */
-    width: 280px;
+    width: 220px;
     /* ✅ same width everywhere */
 
     padding: 0 14px;
@@ -571,7 +582,6 @@ hr {
 
 .table1 {
     margin: 15px;
-    width: 100%;
 }
 
 .tablehead {
@@ -650,117 +660,63 @@ hr {
     cursor: not-allowed;
 }
 
+
+/* ================= IMPORT MODAL BACKDROP ================= */
+
 .import-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.55);
     z-index: 999;
 }
 
-.import-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 1200px;
-    z-index: 1000;
-}
-
-.modal-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* ================= IMPORT MODAL UI IMPROVEMENTS ================= */
+/* ================= IMPORT MODAL WRAPPER ================= */
 
 .import-modal {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 1200px;
+    inset: 0;
     z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px;
+    /* keeps spacing on small screens */
 }
 
-.modal-card {
+/* ================= MODAL CARD ================= */
+
+.import-modal .modal-card {
     background: #ffffff;
     border-radius: 14px;
-    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.35);
-    overflow: hidden;
-    /* keeps rounded corners clean */
-}
 
-/* HEADER */
-.modal-header {
+    width: 100%;
+    max-width: 1400px;
+    max-height: 85vh;
+
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background: #f8fafc;
-    border-bottom: 1px solid #e5e7eb;
+    flex-direction: column;
+
+    padding: 22px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
-.modal-header h3 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
-    color: #1f2937;
+/* ================= BODY SCROLL ================= */
+
+.import-modal .modal-body {
+    flex: 1;
+    overflow: auto;
+    margin: 12px 0;
 }
 
-/* BODY */
-.modal-body {
-    padding: 20px 24px;
-}
+/* ================= FOOTER ================= */
 
-/* TABLE SPACING INSIDE MODAL */
-.modal-body table {
-    margin-bottom: 20px;
-}
-
-/* FOOTER */
-.modal-footer {
+.import-modal .modal-footer {
     display: flex;
     justify-content: center;
     gap: 20px;
-    padding: 18px 24px;
-    background: #f9fafb;
+
+    padding-top: 14px;
     border-top: 1px solid #e5e7eb;
-}
-
-/* BUTTONS */
-.modal-footer .btn {
-    padding: 12px 32px;
-    font-size: 18px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.modal-footer .btn-success {
-    background: #16a34a;
-    color: white;
-    border: none;
-}
-
-.modal-footer .btn-success:hover {
-    background: #15803d;
-}
-
-.modal-footer .btn-secondary {
-    background: #9ca3af;
-    color: white;
-    border: none;
-}
-
-.modal-footer .btn-secondary:hover {
-    background: #6b7280;
-}
-
-/* CLOSE (X) BUTTON */
-.modal-header .btn-danger {
-    padding: 6px 14px;
-    font-size: 16px;
-    border-radius: 6px;
 }

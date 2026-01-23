@@ -6,6 +6,7 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 import { Chart, registerables } from 'chart.js';
+import { APP_CONFIG } from '../config/config';
 Chart.register(...registerables);
 
 @Component({
@@ -57,7 +58,9 @@ export class HomeDashboardComponent implements OnInit, AfterViewInit {
 
   // ================= LOAD DATA =================
   loadInquiries(): void {
-    this.http.get<any[]>('http://localhost:8080/api/inquiries')
+    this.http.get<any[]>(
+      APP_CONFIG.BASE_URL + APP_CONFIG.API.INQUIRIES
+    )
       .subscribe(res => {
         this.inquiries = res || [];
         this.applyFilters();

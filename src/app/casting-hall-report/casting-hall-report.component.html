@@ -54,7 +54,8 @@
             </thead>
 
             <tbody>
-                <ng-container *ngFor="let r of filteredList">
+                <ng-container *ngFor="let r of pagedList">
+
                     <tr *ngIf="canViewCasting(r)">
 
 

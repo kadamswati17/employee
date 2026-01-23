@@ -6,6 +6,7 @@ import { InquiryScheduleService } from '../services/InquiryScheduleService';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { APP_CONFIG } from '../config/config';
 
 @Component({
   selector: 'app-inquiry-schedule',
@@ -72,26 +73,26 @@ export class InquiryScheduleComponent implements OnInit {
   // ================= 🔥 LOAD INQUIRY + LEAD NAME =================
   loadInquiryDropdown(): void {
 
-    // 1️⃣ Get inquiries
-    this.http.get<any[]>('http://localhost:8080/api/inquiries')
-      .subscribe(inquiries => {
+    this.http.get<any[]>(
+      APP_CONFIG.BASE_URL + APP_CONFIG.API.INQUIRIES
+    ).subscribe(inquiries => {
 
-        // 2️⃣ Get leads
-        this.http.get<any[]>('http://localhost:8080/api/leads')
-          .subscribe(leads => {
+      this.http.get<any[]>(
+        APP_CONFIG.BASE_URL + APP_CONFIG.API.LEADS
+      ).subscribe(leads => {
 
-            // 3️⃣ Map inquiryId + lead name
-            this.inquiries = inquiries.map(inq => {
-              const lead = leads.find(l => l.leadId === inq.leadAccountId);
+        // 3️⃣ Map inquiryId + lead name
+        this.inquiries = inquiries.map(inq => {
+          const lead = leads.find(l => l.leadId === inq.leadAccountId);
 
-              return {
-                inqId: inq.inqueryId,                // ✅ REAL inquiry id
-                cname: lead ? lead.cname : '-'       // ✅ lead name
-              };
-            });
+          return {
+            inqId: inq.inqueryId,                // ✅ REAL inquiry id
+            cname: lead ? lead.cname : '-'       // ✅ lead name
+          };
+        });
 
-          });
       });
+    });
   }
 
   openForm(): void {

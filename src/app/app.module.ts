@@ -86,6 +86,8 @@ import { ProductionEntryComponent } from './production-entry/production-entry.co
 import { CastingHallReportComponent } from './casting-hall-report/casting-hall-report.component';
 import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-report.component';
 import { AutoclaveComponent } from './autoclave/autoclave.component';
+// import { CastingProductionComponent } from './casting-production/casting-production.component';
+import { BlockSeparatingComponent } from './block-separating/block-separating.component';
 
 @NgModule({
   declarations: [
@@ -150,7 +152,9 @@ import { AutoclaveComponent } from './autoclave/autoclave.component';
     ProductionEntryComponent,
     CastingHallReportComponent,
     WireCuttingReportComponent,
-    AutoclaveComponent
+    AutoclaveComponent,
+    // CastingProductionComponent,
+    BlockSeparatingComponent
   ],
   imports: [
     BrowserModule,

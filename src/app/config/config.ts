@@ -25,6 +25,7 @@ export const APP_CONFIG = {
         CASTING_REPORT: '/api/casting-report',
         PRODUCTION: '/api/production',
         WIRE_CUTTING: '/api/wire-cutting',
-        AUTOCLAVE: '/api/autoclave'
+        AUTOCLAVE: '/api/autoclave',
+        BLOCK_SEPARATING: '/api/block-separating'
     }
 };

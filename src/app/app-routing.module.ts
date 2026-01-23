@@ -39,6 +39,7 @@ import { ProductionEntryComponent } from './production-entry/production-entry.co
 import { CastingHallReportComponent } from './casting-hall-report/casting-hall-report.component';
 import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-report.component';
 import { AutoclaveComponent } from './autoclave/autoclave.component';
+import { BlockSeparatingComponent } from './block-separating/block-separating.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -99,6 +100,7 @@ const routes: Routes = [
     path: 'autoclave',
     component: AutoclaveComponent
   },
+  { path: 'block-separating', component: BlockSeparatingComponent },
   { path: '**', redirectTo: '/login' }
 ];
 
