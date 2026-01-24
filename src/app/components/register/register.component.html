@@ -2,7 +2,7 @@
   <div class="register-card">
     <div class="register-header">
       <h2>Create User</h2>
-      <p>Create a new user for Employee Management System</p>
+      <!-- <p>Create a new user for Employee Management System</p> -->
     </div>
 
     <div *ngIf="isSuccessful" class="alert alert-success">
@@ -48,18 +48,25 @@
         </div>
       </div>
 
-      <!-- ⭐ ROLE DROPDOWN ADDED HERE -->
-      <div class="form-group">
-        <label for="role">Select Role</label>
-        <select id="role" formControlName="role" class="form-control"
-          [class.is-invalid]="registerForm.get('role')?.invalid && registerForm.get('role')?.touched">
-          <option value="">Choose Role</option>
-          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
-        </select>
+      <div class="form-group role-wrapper">
+        <label>Select Role</label>
+
+        <div class="custom-select" (click)="toggleRoleDropdown()">
+          {{ selectedRole || 'Choose Role' }}
+          <span class="arrow">▲</span>
+        </div>
+
+        <ul class="role-list" *ngIf="showRoleDropdown">
+          <li *ngFor="let r of roles" (click)="selectRole(r)">
+            {{ r }}
+          </li>
+        </ul>
+
         <div *ngIf="registerForm.get('role')?.invalid && registerForm.get('role')?.touched" class="invalid-feedback">
           Role is required
         </div>
       </div>
+
 
       <!-- Submit Button -->
       <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.invalid || isLoading">

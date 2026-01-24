@@ -183,3 +183,91 @@
         max-height: 180px;
     }
 }
+
+/* ================= MOBILE FORM FIX (≤ 600px ONLY) ================= */
+@media (max-width: 600px) {
+
+    /* ---------- PAGE CONTAINER ---------- */
+    .user-form-container {
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    /* ---------- FORM BOX ---------- */
+    .form-box {
+        width: 100%;
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    /* ---------- TITLE ---------- */
+    .form-title {
+        font-size: 22px;
+        padding: 6px 12px;
+        margin-bottom: 12px;
+    }
+
+    /* ---------- INPUT GROUP ---------- */
+    .floating-group {
+        margin-bottom: 18px;
+    }
+
+    /* ---------- INPUTS ---------- */
+    .floating-group input {
+        padding: 28px 12px 8px;
+        font-size: 15px;
+        border-radius: 8px;
+    }
+
+    /* ---------- LABELS ---------- */
+    .floating-group label {
+        font-size: 20px;
+        top: 14px;
+        left: 12px;
+    }
+
+    .floating-group input:focus+label,
+    .floating-group input:not(:placeholder-shown)+label {
+        top: -7px;
+        font-size: 20px;
+    }
+
+    /* ---------- CUSTOM ROLE SELECT ---------- */
+    .select-input {
+        padding: 40px 12px 8px;
+        font-size: 20px;
+        border-radius: 8px;
+    }
+
+    .custom-select .select-input.open+label,
+    .custom-select .select-input:not(:empty)+label {
+        top: -7px;
+        font-size: 18px;
+    }
+
+    /* Dropdown panel */
+    .select-options {
+        max-height: 160px;
+        border-radius: 8px;
+    }
+
+    .option {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    /* ---------- BUTTONS ---------- */
+    .button-row {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-submit,
+    .btn-cancel {
+        width: 100%;
+        font-size: 25px;
+        padding: 10px 14px;
+        border-radius: 6px;
+    }
+}

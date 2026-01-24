@@ -172,7 +172,7 @@
 
     .lead-table th,
     .lead-table td {
-        font-size: 16px;
+        font-size: 19px;
         padding: 10px 12px;
         white-space: nowrap;
     }
@@ -326,4 +326,108 @@
 /* Hover effect */
 .user-details-container .lead-table tbody tr:hover {
     background-color: #f1f5f9 !important;
+}
+
+/* =================================================
+   FINAL MOBILE POLISH (≤ 767px)
+   ✔ padding
+   ✔ margin
+   ✔ spacing
+   ✔ no UI change
+================================================= */
+
+@media (max-width: 767px) {
+
+    /* MAIN CONTAINER */
+    .user-details-container {
+        margin: 10px;
+        padding: 12px;
+        box-shadow: none;
+        /* lighter feel on mobile */
+    }
+
+    /* TITLE */
+    .title {
+        width: 100%;
+        font-size: 20px;
+        padding: 8px 10px;
+        margin-bottom: 10px;
+    }
+
+    /* FORM CARD */
+    .user-form {
+        padding: 12px;
+        margin: 0;
+        border-radius: 12px;
+    }
+
+    /* STACK FIELDS NICELY */
+    .form-row {
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 14px;
+    }
+
+    .field {
+        min-width: 100%;
+    }
+
+    /* INPUTS & CUSTOM SELECT */
+    .field input,
+    .select-input {
+        height: 44px;
+        font-size: 19px;
+        padding: 10px 12px;
+    }
+
+    .field label {
+        font-size: 20px;
+    }
+
+    /* DROPDOWN OPTIONS */
+    .select-options {
+        max-height: 180px;
+    }
+
+    .option {
+        padding: 10px 12px;
+        font-size: 16px;
+    }
+
+    /* SUBMIT BUTTON */
+    .btn-submit {
+        width: 100%;
+        font-size: 25px;
+        padding: 12px;
+        margin-top: 10px;
+    }
+
+    /* TABLE WRAPPER */
+    .table-wrapper {
+        margin-top: 15px;
+        padding-bottom: 10px;
+    }
+
+    /* TABLE SCROLL */
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 900px;
+    }
+
+    th,
+    td {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+
+    /* EDIT BUTTON */
+    .edit-btn {
+        padding: 6px 14px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
 }

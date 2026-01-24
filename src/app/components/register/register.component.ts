@@ -15,7 +15,8 @@ export class RegisterComponent implements OnInit {
   isSignUpFailed = false;
   errorMessage = '';
   isLoading = false;
-
+  showRoleDropdown = false;
+  selectedRole: string | null = null;
   roles = ["ADMIN", "L1", "L2", "L3", "L4", "L5", "USER"];
 
   constructor(
@@ -65,7 +66,15 @@ export class RegisterComponent implements OnInit {
       });
     }
   }
+  toggleRoleDropdown() {
+    this.showRoleDropdown = !this.showRoleDropdown;
+  }
 
+  selectRole(role: string) {
+    this.selectedRole = role;
+    this.registerForm.get('role')?.setValue(role);
+    this.showRoleDropdown = false;
+  }
   goToLogin(): void {
     this.router.navigate(['/login']);
   }

@@ -171,7 +171,7 @@
     }
 
     .title {
-        margin-bottom: 15px;
+        margin-bottom: 25px;
     }
 
     /* STACK FORM */
@@ -242,4 +242,32 @@
 
 .root-master-container .lead-table tbody tr:hover {
     background-color: #f1f5f9 !important;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #e5e7eb;
+}
+
+.page-btn.active {
+    background: #2563eb;
+    color: white;
+}
+
+.page-btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
 }

@@ -22,6 +22,8 @@ export class HomeDashboardComponent implements OnInit, AfterViewInit {
   fromDate = '';
   toDate = '';
   status = '';
+  showStatus = false;
+  showExport = false;
 
   summary: any = {
     OPEN: { count: 0, amount: 0 },
@@ -45,6 +47,21 @@ export class HomeDashboardComponent implements OnInit, AfterViewInit {
   // ================= INIT =================
   ngOnInit(): void {
     this.loadInquiries();
+  }
+  toggleStatus() {
+    this.showStatus = !this.showStatus;
+    this.showExport = false;
+  }
+
+  toggleExport() {
+    this.showExport = !this.showExport;
+    this.showStatus = false;
+  }
+
+  selectStatus(value: string) {
+    this.status = value;
+    this.showStatus = false;
+    this.applyFilters();
   }
 
   ngAfterViewInit(): void {

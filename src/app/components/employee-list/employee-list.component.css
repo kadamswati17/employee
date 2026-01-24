@@ -312,3 +312,84 @@
 .lead-table tbody tr:hover {
   background-color: #f1f5f9 !important;
 }
+
+/* ================= MOBILE VIEW FIX (ONLY MOBILE) ================= */
+@media (max-width: 768px) {
+
+  /* Main container */
+  .employee-list-container {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  /* Header */
+  .header-section {
+    gap: 8px;
+  }
+
+  .page-title {
+    font-size: 18px;
+    padding: 6px 14px;
+  }
+
+  .header-section .btn {
+    padding: 6px 12px;
+    font-size: 15px;
+  }
+
+  /* Table wrapper */
+  .table-scroll {
+    margin-top: 8px;
+    border-radius: 10px;
+  }
+
+  /* Table */
+  .lead-table {
+    min-width: 720px;
+    /* keep horizontal scroll */
+  }
+
+  .lead-table th,
+  .lead-table td {
+    font-size: 14px;
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+
+  .lead-table th {
+    font-size: 13px;
+  }
+
+  /* Action buttons */
+  .edit-btn,
+  .delete-btn {
+    font-size: 14px;
+    padding: 4px 10px;
+    margin-right: 6px;
+  }
+
+  /* Pagination */
+  .pagination {
+    margin-top: 16px;
+    gap: 10px;
+    font-size: 16px;
+  }
+
+  .pagination button {
+    font-size: 15px;
+    padding: 6px 14px;
+  }
+
+  /* States */
+  .loading,
+  .empty-state {
+    padding: 30px 10px;
+    font-size: 15px;
+  }
+
+  .alert {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

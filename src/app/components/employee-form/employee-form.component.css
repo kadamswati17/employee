@@ -170,3 +170,66 @@
   border-radius: 4px;
   width: 230px;
 }
+
+/* ================= MOBILE FORM FIX (ONLY MOBILE) ================= */
+@media (max-width: 600px) {
+
+  /* Container spacing */
+  .employee-form-container {
+    margin: 8px;
+    padding: 8px;
+  }
+
+  /* Card */
+  .form-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Header title */
+  .page-title {
+    font-size: 18px;
+    padding: 6px 14px;
+    width: auto;
+    text-align: center;
+  }
+
+  /* Grid already single column — just tighten spacing */
+  .form-row-4 {
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  /* Inputs */
+  .floating-group input {
+    padding: 14px 12px 6px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  /* Floating labels */
+  .floating-group label {
+    font-size: 14px;
+    top: 14px;
+    left: 14px;
+  }
+
+  .floating-group input:focus+label,
+  .floating-group input:not(:placeholder-shown)+label {
+    top: -8px;
+    font-size: 13px;
+  }
+
+  /* Buttons */
+  .form-actions {
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    font-size: 15px;
+    padding: 10px 14px;
+    border-radius: 8px;
+  }
+}

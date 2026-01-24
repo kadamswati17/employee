@@ -18,7 +18,7 @@ export class ProjectComponent implements OnInit {
   loading = false;
 
   showProjects = true;
-
+  openDropdown: string | null = null;
   projects: any[] = [];
   paginatedProjects: any[] = [];
 
@@ -106,6 +106,15 @@ export class ProjectComponent implements OnInit {
     });
   }
 
+  toggleDropdown(type: string) {
+    this.openDropdown = this.openDropdown === type ? null : type;
+  }
+
+  setStatus(value: string) {
+    this.filterStatus = value;
+    this.applyFilters();
+    this.openDropdown = null;
+  }
 
   setupPagination() {
     this.totalPages = Math.ceil(this.filteredProjects.length / this.pageSize);

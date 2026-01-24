@@ -217,3 +217,93 @@ td {
         min-width: 600px;
     }
 }
+
+/* ================= MOBILE RESPONSIVE FIX (≤ 767px) ================= */
+@media (max-width: 767px) {
+
+    /* ---------- CONTAINER ---------- */
+    .party-price-container {
+        width: calc(100% - 20px);
+        margin: 10px;
+        padding: 14px;
+        border-radius: 10px;
+    }
+
+    /* ---------- TITLE ---------- */
+    .title {
+        font-size: 20px;
+        padding: 8px 10px;
+        width: auto;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    /* ---------- FORM ---------- */
+    .form-row {
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .field input,
+    .select-input {
+        height: 48px;
+        padding: 12px 12px;
+        font-size: 18px;
+    }
+
+    .field label {
+        font-size: 18px;
+    }
+
+    .field input:focus+label,
+    .field input:not(:placeholder-shown)+label,
+    .select-input.open+label,
+    .select-input.filled+label {
+        font-size: 18px;
+        top: -7px;
+    }
+
+    /* ---------- DROPDOWN ---------- */
+    .select-options {
+        max-height: 160px;
+        border-radius: 8px;
+    }
+
+    .option {
+        padding: 10px 12px;
+        font-size: 18px;
+    }
+
+    /* ---------- SUBMIT BUTTON ---------- */
+    .btn-submit {
+        width: 100%;
+        font-size: 18px;
+        padding: 12px;
+    }
+
+    /* ---------- TABLE SCROLL FIX ---------- */
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 650px;
+        /* 🔥 forces horizontal scroll */
+    }
+
+    th,
+    td {
+        font-size: 18px;
+        padding: 10px;
+        white-space: nowrap;
+    }
+
+    /* ---------- EDIT BUTTON ---------- */
+    .party-price-container .btn-edit {
+        font-size: 18px;
+        padding: 6px 14px;
+        white-space: nowrap;
+    }
+}

@@ -51,6 +51,17 @@ export class RootMasterComponent implements OnInit {
       }
     });
   }
+  prevPage(): void {
+    if (this.page > 1) {
+      this.setPage(this.page - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages()) {
+      this.setPage(this.page + 1);
+    }
+  }
 
   // ================= SUBMIT / UPDATE =================
   onSubmit(): void {

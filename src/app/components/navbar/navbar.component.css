@@ -161,7 +161,7 @@
 
   .menu-toggle {
     display: block;
-    margin-right: 0;
+    margin-left: -50px;
   }
 
   .navbar-container {

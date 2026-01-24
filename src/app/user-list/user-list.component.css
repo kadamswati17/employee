@@ -432,3 +432,100 @@
 .project-table tbody tr:hover {
     background-color: #f1f5f9 !important;
 }
+
+/* ================= MOBILE ONLY FIX (≤ 767px) ================= */
+@media (max-width: 767px) {
+
+    /* ---------- CONTAINER ---------- */
+    .user-container {
+        width: 100%;
+        margin: 8px;
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    /* ---------- HEADER ---------- */
+    .header-section {
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .title {
+        font-size: 18px;
+        padding: 6px 12px;
+        white-space: nowrap;
+    }
+
+    .btn-add {
+        margin-top: -17px;
+        font-size: 22px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+
+    /* ---------- TABLE ---------- */
+    .project-table {
+        min-width: 720px;
+        /* keep scroll */
+    }
+
+    .project-table th,
+    .project-table td {
+        font-size: 14px;
+        padding: 8px 10px;
+        white-space: nowrap;
+    }
+
+    /* Sticky header stays */
+    .project-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+    }
+
+    /* ---------- ROLE BADGE ---------- */
+    .badge {
+        font-size: 14px;
+        padding: 4px 10px;
+    }
+
+    /* ---------- ACTION BUTTONS ---------- */
+    .action-buttons {
+        gap: 6px;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+    }
+
+    .edit-btn {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .edit-btn.warn,
+    .edit-btn.success,
+    .edit-btn.danger {
+        padding: 6px 10px;
+    }
+
+    /* ---------- PAGINATION ---------- */
+    .pagination {
+        margin-top: 18px;
+        gap: 10px;
+    }
+
+    .pagination button {
+        font-size: 18px;
+        padding: 6px 14px;
+    }
+
+    .pagination span {
+        font-size: 18px;
+    }
+
+    /* ---------- NO DATA ---------- */
+    .no-data {
+        font-size: 14px;
+        padding: 14px;
+    }
+}

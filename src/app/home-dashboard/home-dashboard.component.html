@@ -19,20 +19,46 @@
                 <input type="date" [(ngModel)]="toDate" (change)="applyFilters()" />
             </div>
 
-            <select [(ngModel)]="status" (change)="applyFilters()">
+            <!-- <select [(ngModel)]="status" (change)="applyFilters()">
                 <option value="">All Status</option>
                 <option value="OPEN">Open</option>
                 <option value="IN_PROGRESS">In Progress</option>
                 <option value="CLOSED">Closed</option>
                 <option value="SUCCESS">Success</option>
                 <option value="CANCELLED">Cancelled</option>
-            </select>
+            </select> -->
 
-            <select #exportSel (change)="exportData(exportSel.value)">
+            <!-- <select #exportSel (change)="exportData(exportSel.value)">
                 <option value="">Export</option>
                 <option value="pdf">PDF</option>
                 <option value="excel">Excel</option>
-            </select>
+            </select> -->
+
+            <div class="custom-select">
+                <div class="selected" (click)="toggleStatus()">
+                    {{ status || 'All Status' }}
+                </div>
+
+                <ul *ngIf="showStatus">
+                    <li (click)="selectStatus('')">All Status</li>
+                    <li (click)="selectStatus('OPEN')">Open</li>
+                    <li (click)="selectStatus('IN_PROGRESS')">In Progress</li>
+                    <li (click)="selectStatus('CLOSED')">Closed</li>
+                    <li (click)="selectStatus('SUCCESS')">Success</li>
+                    <li (click)="selectStatus('CANCELLED')">Cancelled</li>
+                </ul>
+            </div>
+            <div class="custom-select">
+                <div class="selected" (click)="toggleExport()">
+                    Export
+                </div>
+
+                <ul *ngIf="showExport">
+                    <li (click)="exportData('pdf')">PDF</li>
+                    <li (click)="exportData('excel')">Excel</li>
+                </ul>
+            </div>
+
 
             <button class="clear-btn" (click)="clear()">Clear</button>
         </div>

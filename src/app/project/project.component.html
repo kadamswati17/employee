@@ -4,7 +4,7 @@
     <div class="project-card mt" *ngIf="!showProjects">
 
         <div class="form-header">
-            <h2>{{ isEditMode ? 'Edit Project' : 'Create Project' }}</h2>
+            <h2>{{ isEditMode ? 'Edit Project' : 'Add Project' }}</h2>
 
             <button type="button" class="toggle-btn" (click)="backToList()">
                 Back to List
@@ -123,26 +123,43 @@
                         <input type="date" [(ngModel)]="filterToDate" (change)="applyFilters()" />
                     </div>
 
-                    <select [(ngModel)]="filterStatus" (change)="applyFilters()">
-                        <option value="">Status</option>
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
-                    </select>
+                    <div class="custom-dropdown">
+                        <div class="dropdown-btn" (click)="toggleDropdown('status')">
+                            {{ filterStatus === '' ? 'Status' : (filterStatus === '1' ? 'Active' : 'Inactive') }}
+                        </div>
 
-                    <!-- EXPORT -->
-                    <select (change)="exportData($any($event.target).value)">
-                        <option value="">Export</option>
-                        <option value="pdf">Export PDF</option>
-                        <option value="excel">Export Excel</option>
-                    </select>
+                        <ul class="dropdown-list" *ngIf="openDropdown === 'status'">
+                            <li (click)="setStatus('')">All</li>
+                            <li (click)="setStatus('1')">Active</li>
+                            <li (click)="setStatus('0')">Inactive</li>
+                        </ul>
+                    </div>
 
-                    <!-- 🔵 IMPORT EXCEL -->
 
-                    <!-- 🔵 IMPORT (LIKE EXPORT) -->
-                    <select (change)="onImportSelect($event, fileInput)">
-                        <option value="">Import</option>
-                        <option value="excel">Import Excel</option>
-                    </select>
+                    <div class="custom-dropdown">
+                        <div class="dropdown-btn" (click)="toggleDropdown('export')">
+                            Export
+                        </div>
+
+                        <ul class="dropdown-list" *ngIf="openDropdown === 'export'">
+                            <li (click)="exportData('pdf')">Export PDF</li>
+                            <li (click)="exportData('excel')">Export Excel</li>
+                        </ul>
+                    </div>
+
+
+                    <div class="custom-dropdown">
+                        <div class="dropdown-btn" (click)="toggleDropdown('import')">
+                            Import
+                        </div>
+
+                        <ul class="dropdown-list" *ngIf="openDropdown === 'import'">
+                            <li (click)="fileInput.click()">Import Excel</li>
+                        </ul>
+
+                        <input type="file" hidden #fileInput accept=".xlsx,.xls" (change)="importExcel($event)" />
+                    </div>
+
 
                     <input type="file" hidden #fileInput accept=".xlsx,.xls" (change)="importExcel($event)" />
 
