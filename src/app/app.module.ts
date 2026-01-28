@@ -88,6 +88,10 @@ import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-r
 import { AutoclaveComponent } from './autoclave/autoclave.component';
 // import { CastingProductionComponent } from './casting-production/casting-production.component';
 import { BlockSeparatingComponent } from './block-separating/block-separating.component';
+// import { CubeTestComponentComponent } from './cube-test-component/cube-test-component.component';
+import { CubeTestComponent } from './cube-test-component/cube-test-component.component';
+import { RejectionComponentComponent } from './rejection-component/rejection-component.component';
+
 
 @NgModule({
   declarations: [
@@ -154,7 +158,9 @@ import { BlockSeparatingComponent } from './block-separating/block-separating.co
     WireCuttingReportComponent,
     AutoclaveComponent,
     // CastingProductionComponent,
-    BlockSeparatingComponent
+    BlockSeparatingComponent,
+    CubeTestComponent,
+    RejectionComponentComponent
   ],
   imports: [
     BrowserModule,

@@ -26,6 +26,8 @@ export const APP_CONFIG = {
         PRODUCTION: '/api/production',
         WIRE_CUTTING: '/api/wire-cutting',
         AUTOCLAVE: '/api/autoclave',
-        BLOCK_SEPARATING: '/api/block-separating'
+        BLOCK_SEPARATING: '/api/block-separating',
+        CUBE_TEST: '/cube-test',
+        REJECTION: '/api/rejection'
     }
 };

@@ -40,6 +40,8 @@ import { CastingHallReportComponent } from './casting-hall-report/casting-hall-r
 import { WireCuttingReportComponent } from './wire-cutting-report/wire-cutting-report.component';
 import { AutoclaveComponent } from './autoclave/autoclave.component';
 import { BlockSeparatingComponent } from './block-separating/block-separating.component';
+import { CubeTestComponent } from './cube-test-component/cube-test-component.component';
+import { RejectionComponentComponent } from './rejection-component/rejection-component.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -100,7 +102,9 @@ const routes: Routes = [
     path: 'autoclave',
     component: AutoclaveComponent
   },
+  { path: 'cube-test', component: CubeTestComponent },
   { path: 'block-separating', component: BlockSeparatingComponent },
+  { path: 'rejection', component: RejectionComponentComponent },
   { path: '**', redirectTo: '/login' }
 ];
 
