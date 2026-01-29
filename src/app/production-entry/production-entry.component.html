@@ -23,15 +23,21 @@
             </div>
 
 
-            <select (change)="exportData($any($event.target).value)">
-                <option value="">Export</option>
-                <option value="pdf">Export PDF</option>
-                <option value="excel">Export Excel</option>
-            </select>
-            <select (change)="onImportSelect($event, fileInput)">
-                <option value="">Import</option>
-                <option value="excel">Import Excel</option>
-            </select>
+            <div class="filter-select">
+                <select (change)="exportData($any($event.target).value)">
+                    <option value="">Export</option>
+                    <option value="pdf">Export PDF</option>
+                    <option value="excel">Export Excel</option>
+                </select>
+            </div>
+
+            <div class="filter-select">
+                <select (change)="onImportSelect($event, fileInput)">
+                    <option value="">Import</option>
+                    <option value="excel">Import Excel</option>
+                </select>
+            </div>
+
 
             <input type="file" hidden #fileInput accept=".xlsx,.xls" (change)="importExcel($event)" />
 
@@ -133,21 +139,10 @@
         </div>
 
         <!-- ================= PAGINATION ================= -->
-        <div class="pagination-bar" *ngIf="totalPages > 1">
-
-            <button (click)="prevPage()" [disabled]="currentPage === 1">
-                ⬅ Prev
-            </button>
-
-            <button *ngFor="let p of [].constructor(totalPages); let i = index" (click)="goToPage(i + 1)"
-                [class.active]="currentPage === i + 1">
-                {{ i + 1 }}
-            </button>
-
-            <button (click)="nextPage()" [disabled]="currentPage === totalPages">
-                Next ➡
-            </button>
-
+        <div class="pagination">
+            <button (click)="prevPage()">Prev</button>
+            <span>{{currentPage}} / {{totalPages}}</span>
+            <button (click)="nextPage()">Next</button>
         </div>
 
     </div>

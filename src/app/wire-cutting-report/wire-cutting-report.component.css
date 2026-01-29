@@ -764,3 +764,133 @@ hr {
     font-size: 16px;
     border-radius: 6px;
 }
+
+
+/* ================= WIRE CUTTING MOBILE FIX (MATCH PRODUCTION + CASTING) ================= */
+@media (max-width: 768px) {
+
+    /* HEADER */
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .page-title {
+        font-size: 22px;
+        padding: 6px 10px;
+        white-space: nowrap;
+    }
+
+    .add-btn {
+        padding: 12px 20px;
+        font-size: 25px;
+        margin-top: -15px;
+    }
+
+    /* FILTERS */
+
+    .filters {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px;
+        overflow-x: hidden !important;
+        padding: 15px 0px;
+    }
+
+    .date-field.top-label,
+    .filters select,
+    .filters input[type="date"],
+    .clear-btn {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+
+    .clear-btn {
+        font-size: 25px;
+    }
+
+    /* TABLE SCROLL */
+
+    table.custom-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    table.custom-table thead th,
+    table.custom-table tbody td {
+        min-width: 130px;
+    }
+
+    /* MAIN CONTAINER */
+
+    .container {
+        padding: 10px 5px 40px 5px;
+    }
+
+    .main {
+        padding: 8px;
+    }
+
+    /* FORM */
+
+    form.card {
+        padding: 12px;
+    }
+
+    .row-header {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    .row-3,
+    .row-4 {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+        width: 100%;
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    /* ACTION BUTTONS */
+
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .actions button {
+        width: 100%;
+        font-size: 18px;
+    }
+
+    /* MODAL TABLE */
+
+    .modal-body table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .table1 {
+        display: block;
+        overflow-x: auto;
+    }
+
+    /* MODAL FOOTER */
+
+    .modal-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
+}

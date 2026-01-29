@@ -5,6 +5,7 @@ import { CubeTestService } from '../services/CubeTestService';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { AuthService } from '../services/auth.service';
 
 
 
@@ -34,7 +35,9 @@ export class RejectionComponentComponent implements OnInit {
   totalPages = 0;
 
 
-  constructor(private fb: FormBuilder, private service: RejectionService, private cubeTestService: CubeTestService) { }
+  constructor(private fb: FormBuilder, private service: RejectionService,
+    private auth: AuthService,
+    private cubeTestService: CubeTestService) { }
 
   ngOnInit() {
 
@@ -209,7 +212,7 @@ export class RejectionComponentComponent implements OnInit {
 
 
   submit() {
-
+    const userId = this.auth.getLoggedInUserId();
     const f = this.form.value;
 
     f.totalBreakages =
@@ -220,6 +223,11 @@ export class RejectionComponentComponent implements OnInit {
       +f.risingCrack +
       +f.centreCrack +
       +f.bottomUncutBlocks;
+
+    const payload = {
+      ...f,
+      userId: userId
+    };
 
     const req = this.editId
       ? this.service.update(this.editId, f)

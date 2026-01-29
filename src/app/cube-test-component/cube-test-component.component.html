@@ -50,7 +50,7 @@
 
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <!-- <th>ID</th> -->
                         <th>Batch_Casting Date</th>
                         <th>Test Date</th>
                         <th>Strength Over Dry</th>
@@ -64,10 +64,11 @@
 
                 <tbody>
                     <tr *ngFor="let r of paginated">
-                        <td>{{ r.id }}</td>
-                        <td>
+                        <!-- <td>{{ r.id }}</td> -->
+                        <td class="clickable" (click)="openCubeModal(r)">
                             {{ r.batchNo }}_{{ r.castDate | date:'dd-MM-yyyy' }}
                         </td>
+
 
 
 
@@ -87,6 +88,8 @@
                         <td class="action-cell">
                             <button class="link-btn" (click)="edit(r)">Edit</button>
                             <button class="link-btn danger" (click)="delete(r.id)">Delete</button>
+
+
                         </td>
 
                     </tr>
@@ -225,4 +228,127 @@
 
     </div>
 
+</div>
+<!-- ================= CUBE VIEW MODAL ================= -->
+<div class="modal fade" id="cubeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+
+                <div class="d-flex align-items-center modal-header-big">
+
+                    <h4 class="modal-title mb-0">
+                        Batch No - {{ selectedCube?.batchNo }}
+                    </h4>
+
+                    <div class="meta-text">
+                        <strong>Date:</strong>
+                        {{ selectedCube?.castDate | date:'longDate' }}
+                    </div>
+
+                    <div class="meta-text">
+                        <strong>Shift:</strong>
+                        {{ selectedCube?.shift }}
+                    </div>
+
+                </div>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <table class="table custom-table">
+
+                    <thead>
+                        <tr>
+                            <th>Cube Immediate</th>
+                            <th>Cube Over Dry</th>
+                            <th>Weight Immediate</th>
+                            <th>Weight Over Dry</th>
+                            <th>Weight Moisture</th>
+                            <th>Density</th>
+                            <th>Testing Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>{{ selectedCube?.cubeDimensionImmediate }}</td>
+                            <td>{{ selectedCube?.cubeDimensionOverDry }}</td>
+                            <td>{{ selectedCube?.weightImmediateKg }}</td>
+                            <td>{{ selectedCube?.weightOverDryKg }}</td>
+                            <td>{{ selectedCube?.weightWithMoistureKg }}</td>
+                            <td>{{ selectedCube?.densityKgM3 }}</td>
+                            <td>{{ selectedCube?.testingDate | date:'dd-MM-yyyy' }}</td>
+                        </tr>
+
+                        <tr class="section-header">
+                            <th>Load Over Dry</th>
+                            <th>Load Moisture</th>
+                            <th>Strength Over Dry</th>
+                            <th>Strength Moisture</th>
+                            <th colspan="3"></th>
+                        </tr>
+
+                        <tr>
+                            <td>{{ selectedCube?.loadOverDryTonn }}</td>
+                            <td>{{ selectedCube?.loadMoistureTonn }}</td>
+                            <td>{{ selectedCube?.compStrengthOverDry }}</td>
+                            <td>{{ selectedCube?.compStrengthMoisture }}</td>
+                            <td colspan="3"></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <!-- APPROVAL TABLE (UI SAME AS CASTING) -->
+            <table class="table1">
+                <thead class="tablehead">
+                    <tr>
+                        <th style="padding:8px;color:white">CHECKED BY</th>
+                        <th style="padding:8px;color:white">REVIEWED BY</th>
+                        <th style="padding:8px;color:white">APPROVED BY</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>{{getApprovalLevels(selectedCube).checkedBy.name}}</td>
+                        <td>{{getApprovalLevels(selectedCube).reviewedBy.name}}</td>
+                        <td>{{getApprovalLevels(selectedCube).approvedBy.name}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+
+                <button class="btn btn-primary btn-sm" (click)="edit(selectedCube); closeCubeModal()">
+                    Edit
+                </button>
+
+                <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                    Close
+                </button>
+                <button class="btn btn-success btn-sm" *ngIf="canApprove(selectedCube)" (click)="approveCube()">
+                    Approve
+                </button>
+
+                <button class="btn btn-warning btn-sm" *ngIf="canReject(selectedCube)" (click)="rejectCube()">
+                    Reject
+                </button>
+
+
+
+            </div>
+
+        </div>
+    </div>
 </div>

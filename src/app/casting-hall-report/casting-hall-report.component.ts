@@ -7,6 +7,7 @@ import * as bootstrap from 'bootstrap';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-casting-hall-report',
@@ -56,7 +57,8 @@ export class CastingHallReportComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: CastingHallReportService,
-    private productionService: ProductionService
+    private productionService: ProductionService,
+    private auth: AuthService
   ) { }
 
   // ================= INIT =================
@@ -227,9 +229,10 @@ export class CastingHallReportComponent implements OnInit {
   }
 
   submit() {
+    const userId = this.auth.getLoggedInUserId();
     const payload = {
       ...this.reportForm.value,
-      userId: 1,
+      userId: userId,
       branchId: 1,
       orgId: 1
     };
@@ -251,17 +254,19 @@ export class CastingHallReportComponent implements OnInit {
     this.editId = null;
   }
 
-  // ================= MODAL =================
   openCastingModal(r: any) {
     this.selectedCasting = r;
-    console.log(r);
 
     const modalEl = document.getElementById('castingModal');
+
+    console.log('modal element:', modalEl);   // ADD THIS
+
     if (!modalEl) return;
 
     const modal = new bootstrap.Modal(modalEl);
     modal.show();
   }
+
 
   closeCastingModal() {
     const modalEl = document.getElementById('castingModal');

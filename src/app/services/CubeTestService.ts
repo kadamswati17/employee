@@ -48,4 +48,14 @@ export class CubeTestService {
     delete(id: number): Observable<void> {
         return this.http.delete<void>(`${this.API}/${id}`, this.authHeaders());
     }
+
+    approve(id: number) {
+        return this.http.post(`${this.API}/${id}/approve`, {}, this.authHeaders());
+    }
+
+    reject(id: number, reason: string) {
+        return this.http.post(`${this.API}/${id}/reject`, { reason }, this.authHeaders());
+    }
+
+
 }

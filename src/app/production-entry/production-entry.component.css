@@ -559,7 +559,7 @@ hr {
         align-items: stretch;
         /* full width */
         gap: 12px;
-
+        margin-top: -15px;
         overflow-x: hidden;
         /* ❌ remove scroll */
         flex-wrap: wrap;
@@ -722,4 +722,230 @@ hr {
 
     padding-top: 14px;
     border-top: 1px solid #e5e7eb;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.pagination button {
+    padding: 8px 20px;
+    border-radius: 999px;
+    border: none;
+    font-weight: 600;
+    color: white;
+    background-color: #1e40af;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* ================= FINAL MOBILE TABLE + HEADER FIX ================= */
+@media (max-width: 768px) {
+
+    .header {
+        flex-direction: row;
+        /* keep in same line */
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .page-title {
+        font-size: 18px;
+        padding: 9px 10px;
+        border-radius: 10px;
+        line-height: 1.2;
+        white-space: nowrap;
+        margin-top: 16px;
+    }
+
+    .add-btn {
+        margin-top: -16px;
+        padding: 8px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        /* increased */
+        border-radius: 10px;
+        white-space: nowrap;
+    }
+
+    /* TABLE SCROLL FIX */
+    .table,
+    .custom-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .custom-table thead th,
+    .custom-table tbody td {
+        min-width: 120px;
+    }
+
+    /* First column slightly wider */
+    .custom-table thead th:first-child,
+    .custom-table tbody td:first-child {
+        min-width: 140px;
+    }
+
+    /* Pagination spacing */
+    .pagination {
+        margin-top: 12px;
+        gap: 8px;
+    }
+
+    .pagination button {
+        padding: 10px 15px;
+        font-size: 25px;
+    }
+
+    .pagination span {
+        font-size: 25px;
+    }
+
+    /* Reduce card padding */
+    .main {
+        padding: 0px;
+    }
+
+    /* Modal tables scroll */
+    .modal-body table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .filters {
+        padding: 5px 0px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* FORM CARD */
+    form.card {
+        padding: 12px;
+    }
+
+    /* HEADER ROW STACK */
+    .row-header {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    /* ALL FORM ROWS → SINGLE COLUMN */
+    .row-1,
+    .row-3,
+    .row-4 {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    /* TOTAL SOLID GRID FIX */
+    .total-layout {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+    }
+
+    .total-solid {
+        grid-row: auto;
+    }
+
+    /* INPUTS FULL WIDTH */
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+        width: 100%;
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    /* LABEL SIZE */
+    .form-field label {
+        font-size: 20px;
+    }
+
+    /* TOTAL SOLID HEIGHT */
+    .total-solid input {
+        min-height: 50px;
+        font-size: 15px;
+    }
+
+    /* PRODUCTION TIME */
+    .production-time {
+        grid-column: auto;
+    }
+
+    /* ACTION BUTTONS */
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header .add-btn {
+        margin-top: 0;
+        padding: 10px 10px;
+
+        font-size: 16px;
+
+        font-weight: 700;
+
+        border-radius: 10px;
+        white-space: nowrap;
+    }
+
+    .actions button {
+        width: 100%;
+        font-size: 25px;
+        padding: 10px;
+    }
+
+    /* REMOVE NEGATIVE MARGIN */
+    .add-btn {
+        margin-top: 0;
+    }
+
+    .mobile-dropdown {
+        width: 100%;
+    }
+
+    .dropdown-toggle-btn {
+        width: 100%;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        background: white;
+        font-size: 15px;
+        text-align: left;
+        padding: 0 14px;
+    }
+
+    .dropdown-menu {
+        width: 100%;
+    }
+
+
+
+
 }

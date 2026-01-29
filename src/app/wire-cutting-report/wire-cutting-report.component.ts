@@ -9,6 +9,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { WireCuttingReport } from '../models/wire-cutting';
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-wire-cutting-report',
   templateUrl: './wire-cutting-report.component.html',
@@ -64,7 +65,8 @@ export class WireCuttingReportComponent implements OnInit {
     private fb: FormBuilder,
     private service: WireCuttingReportService,
     private productionService: ProductionService,
-    private castingService: CastingHallReportService
+    private castingService: CastingHallReportService,
+    private auth: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -238,9 +240,11 @@ export class WireCuttingReportComponent implements OnInit {
   }
 
   submit() {
+    const userId = this.auth.getLoggedInUserId();
+
     const payload = {
       ...this.form.value,
-      userId: 1,
+      userId: userId,
       branchId: 1,
       orgId: 1
     };

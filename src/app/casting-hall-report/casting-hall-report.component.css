@@ -534,38 +534,7 @@ hr {
 }
 
 /* ================= MOBILE FILTER FIX ================= */
-@media (max-width: 768px) {
 
-    .filters {
-        flex-direction: column;
-        /* 🔥 stack vertically */
-        align-items: stretch;
-        /* full width */
-        gap: 12px;
-
-        overflow-x: hidden;
-        /* ❌ remove scroll */
-        flex-wrap: wrap;
-        /* allow wrapping */
-    }
-
-    .date-field.top-label,
-    .filters select,
-    .clear-btn {
-        width: 100%;
-        /* 🔥 full width inputs */
-        min-width: unset;
-    }
-
-    .filters input[type="date"],
-    .filters select {
-        width: 100%;
-    }
-
-    .clear-btn {
-        justify-content: center;
-    }
-}
 
 .table1 {
     margin: 15px;
@@ -706,4 +675,120 @@ hr {
 
     padding-top: 14px;
     border-top: 1px solid #e5e7eb;
+}
+
+/* ================= CASTING MOBILE FIX (SAME AS PRODUCTION) ================= */
+@media (max-width: 768px) {
+
+    /* FILTER BAR */
+    .filters {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px;
+        overflow-x: hidden !important;
+        margin: -9px -9px;
+        padding: 15px 10px;
+    }
+
+    .filters select,
+    .filters input[type="date"],
+    .date-field.top-label {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+
+    .clear-btn {
+        width: 100%;
+        font-size: 25px;
+    }
+
+    /* TABLE SCROLL */
+    table.custom-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    table.custom-table thead th,
+    table.custom-table tbody td {
+        min-width: 130px;
+    }
+
+    /* HEADER */
+    .header {
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    .page-title {
+        font-size: 18px;
+        padding: 6px 10px;
+    }
+
+    .add-btn {
+        padding: 12px 12px;
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    /* FORM */
+
+    form.card {
+        padding: 12px;
+    }
+
+    .row-header {
+        grid-template-columns: 1fr !important;
+    }
+
+    .row-3,
+    .row-4 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+
+    /* MODAL TABLE */
+
+    .modal-body table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* CONTAINER */
+
+    .container {
+        padding: 10px 5px 40px 5px;
+    }
+
+    .main {
+        padding: 8px;
+    }
+
+
+    /* LABEL CUTTING BORDER */
+    .date-field.top-label label {
+
+        font-size: 18px;
+
+    }
+
+    /* hr {
+        margin: 5px 0px;
+    } */
 }

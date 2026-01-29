@@ -6,6 +6,7 @@ import { ProductionImportResponse } from '../models/ProductionImportResponse';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-production-entry',
@@ -46,7 +47,8 @@ export class ProductionEntryComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private service: ProductionService
+    private service: ProductionService,
+    private auth: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -398,8 +400,10 @@ export class ProductionEntryComponent implements OnInit {
   }
 
   submit() {
+    const userId = this.auth.getLoggedInUserId();
     const payload = {
       ...this.productionForm.value,
+      userId: userId,
       totalSolid: this.calculateTotalSolid()
     };
 

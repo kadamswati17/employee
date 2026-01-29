@@ -5,6 +5,7 @@ import { BlockSeparatingService } from '../services/BlockSeparatingService';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-block-separating',
@@ -39,7 +40,8 @@ export class BlockSeparatingComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private service: BlockSeparatingService
+    private service: BlockSeparatingService,
+    private auth: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -196,8 +198,14 @@ export class BlockSeparatingComponent implements OnInit {
     }
 
     this.isSubmitting = true;
+    const userId = this.auth.getLoggedInUserId();
 
-    const payload = this.form.value;
+
+
+    const payload = {
+      ...this.form.value,
+      userId: userId
+    };
 
     const request$ = this.editId
       ? this.service.update(this.editId, payload)

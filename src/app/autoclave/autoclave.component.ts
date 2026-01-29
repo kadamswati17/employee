@@ -10,6 +10,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { WireCuttingReportService } from '../services/WireCuttingReportService';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -51,7 +52,8 @@ export class AutoclaveComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: AutoclaveService,
-    private wireCuttingService: WireCuttingReportService
+    private wireCuttingService: WireCuttingReportService,
+    private auth: AuthService
   ) { }
 
   // ================= INIT =================
@@ -233,10 +235,11 @@ export class AutoclaveComponent implements OnInit {
   }
 
   save(): void {
+    const userId = this.auth.getLoggedInUserId();
     const payload = {
       ...this.form.value,
       wagons: this.wagonForm.value.wagons,
-      userId: 1,
+      userId: userId,
       branchId: 1,
       orgId: 1
     };

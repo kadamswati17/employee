@@ -5,6 +5,8 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { BlockSeparatingService } from '../services/BlockSeparatingService';
+import { AuthService } from '../services/auth.service';
+import * as bootstrap from 'bootstrap';
 
 
 @Component({
@@ -20,6 +22,8 @@ export class CubeTestComponent implements OnInit {
   filtered: any[] = [];
   paginated: any[] = [];
   batches: any[] = [];
+  selectedCube: any = null;
+  currentRole = '';
 
   showLeads = true;
   editId: any = null;
@@ -32,7 +36,9 @@ export class CubeTestComponent implements OnInit {
   pageSize = 5;
   totalPages = 0;
 
-  constructor(private fb: FormBuilder, private service: CubeTestService, private blockService: BlockSeparatingService) { }
+  constructor(private fb: FormBuilder, private service: CubeTestService,
+    private auth: AuthService,
+    private blockService: BlockSeparatingService) { }
 
   ngOnInit() {
 
@@ -60,6 +66,8 @@ export class CubeTestComponent implements OnInit {
 
     this.load();
     this.loadBatches();
+    this.currentRole = localStorage.getItem('role') || '';
+
   }
 
 
@@ -180,8 +188,12 @@ export class CubeTestComponent implements OnInit {
   }
 
   submit() {
+    const userId = this.auth.getLoggedInUserId();
 
-    const payload = this.form.value;
+    const payload = {
+      ...this.form.value,
+      userId: userId
+    };
 
     console.log('FINAL PAYLOAD:', payload); // 🔥
 
@@ -291,5 +303,91 @@ export class CubeTestComponent implements OnInit {
     });
 
   }
+
+  openCubeModal(r: any) {
+
+    console.log('CLICKED:', r);
+
+    this.selectedCube = r;
+
+    const modalEl = document.getElementById('cubeModal');
+
+    console.log('MODAL:', modalEl);
+
+    if (!modalEl) return;
+
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+  }
+
+
+  closeCubeModal() {
+    const modalEl = document.getElementById('cubeModal');
+    if (!modalEl) return;
+
+    bootstrap.Modal.getInstance(modalEl)?.hide();
+  }
+
+  getApprovalLevels(c: any) {
+    return {
+      checkedBy: { name: c?.approvedByL1 || '', level: 'L1' },
+      reviewedBy: { name: c?.approvedByL2 || '', level: 'L2' },
+      approvedBy: { name: c?.approvedByL3 || '', level: 'L3' }
+    };
+  }
+
+  canApprove(c: any): boolean {
+    if (!c) return false;
+
+    const stage = c.approvalStage || 'NONE';
+
+    return (
+      (this.currentRole === 'ROLE_L1' && stage === 'NONE') ||
+      (this.currentRole === 'ROLE_L2' && stage === 'L1') ||
+      (this.currentRole === 'ROLE_L3' && stage === 'L2')
+    );
+  }
+
+
+  canReject(c: any): boolean {
+    if (!c) return false;
+
+    const stage = c.approvalStage || 'NONE';
+
+    if (stage === 'NONE' && this.currentRole === 'ROLE_L1') return true;
+    if (stage === 'L1' && this.currentRole === 'ROLE_L2') return true;
+    if (stage === 'L2' && this.currentRole === 'ROLE_L3') return true;
+
+    return false;
+  }
+
+
+
+  approveCube() {
+
+    if (!this.selectedCube) return;
+
+    this.service.approve(this.selectedCube.id)
+      .subscribe(() => {
+        alert('Approved successfully');
+        this.closeCubeModal();
+        this.load();
+      });
+  }
+  rejectCube() {
+
+    if (!this.selectedCube) return;
+
+    const reason = prompt('Enter rejection reason');
+    if (!reason) return;
+
+    this.service.reject(this.selectedCube.id, reason)
+      .subscribe(() => {
+        alert('Rejected successfully');
+        this.closeCubeModal();
+        this.load();
+      });
+  }
+
 
 }
