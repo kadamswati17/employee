@@ -593,11 +593,12 @@ hr {
     padding: 10px 0px;
 }
 
+
 .section-header th {
     background-color: blue;
     /* or blue */
     color: white;
-    text-align: center;
+    text-align: start;
 }
 
 .modal-footer {
@@ -613,6 +614,7 @@ hr {
 .level-text {
     font-size: 20px;
     padding: 15px;
+    text-align: center;
 }
 
 .modal-header {
@@ -946,6 +948,83 @@ hr {
     }
 
 
+    .modal-header {
+        display: flex !important;
+        justify-content: flex-start !important;
+        /* 🔥 force left */
+        align-items: flex-start !important;
+        padding-left: 10px !important;
+        /* 🔥 remove bootstrap offset */
+        padding-right: 40px !important;
+        position: relative;
+    }
 
+    .modal-header-big {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        /* 🔥 text left */
+        justify-content: flex-start;
 
+        width: 100%;
+        margin: 0 !important;
+        /* 🔥 remove centering */
+        padding: 0 !important;
+
+        gap: 6px;
+        white-space: normal;
+        /* 🔥 allow wrap */
+    }
+
+    .modal-header-big .modal-title,
+    .modal-header-big .meta-text {
+        text-align: left;
+        /* 🔥 hard left */
+        width: 100%;
+    }
+
+    /* Close button absolute top-right */
+    .btn-close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        margin: 0;
+    }
+
+    .custom-table {
+        border-collapse: collapse;
+        /* important */
+    }
+
+    /* All cells */
+    .custom-table th,
+    .custom-table td {
+        border: 1px solid #2563eb;
+        font-size: 18px;
+        /* 🔥 blue column + row borders */
+    }
+
+    /* Header stronger border */
+    .custom-table thead th {
+        border: 2px solid #2563eb;
+    }
+
+    /* Body cells */
+    .custom-table tbody td {
+        border: 1px solid #93c5fd;
+    }
+
+    .tablehead th {
+        /* font-size: 14px; */
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+
+    .modal-dialog {
+        margin-top: 100px;
+    }
 }

@@ -34,33 +34,37 @@
 
     <!-- TABLE -->
     <div class="table-wrapper" *ngIf="paginatedTalukas.length">
-        <table>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>Taluka</th>
-                    <th>District</th>
-                    <th>State</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+
+        <div class="table-scroll">
+
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Sr No</th>
+                        <th>Taluka</th>
+                        <th>District</th>
+                        <th>State</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
 
 
-            <tbody>
-                <tr *ngFor="let t of paginatedTalukas; let i = index">
-                    <td>{{ talukas.length - ((page - 1) * pageSize + i) }}</td>
+                <tbody>
+                    <tr *ngFor="let t of paginatedTalukas; let i = index">
+                        <td>{{ talukas.length - ((page - 1) * pageSize + i) }}</td>
 
-                    <td>{{ t.name }}</td>
-                    <td>{{ t.districtName }}</td>
-                    <td>{{ t.stateName }}</td>
+                        <td>{{ t.name }}</td>
+                        <td>{{ t.districtName }}</td>
+                        <td>{{ t.stateName }}</td>
 
-                    <td>
-                        <button class="btn-edit" (click)="edit(t)">Edit</button>
-                    </td>
-                </tr>
-            </tbody>
+                        <td>
+                            <button class="btn-edit" (click)="edit(t)">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
 
-        </table>
+            </table>
+        </div>
 
         <!-- PAGINATION -->
         <div class="pagination">
@@ -70,5 +74,6 @@
             </button>
         </div>
     </div>
+
 
 </div>

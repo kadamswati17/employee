@@ -870,7 +870,98 @@ hr {
         font-size: 18px;
     }
 
-    /* MODAL TABLE */
+    .modal-header {
+        display: flex !important;
+        justify-content: flex-start !important;
+        /* 🔥 force left */
+        align-items: flex-start !important;
+        padding: 10px 20px !important;
+        /* 🔥 remove bootstrap offset */
+        padding-right: 40px !important;
+        position: relative;
+    }
+
+    .modal-header-big {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        /* 🔥 text left */
+        justify-content: flex-start;
+
+        width: 100%;
+        margin: 0 !important;
+        /* 🔥 remove centering */
+        padding: 0 !important;
+
+        gap: 6px;
+        white-space: normal;
+        /* 🔥 allow wrap */
+    }
+
+    .modal-header-big .modal-title,
+    .modal-header-big .meta-text {
+        text-align: left;
+        /* 🔥 hard left */
+        width: 100%;
+    }
+
+    /* Close button absolute top-right */
+    .btn-close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        margin: 0;
+    }
+
+    .modal-dialog {
+        margin: 80px 10px 20px 10px;
+    }
+
+    .modal-content {
+        border-radius: 14px;
+    }
+
+    /* ===== HEADER ===== */
+
+    .modal-header {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+
+        padding: 12px 14px !important;
+        gap: 6px;
+        position: relative;
+    }
+
+    .modal-header-big {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        gap: 4px;
+    }
+
+    .modal-title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .meta-text {
+        font-size: 14px;
+    }
+
+    .btn-close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    /* ===== BODY ===== */
+
+    .modal-body {
+        padding: 10px;
+    }
+
+    /* Tables scroll */
 
     .modal-body table {
         display: block;
@@ -878,19 +969,34 @@ hr {
         white-space: nowrap;
     }
 
-    .table1 {
-        display: block;
+    /* ===== FOOTER BUTTONS ===== */
+
+    .modal-footer {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+
+        gap: 8px;
+        padding: 10px;
+
         overflow-x: auto;
     }
 
-    /* MODAL FOOTER */
+    .modal-footer::-webkit-scrollbar {
+        height: 4px;
+    }
 
-    .modal-footer {
-        flex-direction: column;
-        gap: 10px;
+    .modal-footer::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
     }
 
     .modal-footer .btn {
-        width: 100%;
+        flex-shrink: 0;
+
+        padding: 8px 14px;
+        font-size: 14px;
+        border-radius: 10px;
+        min-width: auto;
     }
 }

@@ -97,4 +97,9 @@ export class DistrictMasterComponent implements OnInit {
     });
   }
 
+  totalPages(): number {
+    return Math.ceil(this.districts.length / this.pageSize);
+  }
+
+
 }

@@ -30,7 +30,7 @@
     </form>
 
     <!-- TABLE -->
-    <div class="table-wrapper" *ngIf="paginatedCities.length">
+    <!-- <div class="table-wrapper" *ngIf="paginatedCities.length">
         <table>
             <thead>
                 <tr>
@@ -57,13 +57,55 @@
             </tbody>
         </table>
 
-        <!-- PAGINATION -->
+       
         <div class="pagination">
             <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
                 [disabled]="page === i + 1">
                 {{ i + 1 }}
             </button>
         </div>
+    </div> -->
+
+    <div class="table-wrapper" *ngIf="paginatedCities.length">
+
+        <div class="table-scroll">
+
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Sr No</th>
+                        <th>City</th>
+                        <th>Taluka</th>
+                        <th>District</th>
+                        <th>State</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let c of paginatedCities; let i = index">
+                        <td>{{ cities.length - ((page - 1) * pageSize + i) }}</td>
+                        <td>{{ c.cityName }}</td>
+                        <td>{{ c.talukaName }}</td>
+                        <td>{{ c.districtName }}</td>
+                        <td>{{ c.stateName }}</td>
+                        <td>
+                            <button class="btn-edit" (click)="edit(c)">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="pagination">
+            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
+                [disabled]="page === i + 1">
+                {{ i + 1 }}
+            </button>
+        </div>
+
     </div>
+
 
 </div>

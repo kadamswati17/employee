@@ -33,7 +33,7 @@
     </form>
 
     <!-- TABLE -->
-    <div class="table-wrapper" *ngIf="paginated.length">
+    <!-- <div class="table-wrapper" *ngIf="paginated.length">
         <table>
             <thead>
                 <tr>
@@ -59,6 +59,43 @@
             </tbody>
 
         </table>
+    </div> -->
+
+    <div class="table-wrapper" *ngIf="paginated.length">
+
+        <div class="table-scroll">
+
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Sr No</th>
+                        <th>District</th>
+                        <th>State</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let d of paginated; let i = index">
+                        <td>{{ districts.length - ((page - 1) * pageSize + i) }}</td>
+                        <td>{{ d.name }}</td>
+                        <td>{{ d.state?.name }}</td>
+                        <td>
+                            <button class="btn-edit" (click)="edit(d)">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination">
+            <button *ngFor="let p of [].constructor(totalPages()); let i = index" (click)="setPage(i + 1)"
+                [disabled]="page === i + 1">
+                {{ i + 1 }}
+            </button>
+        </div>
+
     </div>
+
 
 </div>
