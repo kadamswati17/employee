@@ -391,3 +391,249 @@
 .modal .employee-table tbody tr:hover {
     background-color: #f1f5f9 !important;
 }
+
+
+
+/* ================= MOBILE ONLY RESPONSIVE PATCH ================= */
+@media (max-width: 600px) {
+
+    /* Page padding */
+    .employee-list-container {
+        margin: 8px;
+        padding: 10px;
+    }
+
+    /* Title center */
+    .top-bar h2 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    /* Buttons full width */
+    .top-bar-actions,
+    .filter-buttons {
+        width: 100%;
+    }
+
+    .top-bar-actions button,
+    .filter-btn {
+        flex: 1;
+        font-size: 17px;
+        padding: 10px 4px;
+    }
+
+    /* ===== TABLE SCROLL FIX ===== */
+    .table-container {
+        padding: 4px;
+        overflow-x: auto;
+    }
+
+    .lead-table {
+        min-width: 750px;
+    }
+
+    .lead-table th,
+    .lead-table td {
+        font-size: 18px;
+        padding: 6px;
+        white-space: nowrap;
+    }
+
+    /* ===== MODAL FULL WIDTH ===== */
+    .modal-dialog {
+        margin: 5px;
+        max-width: 100%;
+    }
+
+    .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        max-height: calc(100vh - 160px);
+        padding: 10px 10px 80px 10px;
+        /* ✅ bottom padding */
+    }
+
+
+    /* Modal table scroll */
+    .km-modal-table-wrapper {
+        max-height: 220px;
+        overflow-x: auto;
+    }
+
+    .modal-entries-table {
+        min-width: 900px;
+    }
+
+    .modal-entries-table td,
+    .modal-entries-table th {
+        font-size: 13px;
+        padding: 5px;
+        white-space: nowrap;
+    }
+
+    /* Images smaller */
+    .km-photo {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Footer buttons wrap */
+    .modal-footer {
+        flex-wrap: wrap;
+    }
+
+    .modal-footer button {
+        flex: 1;
+        font-size: 13px;
+    }
+
+    /* Pagination smaller */
+    .pagination-container .btn {
+        padding: 4px 6px;
+        font-size: 13px;
+    }
+
+    /* Make modal take full screen */
+    .modal-dialog {
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+    }
+
+    .modal-content {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+
+    .modal-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        /* ✅ move left */
+        text-align: left;
+        /* ✅ text left */
+        gap: 6px;
+    }
+
+    .modal-header h5 {
+        font-size: 16px;
+    }
+
+    .modal-header small {
+        font-size: 16px;
+    }
+
+    /* Company title */
+    .modal-header .fw-bold {
+        font-size: 15px;
+    }
+
+    /* Body scroll */
+    .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        max-height: calc(100vh - 140px);
+        padding: 10px 5px 50px 5px;
+    }
+
+    /* Entries table scroll */
+    .km-modal-table-wrapper {
+        max-height: 200px;
+        overflow-x: auto;
+    }
+
+    .modal-entries-table {
+        min-width: 850px;
+    }
+
+    .modal-entries-table th,
+    .modal-entries-table td {
+        font-size: 12px;
+        padding: 4px;
+        white-space: nowrap;
+    }
+
+    /* Approval table smaller */
+    .employee-table thead th,
+    .employee-table td {
+        font-size: 15px;
+        padding: 6px;
+    }
+
+    /* Footer buttons full width */
+    .modal-footer {
+        flex-direction: row;
+        gap: 8px;
+        margin-bottom: 200px;
+    }
+
+    .modal-footer button {
+        width: 100%;
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    /* Close button position */
+    .btn-close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    .employee-table {
+        width: 336px;
+    }
+}
+
+/* ================= FINAL MOBILE MODAL + TABLE FIX ================= */
+@media (max-width: 600px) {
+
+    /* Modal layout */
+    .modal-content {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .modal-body {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    /* REAL horizontal scroll */
+    .km-modal-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .modal-entries-table {
+        min-width: 800px;
+    }
+
+    /* Approval table scroll */
+    .employee-table {
+        min-width: 330px;
+    }
+
+    .employee-table-wrapper {
+        overflow-x: auto;
+    }
+
+    /* Sticky footer */
+    .modal-footer {
+        /* position: sticky; */
+        bottom: 0;
+        background: white;
+        padding: 10px;
+        box-shadow: 0 -2px 6px rgba(0, 0, 0, .08);
+    }
+
+    /* Footer buttons */
+    .modal-footer button {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px;
+    }
+}

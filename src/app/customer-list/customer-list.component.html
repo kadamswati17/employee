@@ -82,8 +82,10 @@
         <div class="modal-content">
 
             <!-- MODAL HEADER -->
-            <div class="modal-header d-flex justify-content-between align-items-center">
-
+            <div class="modal-header d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                    <h5 class="modal-title fw-bold">Demo Auto Limited</h5>
+                </div>
                 <div class="d-flex flex-column">
                     <h5 class="modal-title mb-1">Batch No - {{ selectedBatchNo }}</h5>
 
@@ -107,9 +109,7 @@
                     </div>
                 </div>
 
-                <div class="flex-grow-1 text-center">
-                    <h5 class="modal-title fw-bold">Demo Auto Limited</h5>
-                </div>
+
 
                 <button type="button" class="btn-close modal-close-btn" data-bs-dismiss="modal"></button>
             </div>
@@ -240,7 +240,7 @@
                         </tbody>
                     </table>
 
-                    <table class="employee-table mt-4">
+                    <table class="employee-table table mt-4">
                         <thead>
                             <tr>
                                 <th>Checked By</th>
@@ -280,32 +280,33 @@
                 <ng-template #noData>
                     <p>No transactions found.</p>
                 </ng-template>
-            </div>
 
-            <div class="modal-footer">
-                <div class="d-flex ">
-                    <button class="btn btn-info btn-sm" (click)="downloadBatch(selectedBatchNo!)">Download</button>
+                <div class="modal-footer">
+                    <div class="d-flex ">
+                        <button class="btn btn-info btn-sm" (click)="downloadBatch(selectedBatchNo!)">Download</button>
 
-                    <button class="btn btn-success btn-sm" *ngIf="canApprove() && !isL1AlreadyApproved()"
-                        [disabled]="isBatchApproving" (click)="approveBatch(selectedBatchNo!)">
-                        Approve Batch
-                    </button>
+                        <button class="btn btn-success btn-sm" *ngIf="canApprove() && !isL1AlreadyApproved()"
+                            [disabled]="isBatchApproving" (click)="approveBatch(selectedBatchNo!)">
+                            Approve Batch
+                        </button>
 
-                    <button class="btn btn-warning btn-sm"
-                        *ngIf="currentUserRole === 'ROLE_L1' || currentUserRole === 'ROLE_L2' || currentUserRole === 'ROLE_L3'"
-                        (click)="rejectBatch()">
-                        Reject
-                    </button>
+                        <button class="btn btn-warning btn-sm"
+                            *ngIf="currentUserRole === 'ROLE_L1' || currentUserRole === 'ROLE_L2' || currentUserRole === 'ROLE_L3'"
+                            (click)="rejectBatch()">
+                            Reject
+                        </button>
 
-                    <!-- OLD EDIT BUTTON REMOVED -->
+                        <!-- OLD EDIT BUTTON REMOVED -->
 
-                    <button class="btn btn-danger btn-sm" *ngIf="canEditDelete()" (click)="deleteBatch()">
-                        Delete
-                    </button>
+                        <button class="btn btn-danger btn-sm" *ngIf="canEditDelete()" (click)="deleteBatch()">
+                            Delete
+                        </button>
+                    </div>
+
+                    <!-- <button class="btn btn-secondary" data-bs-dismiss="modal">Submit</button> -->
                 </div>
-
-                <!-- <button class="btn btn-secondary" data-bs-dismiss="modal">Submit</button> -->
             </div>
+
 
         </div>
     </div>

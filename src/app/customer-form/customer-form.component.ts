@@ -233,6 +233,7 @@ export class CustomerFormComponent implements OnInit {
     this.cartItems = [];
     this.customerForm.reset();
     this.customerForm.patchValue({ createdby: this.currentUserName });
+    this.router.navigate(['/customers']);
   }
 
 }

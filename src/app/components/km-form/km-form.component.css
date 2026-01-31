@@ -199,12 +199,7 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
     font-size: 20px;
 }
 
-/* MOBILE RESPONSIVE */
-@media (max-width: 768px) {
-    .form-row-3 {
-        grid-template-columns: 1fr;
-    }
-}
+
 
 .cart-img {
     width: 60px;
@@ -213,4 +208,107 @@ input[type="date"]:not(:focus):not(:valid)::-webkit-datetime-edit {
     border-radius: 4px;
     border: 1px solid #ccc;
     cursor: pointer;
+}
+
+/* ================= MOBILE FORM RESPONSIVE PATCH ================= */
+@media (max-width: 600px) {
+
+    /* Container tighter */
+    .employee-form-container {
+        margin: 6px;
+        padding: 8px 4px 50px 4px;
+    }
+
+    .form-card {
+        padding: 10px;
+    }
+
+    /* Title */
+    .form-header h2 {
+        font-size: 22px;
+    }
+
+    .title {
+        width: 50%;
+        margin: 0 auto;
+        /* ✅ centers horizontally */
+        text-align: center;
+        font-size: 20px;
+    }
+
+
+    /* Inputs */
+    .form-group.floating .big-input {
+        font-size: 17px;
+        padding: 14px 12px 6px;
+    }
+
+    .form-group.floating label {
+        font-size: 18px;
+    }
+
+    .form-group.floating .big-input:focus+label,
+    .form-group.floating .big-input:not(:placeholder-shown)+label {
+        font-size: 18px;
+    }
+
+    /* Save button full width */
+    .action-right {
+        text-align: center;
+    }
+
+    .save-btn {
+        width: 100%;
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    /* Details title */
+    .details-title {
+        font-size: 18px;
+    }
+
+    /* ===== CART TABLE SCROLL ===== */
+    .cart-container {
+        overflow-x: auto;
+    }
+
+    .employee-table {
+        min-width: 750px;
+    }
+
+    .employee-table th,
+    .employee-table td {
+        font-size: 13px;
+        padding: 6px;
+        white-space: nowrap;
+    }
+
+    /* Cart image */
+    .cart-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Footer buttons stack */
+    .form-actions {
+        flex-direction: row;
+    }
+
+    .cancel-btn,
+    .submit-btn {
+        width: 100%;
+        font-size: 20px;
+        padding: 10px;
+    }
+
+    /* Empty box */
+    .empty-box {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .form-row-3 {
+        grid-template-columns: 1fr;
+    }
 }
