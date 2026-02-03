@@ -148,11 +148,8 @@ export class AuthService {
   }
 
   getLoggedInUserId(): number | null {
-    const token = this.tokenStorage.getToken();
-    if (!token) return null;
-
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.userId || null;
+    const user = this.tokenStorage.getUser();
+    return user?.id || null;
   }
 
 

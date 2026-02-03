@@ -63,22 +63,25 @@ export class ProductionService {
         );
     }
 
-    approve(id: number): Observable<any> {
+
+
+
+    approve(id: number, userId: number, role: string) {
         return this.http.put(
-            `${this.baseUrl}/${id}/approve`,
+            `${this.baseUrl}/${id}/approve?userId=${userId}&role=${role}`,
             {},
             this.getAuthHeaders()
         );
     }
 
-
-    reject(id: number, reason: string): Observable<any> {
+    reject(id: number, reason: string, userId: number, role: string) {
         return this.http.post(
-            `${this.baseUrl}/${id}/reject?reason=${encodeURIComponent(reason)}`,
+            `${this.baseUrl}/${id}/reject?userId=${userId}&role=${role}&reason=${encodeURIComponent(reason)}`,
             {},
             this.getAuthHeaders()
         );
     }
+
 
 
     importProduction(payload: any): Observable<ProductionImportResponse> {

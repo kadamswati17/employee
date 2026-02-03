@@ -37,6 +37,7 @@ export class ProductionEntryComponent implements OnInit {
   excelPreview: any[] = [];
   hasExcelErrors = false;
   apiMessage = '';
+  // userMap: { [key: string]: string } = {};
 
   // ================= PAGINATION =================
   pageSize = 5;
@@ -99,6 +100,8 @@ export class ProductionEntryComponent implements OnInit {
 
     this.setShiftByTime();
     this.loadData();
+    this.loadUsers();
+
   }
 
 
@@ -110,6 +113,16 @@ export class ProductionEntryComponent implements OnInit {
       : `ROLE_${role}`;
 
     console.log('ROLE IN COMPONENT:', this.currentUserRole);
+  }
+
+  loadUsers() {
+    this.auth.getAllUsers().subscribe(users => {
+      users.forEach((u: any) => {
+        this.userMap[String(u.id)] = u.username;   // 🔥 force string
+      });
+
+      console.log('USER MAP:', this.userMap); // debug
+    });
   }
 
 
@@ -372,16 +385,18 @@ export class ProductionEntryComponent implements OnInit {
       (+this.productionForm.value.faSolid2 || 0);
   }
 
-  // TEMP USER MAP (until backend sends name)
-  userMap: { [key: number]: string } = {
-    1: 'Admin',
-    2: 'Supervisor',
-    3: 'Operator'
-  };
+  userMap: { [key: string]: string } = {};
 
-  getUserName(userId: number): string {
-    return this.userMap[userId] || `User-${userId}`;
+
+  getUserName(userId: any): string {
+    if (!userId) return '—';
+
+    const key = String(userId);   // 🔥 force string
+
+    return this.userMap[key] || key;
   }
+
+
 
 
   setShiftByTime() {
@@ -401,9 +416,15 @@ export class ProductionEntryComponent implements OnInit {
 
   submit() {
     const userId = this.auth.getLoggedInUserId();
+
+    if (!userId) {
+      alert('User not logged in');
+      return;
+    }
+
     const payload = {
       ...this.productionForm.value,
-      userId: userId,
+      userId,
       totalSolid: this.calculateTotalSolid()
     };
 
@@ -416,6 +437,7 @@ export class ProductionEntryComponent implements OnInit {
       this.loadData();
     });
   }
+
 
   edit(row: any) {
     this.editId = row.id;
@@ -434,19 +456,20 @@ export class ProductionEntryComponent implements OnInit {
   getApprovalLevels(p: any) {
     return {
       checkedBy: {
-        name: p?.approvedByL1 || '',
-        level: p?.approvedByL1 ? 'L1' : 'L1'
+        name: this.getUserName(p?.approvedByL1),
+        level: p?.approvedByL1 ? 'L1' : ''
       },
       reviewedBy: {
-        name: p?.approvedByL2 || '',
+        name: this.getUserName(p?.approvedByL2),
         level: p?.approvedByL2 ? 'L2' : ''
       },
       approvedBy: {
-        name: p?.approvedByL3 || '',
+        name: this.getUserName(p?.approvedByL3),
         level: p?.approvedByL3 ? 'L3' : ''
       }
     };
   }
+
 
 
   private buildExportRows(p: any): any[] {
@@ -567,13 +590,17 @@ export class ProductionEntryComponent implements OnInit {
   approveProduction() {
     if (!this.selectedProduction) return;
 
-    this.service.approve(this.selectedProduction.id).subscribe({
-      next: () => {
-        alert('Approved successfully');
-        this.closeModal();
-        this.loadData();
-      },
-      error: () => alert('Approve failed')
+    const userId = this.auth.getLoggedInUserId();
+    if (!userId) return;
+
+    this.service.approve(
+      this.selectedProduction.id,
+      userId,
+      this.currentUserRole
+    ).subscribe(() => {
+      alert('Approved successfully');
+      this.closeModal();
+      this.loadData();
     });
   }
 
@@ -584,15 +611,21 @@ export class ProductionEntryComponent implements OnInit {
     const reason = prompt('Enter rejection reason');
     if (!reason) return;
 
-    this.service.reject(this.selectedProduction.id, reason).subscribe({
-      next: () => {
-        alert('Rejected successfully');
-        this.closeModal();
-        this.loadData();
-      },
-      error: () => alert('Reject failed')
+    const userId = this.auth.getLoggedInUserId();
+    if (!userId) return;
+
+    this.service.reject(
+      this.selectedProduction.id,
+      reason,
+      userId,
+      this.currentUserRole
+    ).subscribe(() => {
+      alert('Rejected successfully');
+      this.closeModal();
+      this.loadData();
     });
   }
+
 
   // saveModalEdit() {
   //   if (!this.selectedProduction) return;
