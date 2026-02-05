@@ -42,6 +42,7 @@ import { AutoclaveComponent } from './autoclave/autoclave.component';
 import { BlockSeparatingComponent } from './block-separating/block-separating.component';
 import { CubeTestComponent } from './cube-test-component/cube-test-component.component';
 import { RejectionComponentComponent } from './rejection-component/rejection-component.component';
+import { ProductionDashboardComponent } from './production-dashboard/production-dashboard.component';
 // import { PartyPriceComponent } from './components/price-list/price-list.component';
 
 
@@ -105,6 +106,11 @@ const routes: Routes = [
   { path: 'cube-test', component: CubeTestComponent },
   { path: 'block-separating', component: BlockSeparatingComponent },
   { path: 'rejection', component: RejectionComponentComponent },
+  {
+    path: 'production-dashboard',
+    component: ProductionDashboardComponent
+  },
+
   { path: '**', redirectTo: '/login' }
 ];
 

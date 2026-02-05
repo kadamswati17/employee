@@ -208,6 +208,29 @@
     .pg-text {
         font-size: 16px;
     }
+
+    .header-section {
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* remove fixed width from title */
+    .title1 {
+        width: auto !important;
+        font-size: 18px;
+        padding: 6px 20px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .add-btn {
+        padding: 10px 20px;
+        font-size: 18px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-top: -10px;
+    }
 }
 
 /* =================================================

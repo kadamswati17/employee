@@ -28,6 +28,7 @@ export const APP_CONFIG = {
         AUTOCLAVE: '/api/autoclave',
         BLOCK_SEPARATING: '/api/block-separating',
         CUBE_TEST: '/cube-test',
-        REJECTION: '/api/rejection'
+        REJECTION: '/api/rejection',
+        PRODUCTION_DASHBOARD: '/api/productiondashboard'
     }
 };

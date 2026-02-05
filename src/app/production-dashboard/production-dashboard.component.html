@@ -1,0 +1,67 @@
+<div class="container">
+
+    <div class="main">
+
+        <!-- TOP BAR -->
+        <div class="top-bar">
+
+            <h2 class="page-title">Production Dashboard</h2>
+
+            <div class="filters">
+
+                <div class="date-field top-label">
+                    <label>From Date</label>
+                    <input type="date" [(ngModel)]="fromDate" (change)="applyFilters()" />
+                </div>
+
+                <div class="date-field top-label">
+                    <label>To Date</label>
+                    <input type="date" [(ngModel)]="toDate" (change)="applyFilters()" />
+                </div>
+
+                <button class="clear-btn" (click)="clear()">Clear</button>
+
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+        <div class="table-wrapper">
+            <table class="table custom-table">
+
+                <thead>
+                    <tr>
+                        <th>Batch No</th>
+                        <th>L1</th>
+                        <th>L2</th>
+                        <th>L3</th>
+                        <th>L4</th>
+                        <th>L5</th>
+                        <th>L6</th>
+                        <th>L7</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let row of filteredRows">
+
+                        <td>{{ row.batchNo }}</td>
+
+                        <td>{{ row.approvalTimeL1 || '-' }}</td>
+                        <td>{{ row.approvalTimeL2 || '-' }}</td>
+                        <td>{{ row.approvalTimeL3 || '-' }}</td>
+                        <td>{{ row.approvalTimeL4 || '-' }}</td>
+                        <td>{{ row.approvalTimeL5 || '-' }}</td>
+                        <td>{{ row.approvalTimeL6 || '-' }}</td>
+                        <td>{{ row.approvalTimeL7 || '-' }}</td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>

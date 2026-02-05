@@ -11,8 +11,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-    font-size: 20px;
+    margin-bottom: -7px;
 }
 
 .add-btn {
@@ -20,9 +19,21 @@
     color: #fff;
     padding: 15px 18px;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 20px;
+    margin-top: -22px;
+}
+
+.add-btn1 {
+    background: #16a34a;
+    color: #fff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-top: 1px;
 }
 
 /* CARD */
@@ -37,13 +48,13 @@
 .row {
     display: grid;
     gap: 16px;
-    margin-bottom: -4px;
+    margin-bottom: -7px;
     align-items: center;
 }
 
 /* ROW CONFIGS */
 .row-header {
-    grid-template-columns: 1fr 250px 10px;
+    grid-template-columns: 1fr 180px 180px;
     align-items: center;
 }
 
@@ -67,18 +78,11 @@
 }
 
 .row-3 {
-    margin-top: 7px;
     grid-template-columns: repeat(4, 1fr);
-}
-
-.row-30 {
-    grid-template-columns: repeat(7, 1fr);
-    margin-top: 7px;
 }
 
 /* ⭐ FIXED ROW */
 .row-4 {
-    margin-top: 7px;
     grid-template-columns: 2fr 2fr 2fr 2fr;
 }
 
@@ -86,12 +90,6 @@
 .form-field {
     position: relative;
 }
-
-/* ===== GRID SPAN HELPERS ===== */
-.span-2 {
-    grid-column: span 3;
-}
-
 
 .form-field input,
 .form-field select,
@@ -111,15 +109,16 @@
 /* FLOATING LABEL */
 .form-field label {
     position: absolute;
-    top: 10%;
+    top: 5%;
     left: 20px;
     transform: translateY(-50%);
     background: #fff;
     padding: 0 6px;
-    color: blue;
-    font-size: 20px;
+    color: gray;
+    font-size: 18px;
     transition: .2s ease;
     pointer-events: none;
+    color: blue;
 }
 
 .form-field input:focus+label,
@@ -128,7 +127,7 @@
 .form-field textarea:focus+label,
 .form-field textarea:not(:placeholder-shown)+label {
     top: 3px;
-    font-size: 19px;
+    font-size: 18px;
     color: #2563eb;
 
 }
@@ -148,38 +147,26 @@
     display: flex;
     justify-content: center;
     gap: 25px;
-    margin-top: 18px;
-}
-
-
-.actions1 button {
-    background: linear-gradient(135deg, #4f46e5, #6366f1);
-    color: #fff;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 6px;
-    font-size: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s ease;
+    margin-top: 5px;
 }
 
 .actions button {
-
     padding: 12px 36px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 25x;
 }
 
 .actions button:first-child {
     background: #2563eb;
     color: #fff;
+    font-size: 25px;
 }
 
 .cancel {
     background: #9ca3af;
+    font-size: 25px;
 }
 
 /* TABLE WRAPPER */
@@ -202,18 +189,19 @@
 }
 
 .custom-table thead th {
-    font-size: 20px;
     color: #fff;
     font-weight: 600;
     padding: 14px 16px;
     text-align: left;
     background-color: blue;
+    font-size: 20px;
 }
 
 /* BODY */
 .custom-table tbody td {
     padding: 14px 16px;
     border-top: 1px solid #e5e7eb;
+    font-size: 20px;
 }
 
 /* ODD ROWS */
@@ -234,30 +222,31 @@
 }
 
 
-
 /* ACTION BUTTONS */
 .link-btn {
     background: blue;
     border: none;
-    padding: 5px 15px;
+    padding: 7px 15px;
     margin-right: 12px;
     font-weight: 600;
     cursor: pointer;
     color: white;
     border-radius: 7px;
+    font-size: 18px;
 }
 
 .link-btn.danger {
-    padding: 5px 20px;
+    padding: 7px 20px;
     margin-right: 12px;
     background-color: red;
     color: white;
     border-radius: 10px;
+    font-size: 18px;
 }
 
 .main {
     background-color: #f1f4f8;
-    padding: 10px 15px;
+    padding: 15px 15px;
     border-radius: 15px;
 }
 
@@ -298,25 +287,24 @@
 }
 
 .page-title {
-    width: 255px;
-    margin-bottom: 0px;
     font-size: 26px;
     font-weight: 700;
     background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
+
     color: white;
-    padding: 8px 25px;
-    border-radius: 10px;
+    padding: 9px 25px;
+    border-radius: 10px
 }
 
 .page-title1 {
-    font-size: 26px;
+    font-size: 27px;
     font-weight: 700;
     background: linear-gradient(135deg, #7f46ff 0%, #9d6bff 100%);
 
     color: white;
-    padding: 10px 25px;
+    padding: 8px 25px;
     border-radius: 10px;
-    width: 250px;
+    width: 300px;
     margin-top: 5px;
     margin-left: 10px;
 }
@@ -326,7 +314,7 @@ hr {
     height: 1px;
     background-color: #2563eb;
     /* blue */
-    margin: 10px 0;
+    margin: 18px 0;
 }
 
 .filters {
@@ -343,6 +331,10 @@ hr {
 
     flex-wrap: nowrap;
     overflow-x: auto;
+    margin-bottom: 10px;
+    justify-content: flex-end;
+    /* 👈 FIX */
+    gap: 14px;
 }
 
 /* ================= DATE FIELD (LABEL + INPUT) ================= */
@@ -407,7 +399,7 @@ hr {
     /* matches inputs */
     padding: 0 35px;
 
-    border-radius: 999px;
+    border-radius: 15px;
     border: none;
 
     font-size: 16px;
@@ -447,7 +439,7 @@ hr {
 /* LABEL CUTTING BORDER */
 .date-field.top-label label {
     position: absolute;
-    top: -9px;
+    top: -6px;
     /* 🔥 key line */
     left: 14px;
 
@@ -468,7 +460,7 @@ hr {
     height: 42px;
     padding: 0 14px;
 
-    font-size: 18px;
+    font-size: 15px;
 
     border-radius: 12px;
     border: 1.5px solid #cbd5e1;
@@ -532,7 +524,7 @@ hr {
     /* matches inputs */
     padding: 0 35px;
 
-    border-radius: 999px;
+    border-radius: 15px;
     border: none;
 
     font-size: 20px;
@@ -571,7 +563,7 @@ hr {
         align-items: stretch;
         /* full width */
         gap: 12px;
-
+        margin-top: -15px;
         overflow-x: hidden;
         /* ❌ remove scroll */
         flex-wrap: wrap;
@@ -605,11 +597,12 @@ hr {
     padding: 10px 0px;
 }
 
+
 .section-header th {
     background-color: blue;
     /* or blue */
     color: white;
-    text-align: center;
+    text-align: start;
 }
 
 .modal-footer {
@@ -625,6 +618,7 @@ hr {
 .level-text {
     font-size: 20px;
     padding: 15px;
+    text-align: center;
 }
 
 .modal-header {
@@ -675,7 +669,6 @@ hr {
     opacity: 0.4;
     cursor: not-allowed;
 }
-
 
 /* ================= IMPORT MODAL BACKDROP ================= */
 
@@ -737,167 +730,427 @@ hr {
     border-top: 1px solid #e5e7eb;
 }
 
-/* ================= AUTOCLAVE MOBILE FIX (MATCH PRODUCTION + CASTING) ================= */
-@media (max-width: 768px) {
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 24px;
+}
 
-    /* HEADER */
+.pagination button {
+    padding: 8px 20px;
+    border-radius: 999px;
+    border: none;
+    font-weight: 600;
+    color: white;
+    background-color: #1e40af;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* ================= FINAL MOBILE TABLE + HEADER FIX ================= */
+@media (max-width: 768px) {
 
     .header {
         flex-direction: row;
+        /* keep in same line */
+        align-items: center;
         justify-content: space-between;
-        gap: 8px;
-        margin: 5px 15px;
+        gap: 10px;
+        margin-bottom: 12px;
     }
 
     .page-title {
         font-size: 18px;
-        padding: 6px 10px;
-        width: auto;
+        padding: 9px 10px;
+        border-radius: 10px;
+        line-height: 1.2;
         white-space: nowrap;
+        margin-top: 16px;
     }
 
     .add-btn {
-        padding: 11px 21px;
-        font-size: 20px;
+        margin-top: -16px;
+        padding: 8px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        /* increased */
+        border-radius: 10px;
+        white-space: nowrap;
     }
 
-    /* FILTERS */
-
-    .filters {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 12px;
-        overflow-x: hidden !important;
-        padding: 13px 0px;
-
-
+    /* TABLE SCROLL FIX */
+    .table,
+    .custom-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
     }
 
-    .date-field.top-label,
-    .filters select,
-    .filters input[type="date"],
-    .clear-btn {
-        width: 100% !important;
-        min-width: 100% !important;
+    .custom-table thead th,
+    .custom-table tbody td {
+        min-width: 120px;
     }
 
-    .clear-btn {
+    /* First column slightly wider */
+    .custom-table thead th:first-child,
+    .custom-table tbody td:first-child {
+        min-width: 140px;
+    }
+
+    /* Pagination spacing */
+    .pagination {
+        margin-top: 12px;
+        gap: 8px;
+    }
+
+    .pagination button {
+        padding: 10px 15px;
         font-size: 25px;
     }
 
-    .date-field.top-label {
-        font-size: 16px;
+    .pagination span {
+        font-size: 25px;
     }
 
-    /* TABLE SCROLL */
+    /* Reduce card padding */
+    .main {
+        padding: 0px;
+    }
 
-    table.custom-table {
+    /* Modal tables scroll */
+    .modal-body table {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
     }
 
-    table.custom-table thead th,
-    table.custom-table tbody td {
-        min-width: 130px;
-    }
-
-    /* MAIN */
-
     .container {
-        padding: 10px 5px 40px 5px;
+        padding: 10px;
     }
 
-    .main {
-        padding: 8px;
+    .filters {
+        padding: 5px 0px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* FORM CARD */
+    form.card {
+        padding: 12px;
     }
 
-    /* FORM HEADER */
-
+    /* HEADER ROW STACK */
     .row-header {
         grid-template-columns: 1fr !important;
         gap: 12px;
     }
 
-    .page-title1 {
-        width: 100%;
-        margin-left: 0;
-        display: flex;
-        justify-content: center;
-    }
-
-    /* FORM ROWS → SINGLE COLUMN */
-
+    /* ALL FORM ROWS → SINGLE COLUMN */
+    .row-1,
     .row-3,
-    .row-4,
-    .row-30 {
+    .row-4 {
+        display: grid !important;
         grid-template-columns: 1fr !important;
         gap: 12px;
     }
 
-    /* INPUTS FULL WIDTH */
+    /* TOTAL SOLID GRID FIX */
+    .total-layout {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+    }
 
+    .total-solid {
+        grid-row: auto;
+    }
+
+    /* INPUTS FULL WIDTH */
     .form-field input,
     .form-field select,
     .form-field textarea {
         width: 100%;
-        font-size: 16px;
+        font-size: 18px;
         padding: 10px;
     }
 
-    /* REMARK SPAN RESET */
+    /* LABEL SIZE */
+    .form-field label {
+        font-size: 20px;
+    }
 
-    .span-2 {
+    /* TOTAL SOLID HEIGHT */
+    .total-solid input {
+        min-height: 50px;
+        font-size: 15px;
+    }
+
+    /* PRODUCTION TIME */
+    .production-time {
         grid-column: auto;
     }
 
-    /* ADD WAGON BUTTON */
-
-    .actions1 button {
-        width: 100%;
-    }
-
-    /* WAGON TABLE */
-
-    .custom-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
     /* ACTION BUTTONS */
-
     .actions {
-        flex-direction: row;
-        gap: 10px;
-        display: flex;
-        align-items: center;
-        margin: 5px 15px;
-    }
-
-    .actions button {
-
-        width: 60%;
-        font-size: 18px;
-    }
-
-    /* MODAL TABLE */
-
-    .modal-body table,
-    .table1 {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-    /* MODAL FOOTER */
-
-    .modal-footer {
         flex-direction: column;
         gap: 10px;
     }
 
-    .modal-footer .btn {
+    .header .add-btn {
+        margin-top: 0;
+        padding: 10px 10px;
+
+        font-size: 16px;
+
+        font-weight: 700;
+
+        border-radius: 10px;
+        white-space: nowrap;
+    }
+
+    .actions button {
+        width: 100%;
+        font-size: 25px;
+        padding: 10px;
+    }
+
+    /* REMOVE NEGATIVE MARGIN */
+    .add-btn {
+        margin-top: 0;
+    }
+
+    .mobile-dropdown {
+        width: 100%;
+    }
+
+    .dropdown-toggle-btn {
+        width: 100%;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        background: white;
+        font-size: 15px;
+        text-align: left;
+        padding: 0 14px;
+    }
+
+    .dropdown-menu {
+        width: 100%;
+    }
+
+
+    .modal-header {
+        display: flex !important;
+        justify-content: flex-start !important;
+        /* 🔥 force left */
+        align-items: flex-start !important;
+        padding-left: 10px !important;
+        /* 🔥 remove bootstrap offset */
+        padding-right: 40px !important;
+        position: relative;
+    }
+
+    .modal-header-big {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        /* 🔥 text left */
+        justify-content: flex-start;
+
+        width: 100%;
+        margin: 0 !important;
+        /* 🔥 remove centering */
+        padding: 0 !important;
+
+        gap: 6px;
+        white-space: normal;
+        /* 🔥 allow wrap */
+    }
+
+    .modal-header-big .modal-title,
+    .modal-header-big .meta-text {
+        text-align: left;
+        /* 🔥 hard left */
+        width: 100%;
+    }
+
+    /* Close button absolute top-right */
+    .btn-close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        margin: 0;
+    }
+
+    .custom-table {
+        border-collapse: collapse;
+        /* important */
+    }
+
+    /* All cells */
+    .custom-table th,
+    .custom-table td {
+        border: 1px solid #2563eb;
+        font-size: 18px;
+        /* 🔥 blue column + row borders */
+    }
+
+    /* Header stronger border */
+    .custom-table thead th {
+        border: 2px solid #2563eb;
+    }
+
+    /* Body cells */
+    .custom-table tbody td {
+        border: 1px solid #93c5fd;
+    }
+
+    .tablehead th {
+        /* font-size: 14px; */
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+
+    .modal-dialog {
+        margin-top: 100px;
+    }
+}
+
+/* ================= DASHBOARD STICKY HEADER + FILTER ================= */
+
+/* Main scroll container */
+.main {
+    max-height: calc(100vh - 40px);
+    overflow: hidden;
+}
+
+/* Header sticky */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #f1f4f8;
+    padding-bottom: 10px;
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    /* 👈 FIX */
+    gap: 14px;
+    /* 👈 spacing between inputs */
+}
+
+
+/* ================= TABLE SCROLL ================= */
+
+.table-wrapper {
+    max-height: calc(100vh - 200px);
+    overflow: auto;
+}
+
+/* Sticky table header */
+.custom-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+/* Horizontal scroll */
+.custom-table {
+    min-width: 900px;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+    .main {
+        max-height: 100vh;
+    }
+
+    .filters {
+        top: 50px;
+    }
+
+    .table-wrapper {
+        max-height: calc(100vh - 220px);
+    }
+
+    .custom-table {
+        min-width: 800px;
+    }
+}
+
+/* ================= SMOOTH SCROLL ================= */
+
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 6px;
+}
+
+/* ================= TOP BAR (TITLE + FILTERS SAME LINE) ================= */
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    position: sticky;
+    top: 0;
+    z-index: 60;
+
+    background: #f1f4f8;
+    padding: 10px 10px;
+}
+
+/* Filters inline */
+.top-bar .filters {
+    /* flex: 1; */
+    justify-content: flex-end;
+    margin-bottom: 0;
+}
+
+/* Title fix */
+.page-title {
+    white-space: nowrap;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+    .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .top-bar .filters {
         width: 100%;
     }
 }

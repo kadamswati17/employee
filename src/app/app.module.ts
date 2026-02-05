@@ -91,6 +91,7 @@ import { BlockSeparatingComponent } from './block-separating/block-separating.co
 // import { CubeTestComponentComponent } from './cube-test-component/cube-test-component.component';
 import { CubeTestComponent } from './cube-test-component/cube-test-component.component';
 import { RejectionComponentComponent } from './rejection-component/rejection-component.component';
+import { ProductionDashboardComponent } from './production-dashboard/production-dashboard.component';
 
 
 @NgModule({
@@ -160,7 +161,8 @@ import { RejectionComponentComponent } from './rejection-component/rejection-com
     // CastingProductionComponent,
     BlockSeparatingComponent,
     CubeTestComponent,
-    RejectionComponentComponent
+    RejectionComponentComponent,
+    ProductionDashboardComponent
   ],
   imports: [
     BrowserModule,
