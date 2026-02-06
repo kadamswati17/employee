@@ -64,20 +64,31 @@ export class CastingHallReportService {
     }
 
     approve(id: number): Observable<any> {
+
+        const userId = Number(localStorage.getItem('userId')); // 🔥 FIX
+        const role = localStorage.getItem('role');
+
         return this.http.put(
-            `${this.baseUrl}/${id}/approve`,
+            `${this.baseUrl}/${id}/approve?userId=${userId}&role=${role}`,
             {},
             this.getAuthHeaders()
         );
     }
 
     reject(id: number, reason: string): Observable<any> {
+
+        const userId = Number(localStorage.getItem('userId')); // 🔥 FIX
+        const role = localStorage.getItem('role');
+
         return this.http.post(
-            `${this.baseUrl}/reject/${id}`,
+            `${this.baseUrl}/reject/${id}?userId=${userId}&role=${role}`,
             { reason },
             this.getAuthHeaders()
         );
     }
+
+
+
 
     importCasting(payload: any) {
         return this.http.post<CastingImportResponse>(

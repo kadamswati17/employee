@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { WireCuttingReportService } from '../services/WireCuttingReportService';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -53,7 +54,8 @@ export class AutoclaveComponent implements OnInit {
     private fb: FormBuilder,
     private service: AutoclaveService,
     private wireCuttingService: WireCuttingReportService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) { }
 
   // ================= INIT =================
@@ -127,6 +129,9 @@ export class AutoclaveComponent implements OnInit {
       wBatch: '',
       wSize: ''
     });
+  }
+  goToDashboard() {
+    this.router.navigate(['/production-dashboard']);
   }
 
 

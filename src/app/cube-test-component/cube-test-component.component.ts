@@ -7,6 +7,7 @@ import autoTable from 'jspdf-autotable';
 import { BlockSeparatingService } from '../services/BlockSeparatingService';
 import { AuthService } from '../services/auth.service';
 import * as bootstrap from 'bootstrap';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -38,7 +39,9 @@ export class CubeTestComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private service: CubeTestService,
     private auth: AuthService,
-    private blockService: BlockSeparatingService) { }
+    private blockService: BlockSeparatingService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
 
@@ -79,6 +82,10 @@ export class CubeTestComponent implements OnInit {
       this.filtered = [...r];
       this.setupPagination();
     });
+  }
+
+  goToDashboard() {
+    this.router.navigate(['/production-dashboard']);
   }
 
   // ================= PAGINATION =================

@@ -5,8 +5,16 @@
 
         <div class="header">
             <h2 class="page-title">Casting Hall Report</h2>
-            <button class="add-btn" (click)="openForm()">+ Add Report</button>
+
+            <div>
+                <button class="add-btn" (click)="openForm()">+ Add Report</button>
+
+                <button class="add-btn" style="margin-left:10px" (click)="goToDashboard()">
+                    Go To Dashboard
+                </button>
+            </div>
         </div>
+
 
         <!-- FILTER BAR -->
         <div class="filters">

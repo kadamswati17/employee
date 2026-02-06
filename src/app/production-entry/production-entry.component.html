@@ -3,11 +3,18 @@
     <!-- ================= LIST VIEW ================= -->
     <div class="main" *ngIf="!showForm">
 
-        <!-- HEADER -->
         <div class="header">
             <h2 class="page-title">Production Register</h2>
-            <button class="add-btn" (click)="openForm()">+ Add Production</button>
+
+            <div>
+                <button class="add-btn" (click)="openForm()">+ Add Production</button>
+
+                <button class="add-btn" style="margin-left:10px" (click)="goToDashboard()">
+                    Go To Dashboard
+                </button>
+            </div>
         </div>
+
 
         <!-- 🔵 FILTER BAR (SAME AS PROJECT UI) -->
         <div class="filters">

@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-production-entry',
@@ -49,7 +50,8 @@ export class ProductionEntryComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: ProductionService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -801,5 +803,10 @@ export class ProductionEntryComponent implements OnInit {
     if (event.target.value === 'excel') fileInput.click();
     event.target.value = '';
   }
+
+  goToDashboard() {
+    this.router.navigate(['/production-dashboard']);
+  }
+
 
 }

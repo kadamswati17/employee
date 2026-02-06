@@ -1,13 +1,19 @@
 <div class="container">
 
-    <!-- ================= LIST VIEW HEADER ================= -->
     <div class="header" *ngIf="!showForm">
         <h2 class="page-title">Autoclave Cycle</h2>
 
-        <button class="add-btn" (click)="openForm()">
-            + Add Cycle
-        </button>
+        <div>
+            <button class="add-btn" (click)="openForm()">
+                + Add Cycle
+            </button>
+
+            <button class="add-btn" style="margin-left:10px" (click)="goToDashboard()">
+                Go To Dashboard
+            </button>
+        </div>
     </div>
+
 
 
     <!-- ================= LIST VIEW ================= -->

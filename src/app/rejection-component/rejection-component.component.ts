@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 
 
@@ -37,7 +38,9 @@ export class RejectionComponentComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private service: RejectionService,
     private auth: AuthService,
-    private cubeTestService: CubeTestService) { }
+    private cubeTestService: CubeTestService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
 
@@ -85,6 +88,9 @@ export class RejectionComponentComponent implements OnInit {
     });
   }
 
+  goToDashboard() {
+    this.router.navigate(['/production-dashboard']);
+  }
 
 
   onBatchSelect(event: any) {

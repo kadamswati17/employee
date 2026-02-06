@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CastingHallReportService } from '../services/CastingHallReportService';
 import { ProductionService } from '../services/ProductionService';
 import * as bootstrap from 'bootstrap';
+import { Router } from '@angular/router';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -58,7 +59,8 @@ export class CastingHallReportComponent implements OnInit {
     private fb: FormBuilder,
     private service: CastingHallReportService,
     private productionService: ProductionService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) { }
 
   // ================= INIT =================
@@ -105,6 +107,9 @@ export class CastingHallReportComponent implements OnInit {
     });
   }
 
+  goToDashboard() {
+    this.router.navigate(['/production-dashboard']);
+  }
 
   // ================= LOAD =================
   loadProductionBatches() {
@@ -435,8 +440,8 @@ export class CastingHallReportComponent implements OnInit {
   }
 
 
-  // ================= ACTIONS =================
   approveCasting() {
+
     this.service.approve(this.selectedCasting.id).subscribe(() => {
       alert('Approved successfully');
       this.reloadSelectedCasting();
@@ -445,6 +450,7 @@ export class CastingHallReportComponent implements OnInit {
   }
 
   rejectCasting() {
+
     const reason = prompt('Enter rejection reason');
     if (!reason) return;
 
@@ -454,6 +460,10 @@ export class CastingHallReportComponent implements OnInit {
       this.loadReports();
     });
   }
+
+
+
+
 
   reloadSelectedCasting() {
     this.service.getById(this.selectedCasting.id).subscribe(res => {

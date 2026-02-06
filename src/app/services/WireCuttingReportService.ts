@@ -36,12 +36,32 @@ export class WireCuttingReportService {
     }
 
     approve(id: number) {
-        return this.http.put(`${this.baseUrl}/${id}/approve`, {}, this.getAuthHeaders());
+
+        const userId = Number(localStorage.getItem('userId'));
+        const role = localStorage.getItem('role');
+        const username = localStorage.getItem('username');
+
+        return this.http.put(
+            `${this.baseUrl}/${id}/approve?userId=${userId}&role=${role}&username=${username}`,
+            {},
+            this.getAuthHeaders()
+        );
     }
 
+
     reject(id: number, reason: string) {
-        return this.http.post(`${this.baseUrl}/${id}/reject`, { reason }, this.getAuthHeaders());
+
+        const userId = Number(localStorage.getItem('userId'));
+        const role = localStorage.getItem('role');
+        const username = localStorage.getItem('username');
+
+        return this.http.post(
+            `${this.baseUrl}/${id}/reject?userId=${userId}&role=${role}&username=${username}`,
+            { reason },
+            this.getAuthHeaders()
+        );
     }
+
 
     importWireCutting(payload: any) {
         return this.http.post(

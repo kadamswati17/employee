@@ -48,6 +48,7 @@ export class AuthService {
           localStorage.setItem('token', response.token);
           localStorage.setItem('role', response.role);
           localStorage.setItem('username', response.username);
+          localStorage.setItem('userId', response.id);
 
           this.loginStatus.next(true);
         }

@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-block-separating',
@@ -41,7 +42,8 @@ export class BlockSeparatingComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: BlockSeparatingService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -81,6 +83,10 @@ export class BlockSeparatingComponent implements OnInit {
       time: row.time,
       remark: row.remark
     });
+  }
+
+  goToDashboard() {
+    this.router.navigate(['/production-dashboard']);
   }
 
   loadList() {

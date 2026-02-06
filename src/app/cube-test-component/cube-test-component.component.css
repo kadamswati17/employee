@@ -50,11 +50,11 @@
 
 .toggle-btn {
     padding: 15px 25px;
-    border-radius: 999px;
+    border-radius: 15px;
     border: none;
     font-weight: 600;
     color: white;
-    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    background: linear-gradient(135deg, #205a28, #255e38);
     cursor: pointer;
     font-size: 25px;
     margin-right: 15px;

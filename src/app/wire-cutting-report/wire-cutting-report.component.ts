@@ -4,6 +4,7 @@ import { WireCuttingReportService } from '../services/WireCuttingReportService';
 import { ProductionService } from '../services/ProductionService';
 import * as bootstrap from 'bootstrap';
 import { CastingHallReportService } from '../services/CastingHallReportService';
+import { Router } from '@angular/router';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -66,7 +67,8 @@ export class WireCuttingReportComponent implements OnInit {
     private service: WireCuttingReportService,
     private productionService: ProductionService,
     private castingService: CastingHallReportService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -126,6 +128,9 @@ export class WireCuttingReportComponent implements OnInit {
     this.castingService.getAll().subscribe(res => {
       this.castingList = res || [];
     });
+  }
+  goToDashboard() {
+    this.router.navigate(['/production-dashboard']);
   }
 
 
