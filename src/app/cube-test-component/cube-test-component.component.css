@@ -1021,4 +1021,39 @@ button {
     .lead-card .filters select {
         height: 48px !important;
     }
+
+    /* ================= MOBILE HEADER FIX ================= */
+
+    .lead-card .header {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px;
+        padding: 10px 0;
+    }
+
+    .lead-card .title {
+        font-size: 25px;
+        padding: 6px 18px;
+        width: auto;
+        white-space: nowrap;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .lead-card .header>div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .toggle-btn {
+        flex: 1;
+        padding: 10px;
+        font-size: 18px;
+        margin: 0 !important;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+
 }

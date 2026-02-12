@@ -838,7 +838,7 @@ hr {
     }
 
     .filters {
-        padding: 5px 0px;
+        padding: 18px 0px;
     }
 }
 
@@ -901,7 +901,7 @@ hr {
 
     /* ACTION BUTTONS */
     .actions {
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
     }
 
@@ -1026,5 +1026,48 @@ hr {
 
     .modal-dialog {
         margin-top: 100px;
+    }
+}
+
+/* ================= MOBILE HEADER FIX ONLY ================= */
+@media (max-width: 768px) {
+
+    .header {
+        flex-direction: column !important;
+        /* stack heading + buttons */
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+
+    .page-title {
+        font-size: 18px;
+        white-space: nowrap;
+        margin: 0 auto;
+        /* 🔥 center horizontally */
+        text-align: center;
+        /* 🔥 center text */
+        display: block;
+        /* ensure full width behavior */
+        width: fit-content;
+        /* shrink to content */
+    }
+
+    .header>div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        /* buttons in one row */
+        gap: 10px;
+        margin-top: 0px;
+    }
+
+    .add-btn {
+        flex: 1;
+        /* equal width buttons */
+        padding: 8px 10px;
+        font-size: 14px;
+        margin-top: 0 !important;
+        /* remove negative margin */
+        white-space: nowrap;
     }
 }

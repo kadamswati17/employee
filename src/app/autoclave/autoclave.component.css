@@ -900,4 +900,38 @@ hr {
     .modal-footer .btn {
         width: 100%;
     }
+
+    /* ================= MOBILE HEADER FIX ================= */
+
+    .header {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px;
+        margin: 10px 0;
+    }
+
+    .page-title {
+        font-size: 18px;
+        padding: 6px 12px;
+        width: auto;
+        white-space: nowrap;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .header>div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .add-btn {
+        flex: 1;
+        padding: 10px;
+        font-size: 18px;
+        margin: 0 !important;
+        white-space: nowrap;
+    }
+
 }

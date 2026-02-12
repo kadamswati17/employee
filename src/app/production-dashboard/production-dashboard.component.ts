@@ -1,9 +1,5 @@
-
 import { Component, OnInit } from '@angular/core';
-import { Production } from '../models/production.model';
 import { ProductionDashboardService } from '../services/productiondashboardservice';
-// import { ProductionDashboardService } from './production-dashboard.service';
-// import { Production } from './production.model';
 
 @Component({
   selector: 'app-production-dashboard',
@@ -14,9 +10,15 @@ export class ProductionDashboardComponent implements OnInit {
 
   rows: any[] = [];
   filteredRows: any[] = [];
+  paginatedRows: any[] = [];
 
   fromDate = '';
   toDate = '';
+
+  // 🔥 Pagination Variables
+  currentPage = 1;
+  pageSize = 8;   // rows per page
+  totalPages = 2;
 
   constructor(private service: ProductionDashboardService) { }
 
@@ -27,7 +29,7 @@ export class ProductionDashboardComponent implements OnInit {
   load() {
     this.service.getDashboard().subscribe(res => {
 
-      // hide fully approved
+      // Hide fully approved rows
       this.rows = res.filter((r: any) =>
         !(r.approvalTimeL1 &&
           r.approvalTimeL2 &&
@@ -39,19 +41,47 @@ export class ProductionDashboardComponent implements OnInit {
       );
 
       this.filteredRows = [...this.rows];
+      this.setupPagination();
     });
+  }
+
+  // 🔥 Setup Pagination
+  setupPagination() {
+    this.totalPages = Math.ceil(this.filteredRows.length / this.pageSize);
+    this.currentPage = 1;
+    this.updatePaginatedRows();
+  }
+
+  // 🔥 Update Current Page Data
+  updatePaginatedRows() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedRows = this.filteredRows.slice(start, end);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedRows();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedRows();
+    }
   }
 
   applyFilters() {
 
-    // 🔴 validation first
     if (this.fromDate && this.toDate) {
       const fromCheck = new Date(this.fromDate).getTime();
       const toCheck = new Date(this.toDate).getTime();
 
       if (toCheck < fromCheck) {
         alert('To Date cannot be less than From Date');
-        this.toDate = '';           // optional: clear To Date
+        this.toDate = '';
         return;
       }
     }
@@ -67,14 +97,14 @@ export class ProductionDashboardComponent implements OnInit {
 
       return (!from || d >= from) && (!to || d <= to);
     });
+
+    this.setupPagination();
   }
 
   clear() {
     this.fromDate = '';
     this.toDate = '';
     this.filteredRows = [...this.rows];
+    this.setupPagination();
   }
-
 }
-
-

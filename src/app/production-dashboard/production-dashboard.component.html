@@ -44,7 +44,8 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let row of filteredRows">
+                    <tr *ngFor="let row of paginatedRows">
+
 
                         <td>{{ row.batchNo }}</td>
 
@@ -61,6 +62,21 @@
 
             </table>
         </div>
+        <div class="pagination">
+
+
+            <button (click)="prevPage()" [disabled]="currentPage === 1">
+                ⬅ Prev
+            </button>
+
+            <span>{{ currentPage }} / {{ totalPages }}</span>
+
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+                Next ➡
+            </button>
+
+        </div>
+
 
     </div>
 
