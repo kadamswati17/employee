@@ -66,15 +66,29 @@ export class CityMasterComponent implements OnInit {
 
     const talukaId = this.form.value.talukaId;
 
-    this.service.addCity(payload, talukaId).subscribe(() => {
-      alert(this.isEdit ? 'City Updated' : 'City Saved');
+    if (this.isEdit && this.editId) {
 
-      this.reset();
+      this.service.updateCity(payload, this.editId, talukaId)
+        .subscribe(() => {
+          alert('City Updated');
+          this.afterSave(talukaId);
+        });
 
-      // reload same taluka cities
-      this.form.patchValue({ talukaId });
-      this.onTalukaChange();
-    });
+    } else {
+
+      this.service.addCity(payload, talukaId)
+        .subscribe(() => {
+          alert('City Saved');
+          this.afterSave(talukaId);
+        });
+
+    }
+  }
+
+  afterSave(talukaId: number) {
+    this.reset();
+    this.form.patchValue({ talukaId });
+    this.onTalukaChange();
   }
 
   // ================= EDIT =================
@@ -103,6 +117,18 @@ export class CityMasterComponent implements OnInit {
     this.page = page;
     const start = (page - 1) * this.pageSize;
     this.paginatedCities = this.cities.slice(start, start + this.pageSize);
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages()) {
+      this.setPage(this.page + 1);
+    }
+  }
+
+  prevPage(): void {
+    if (this.page > 1) {
+      this.setPage(this.page - 1);
+    }
   }
 
   totalPages(): number {

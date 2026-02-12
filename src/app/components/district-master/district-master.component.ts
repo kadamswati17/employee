@@ -33,23 +33,18 @@ export class DistrictMasterComponent implements OnInit {
     });
 
     this.loadStates();
-    // this.loadDistricts();
   }
 
+  // ================= LOAD STATES =================
   loadStates(): void {
     this.service.getStates().subscribe(res => {
       this.states = res;
     });
   }
 
-  loadDistricts(): void {
-    this.service.getAllDistricts().subscribe((res: any[]) => {
-      this.districts = res.sort((a, b) => b.id - a.id);
-      this.setPage(1);
-    });
-  }
-
+  // ================= SUBMIT =================
   onSubmit(): void {
+
     if (this.form.invalid) return;
 
     const payload = {
@@ -58,13 +53,32 @@ export class DistrictMasterComponent implements OnInit {
 
     const stateId = this.form.value.stateId;
 
-    this.service.addDistrict(payload, stateId).subscribe(() => {
-      alert(this.isEdit ? 'District Updated' : 'District Added');
-      this.reset();
-      // this.loadDistricts();
-    });
+    if (this.isEdit && this.editId) {
+
+      this.service.updateDistrict(payload, this.editId, stateId)
+        .subscribe(() => {
+          alert("District Updated");
+          this.afterSave(stateId);
+        });
+
+    } else {
+
+      this.service.addDistrict(payload, stateId)
+        .subscribe(() => {
+          alert("District Added");
+          this.afterSave(stateId);
+        });
+    }
   }
 
+  // ================= AFTER SAVE =================
+  afterSave(stateId: number) {
+    this.reset();
+    this.form.patchValue({ stateId });
+    this.onStateChange();
+  }
+
+  // ================= EDIT =================
   edit(d: any): void {
     this.isEdit = true;
     this.editId = d.id;
@@ -75,18 +89,25 @@ export class DistrictMasterComponent implements OnInit {
     });
   }
 
+  // ================= RESET =================
   reset(): void {
     this.form.reset();
     this.isEdit = false;
     this.editId = null;
   }
 
+  // ================= PAGINATION =================
   setPage(page: number): void {
     this.page = page;
     const start = (page - 1) * this.pageSize;
     this.paginated = this.districts.slice(start, start + this.pageSize);
   }
 
+  totalPages(): number {
+    return Math.ceil(this.districts.length / this.pageSize);
+  }
+
+  // ================= FILTER BY STATE =================
   onStateChange(): void {
     const stateId = this.form.get('stateId')?.value;
     if (!stateId) return;
@@ -96,10 +117,15 @@ export class DistrictMasterComponent implements OnInit {
       this.setPage(1);
     });
   }
-
-  totalPages(): number {
-    return Math.ceil(this.districts.length / this.pageSize);
+  nextPage(): void {
+    if (this.page < this.totalPages()) {
+      this.setPage(this.page + 1);
+    }
   }
 
-
+  prevPage(): void {
+    if (this.page > 1) {
+      this.setPage(this.page - 1);
+    }
+  }
 }

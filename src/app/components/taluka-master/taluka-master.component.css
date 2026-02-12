@@ -414,3 +414,56 @@ td {
         min-width: 700px;
     }
 }
+
+.pagination span {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* ================= PAGINATION – FINAL FIX ================= */
+.pagination {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+/* BUTTONS */
+.pagination button {
+    padding: 8px 22px;
+    border-radius: 999px;
+    border: none;
+    font-weight: 600;
+    font-size: 20px;
+
+    background-color: #1e40af;
+    /* BLUE */
+    color: #ffffff;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* HOVER */
+.pagination button:hover:not(:disabled) {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
+
+/* DISABLED */
+.pagination button:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* PAGE TEXT */
+.pagination span {
+    font-weight: 600;
+    font-size: 15px;
+    color: #0f172a;
+    font-size: 20px;
+}

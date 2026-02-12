@@ -53,6 +53,25 @@ export class LocationService {
             this.publicHeaders()
         );
     }
+    updateCity(data: any, id: number, talukaId: number): Observable<any> {
+        return this.http.put(
+            `${this.baseUrl}/cities/${id}/${talukaId}`,
+            data,
+            this.authHeaders()
+        );
+    }
+    updateState(data: any, id: number) {
+        return this.http.put(`${this.baseUrl}/states/${id}`, data, this.authHeaders());
+    }
+
+    updateDistrict(data: any, id: number, stateId: number) {
+        return this.http.put(`${this.baseUrl}/districts/${id}/${stateId}`, data, this.authHeaders());
+    }
+
+    updateTaluka(data: any, id: number, districtId: number) {
+        return this.http.put(`${this.baseUrl}/talukas/${id}/${districtId}`, data, this.authHeaders());
+    }
+
 
     getCities(talukaId: number): Observable<any[]> {
         return this.http.get<any[]>(
