@@ -81,18 +81,23 @@ export class WireCuttingReportComponent implements OnInit {
     this.form = this.fb.group({
       cuttingDate: [today, Validators.required],
       batchNo: ['', Validators.required],
-      mouldNo: [0],
-      size: [0],
-      ballTestMm: [0],
-      time: [''],
+      mouldNo: [0, Validators.required],
+      size: [0, Validators.required],
+      ballTestMm: [0, Validators.required],
+      time: ['', Validators.required],
       otherReason: ['']
     });
+
 
     this.load();
     this.loadProduction();
     this.loadCasting();
   }
 
+  isInvalid(controlName: string) {
+    const control = this.form.get(controlName);
+    return control?.touched && control?.invalid;
+  }
 
   private buildMergedExportData() {
     return this.filteredList.map(cutting => {

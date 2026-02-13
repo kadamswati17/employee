@@ -72,12 +72,15 @@ export class CastingHallReportComponent implements OnInit {
     this.filterToDate = today;
 
     this.reportForm = this.fb.group({
-      reportDate: [today],
+      reportDate: [today, Validators.required],
       batchNo: ['', Validators.required],
-      size: [0],
-      bedNo: [0],
-      mouldNo: [0],
-      castingTime: [''],
+
+      size: [0, Validators.required],
+      bedNo: [0, Validators.required],
+      mouldNo: [0, Validators.required],
+
+      castingTime: ['', Validators.required],
+
       consistency: [0],
       flowInCm: [0],
       castingTempC: [0],
@@ -88,6 +91,7 @@ export class CastingHallReportComponent implements OnInit {
       hTime: [0],
       remark: ['']
     });
+
 
     this.loadReports();
     this.loadProductionBatches();
@@ -234,10 +238,17 @@ export class CastingHallReportComponent implements OnInit {
   }
 
   submit() {
+
+    if (this.reportForm.invalid) {
+      this.reportForm.markAllAsTouched();
+      return;
+    }
+
     const userId = this.auth.getLoggedInUserId();
+
     const payload = {
       ...this.reportForm.value,
-      userId: userId,
+      userId,
       branchId: 1,
       orgId: 1
     };
@@ -249,8 +260,13 @@ export class CastingHallReportComponent implements OnInit {
     req$.subscribe(() => {
       this.showForm = false;
       this.editId = null;
-      this.loadReports();           // ✅ refresh table
+      this.loadReports();
     });
+  }
+
+  isInvalid(controlName: string) {
+    const control = this.reportForm.get(controlName);
+    return control?.touched && control?.invalid;
   }
 
 

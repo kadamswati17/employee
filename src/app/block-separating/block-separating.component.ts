@@ -111,6 +111,10 @@ export class BlockSeparatingComponent implements OnInit {
     });
   }
 
+  isInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return !!(control && control.touched && control.invalid);
+  }
 
   updatePagination() {
     this.totalPages = Math.ceil(this.filteredList.length / this.pageSize);

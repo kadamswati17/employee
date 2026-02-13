@@ -1006,3 +1006,14 @@ button {
     }
 
 }
+
+.invalid input,
+.invalid select {
+    border: 2px solid red !important;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+}

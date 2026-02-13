@@ -92,5 +92,11 @@ export class ProductionService {
         );
     }
 
+    getDashboard(): Observable<any> {
+        return this.http.get(
+            `${this.baseUrl}/dashboard`,
+            this.getAuthHeaders()
+        );
+    }
 
 }

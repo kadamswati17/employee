@@ -66,6 +66,7 @@
                         <td class="clickable" (click)="openModal(r)">
                             {{ r.batchNo }}
                         </td>
+
                         <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
                         <td>{{ r.cuttingDate | date:'dd-MM-yyyy' }}</td>
                         <td>{{ r.mouldNo }}</td>
@@ -109,64 +110,80 @@
 
         <div class="row row-header">
             <h2 class="page-title1">Wire Cutting Report</h2>
-            <div class="form-field date">
+
+            <div class="form-field date" [ngClass]="{'invalid': isInvalid('cuttingDate')}">
                 <input type="date" formControlName="cuttingDate">
                 <label>Date</label>
+                <div class="error" *ngIf="isInvalid('cuttingDate')">Fill this field</div>
             </div>
+
             <div></div>
         </div>
 
         <hr>
 
         <div class="row row-3">
-            <div class="form-field">
+
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('batchNo')}">
                 <select formControlName="batchNo">
                     <option value="" disabled></option>
-                    <option *ngFor="let p of productionList" [value]="p.batchNo">{{ p.batchNo }}</option>
+                    <option *ngFor="let p of productionList" [value]="p.batchNo">
+                        {{ p.batchNo }}
+                    </option>
                 </select>
                 <label>Batch No</label>
+                <div class="error" *ngIf="isInvalid('batchNo')">Fill this field</div>
             </div>
 
-            <div class="form-field">
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('mouldNo')}">
                 <input type="number" formControlName="mouldNo">
                 <label>Mould No</label>
+                <div class="error" *ngIf="isInvalid('mouldNo')">Fill this field</div>
             </div>
 
-            <div class="form-field">
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('size')}">
                 <input type="number" formControlName="size">
                 <label>Size</label>
+                <div class="error" *ngIf="isInvalid('size')">Fill this field</div>
             </div>
 
-            <div class="form-field">
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('ballTestMm')}">
                 <input type="number" formControlName="ballTestMm">
                 <label>Ball Test (mm)</label>
+                <div class="error" *ngIf="isInvalid('ballTestMm')">Fill this field</div>
             </div>
+
         </div>
 
         <hr>
 
         <div class="row row-4">
-            <div class="form-field">
+
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('time')}">
                 <input formControlName="time">
                 <label>Time</label>
+                <div class="error" *ngIf="isInvalid('time')">Fill this field</div>
             </div>
 
             <div class="form-field textarea">
                 <textarea formControlName="otherReason"></textarea>
                 <label>Other Reason</label>
             </div>
+
             <div></div>
             <div></div>
+
         </div>
 
         <hr>
 
         <div class="actions">
-            <button type="submit">{{ editId ? 'Update' : 'Save' }}</button>
+            <button type="submit">{{ editId ? 'Update' : 'Submit' }}</button>
             <button type="button" class="cancel" (click)="cancel()">Cancel</button>
         </div>
 
     </form>
+
 </div>
 <ng-container *ngIf="showImportModal">
 

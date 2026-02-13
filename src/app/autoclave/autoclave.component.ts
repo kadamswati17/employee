@@ -62,16 +62,15 @@ export class AutoclaveComponent implements OnInit {
   ngOnInit(): void {
     const today = new Date().toISOString().substring(0, 10);
 
-    // Main Autoclave Form
     this.form = this.fb.group({
-      // autoclaveNo: ['', Validators.required],
-      runNo: [''],
-      startedAt: [''],
-      startedDate: [today],
-      completedAt: [''],
-      completedDate: [''],
+      runNo: ['', Validators.required],
+      startedAt: ['', Validators.required],
+      startedDate: [today, Validators.required],
+      completedAt: ['', Validators.required],
+      completedDate: ['', Validators.required],
       remarks: ['']
     });
+
 
     this.wagonForm = this.fb.group({
       eBatch: ['', Validators.required],
@@ -82,6 +81,7 @@ export class AutoclaveComponent implements OnInit {
       wSize: [''],
       wagons: this.fb.array([])
     });
+
     this.loadCuttingBatches();
     this.loadList();
   }
@@ -105,8 +105,18 @@ export class AutoclaveComponent implements OnInit {
     });
   }
 
+  isInvalid(form: FormGroup, control: string) {
+    const c = form.get(control);
+    return c?.touched && c?.invalid;
+  }
 
   addWagon(): void {
+
+    if (this.wagonForm.get('eBatch')?.invalid) {
+      this.wagonForm.get('eBatch')?.markAsTouched();
+      return;
+    }
+
     if (this.wagons.length >= 14) return;
 
     const wagon = this.fb.group({
@@ -120,7 +130,6 @@ export class AutoclaveComponent implements OnInit {
 
     this.wagons.push(wagon);
 
-    // clear input fields after add
     this.wagonForm.patchValue({
       eBatch: '',
       eSize: '',
@@ -130,6 +139,7 @@ export class AutoclaveComponent implements OnInit {
       wSize: ''
     });
   }
+
   goToDashboard() {
     this.router.navigate(['/production-dashboard']);
   }
@@ -240,11 +250,23 @@ export class AutoclaveComponent implements OnInit {
   }
 
   save(): void {
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    if (this.wagons.length < 1) {
+      alert('Add at least one wagon');
+      return;
+    }
+
     const userId = this.auth.getLoggedInUserId();
+
     const payload = {
       ...this.form.value,
       wagons: this.wagonForm.value.wagons,
-      userId: userId,
+      userId,
       branchId: 1,
       orgId: 1
     };
@@ -261,6 +283,7 @@ export class AutoclaveComponent implements OnInit {
       this.loadList();
     });
   }
+
 
   delete(id: number): void {
     if (confirm('Delete this autoclave cycle?')) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CubeTestService } from '../services/CubeTestService';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
@@ -48,24 +48,25 @@ export class CubeTestComponent implements OnInit {
     const today = new Date().toISOString().split('T')[0];
 
     this.form = this.fb.group({
-      batchNo: [''],
-      reportDate: [today],     // ✅ fixed name
-      castDate: [''],          // ✅ must exist
-      testingDate: [''],
-      shift: [''],
+      batchNo: ['', Validators.required],
+      reportDate: [today, Validators.required],
+      castDate: [''],
+      testingDate: ['', Validators.required],
+      shift: ['', Validators.required],
 
-      cubeDimensionImmediate: [''],
+      cubeDimensionImmediate: ['', Validators.required],
       cubeDimensionOverDry: [''],
       weightImmediateKg: [''],
       weightOverDryKg: [''],
       weightWithMoistureKg: [''],
       loadOverDryTonn: [''],
       loadMoistureTonn: [''],
-      compStrengthOverDry: [''],
+      compStrengthOverDry: ['', Validators.required],
       compStrengthMoisture: [''],
-      densityKgM3: [''],
+      densityKgM3: ['', Validators.required],
       isActive: [1]
     });
+
 
     this.load();
     this.loadBatches();
@@ -82,6 +83,10 @@ export class CubeTestComponent implements OnInit {
       this.filtered = [...r];
       this.setupPagination();
     });
+  }
+  isInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return !!(control && control.touched && control.invalid);
   }
 
   goToDashboard() {

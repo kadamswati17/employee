@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RejectionService } from '../services/RejectionService';
 import { CubeTestService } from '../services/CubeTestService';
 import * as XLSX from 'xlsx';
@@ -47,11 +47,12 @@ export class RejectionComponentComponent implements OnInit {
     const today = new Date().toISOString().split('T')[0]; // ✅ yyyy-MM-dd
 
     this.form = this.fb.group({
-      date: [today],          // 👈 default today
-      batchNo: [''],
-      shift: [''],
-      blockSize: [''],
-      qty: [''],
+      date: [today, Validators.required],
+      batchNo: ['', Validators.required],
+      shift: ['', Validators.required],
+      blockSize: ['', Validators.required],
+      qty: ['', Validators.required],
+
       cornerDamage: [0],
       eruptionType: [0],
       topSideDamages: [0],
@@ -59,9 +60,11 @@ export class RejectionComponentComponent implements OnInit {
       risingCrack: [0],
       centreCrack: [0],
       bottomUncutBlocks: [0],
+
       totalBreakages: [0],
       isActive: [1]
     });
+
 
     this.load();
     this.loadCubeTests();
@@ -80,6 +83,10 @@ export class RejectionComponentComponent implements OnInit {
     });
   }
 
+  isInvalid(controlName: string): boolean {
+    const control = this.form.get(controlName);
+    return !!(control && control.touched && control.invalid);
+  }
 
   loadCubeTests() {
     this.cubeTestService.getAll().subscribe((res: any[]) => {

@@ -1032,3 +1032,21 @@ hr {
     }
 
 }
+
+.clickable {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+.invalid input,
+.invalid select,
+.invalid textarea {
+    border: 2px solid red !important;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+}

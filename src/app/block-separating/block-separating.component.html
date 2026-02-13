@@ -79,7 +79,8 @@
 
                     <td>{{ r.batchNumber }}</td>
                     <td>{{ r.castingDate | date:'dd-MM-yyyy' }}</td>
-                    <td>{{ r.shift }}</td>
+                    <td>Shift {{ r.shift }}</td>
+
                     <td>{{ r.blockSize }}</td>
                     <td>{{ r.time }}</td>
                     <td>{{ r.remark || '—' }}</td>
@@ -123,11 +124,13 @@
         <div class="row row-header">
             <h2 class="page-title1">Block Separating Register</h2>
 
-            <div class="form-field date">
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('reportDate')}">
                 <input type="date" formControlName="reportDate">
                 <label>Date</label>
+                <div class="error" *ngIf="isInvalid('reportDate')">Fill this field</div>
             </div>
-            <div class="form-field shift">
+
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('shift')}">
                 <select formControlName="shift">
                     <option value="" disabled></option>
                     <option value="1">Shift 1</option>
@@ -136,6 +139,7 @@
                     <option value="G">General Shift</option>
                 </select>
                 <label>Shift</label>
+                <div class="error" *ngIf="isInvalid('shift')">Fill this field</div>
             </div>
 
             <div></div>
@@ -145,36 +149,41 @@
 
         <!-- ROW -->
         <div class="row row-3">
-            <div class="form-field date">
-                <input type="date" formControlName="castingDate" placeholder=" " />
+
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('castingDate')}">
+                <input type="date" formControlName="castingDate" />
                 <label>Casting Date</label>
+                <div class="error" *ngIf="isInvalid('castingDate')">Fill this field</div>
             </div>
-            <div class="form-field">
+
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('batchNumber')}">
                 <select formControlName="batchNumber">
-                    <option value="">Select Batch</option>
+                    <option value="" disabled></option>
                     <option *ngFor="let b of autoclaveBatches" [value]="b.batchNo">
                         {{ b.batchNo }}
                     </option>
                 </select>
                 <label>Batch Number</label>
-
+                <div class="error" *ngIf="isInvalid('batchNumber')">Fill this field</div>
             </div>
 
-
-            <div class="form-field">
-                <input type="text" formControlName="blockSize" placeholder=" " />
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('blockSize')}">
+                <input type="text" formControlName="blockSize" />
                 <label>Size of Block</label>
+                <div class="error" *ngIf="isInvalid('blockSize')">Fill this field</div>
             </div>
 
-            <div class="form-field">
-                <input type="number" formControlName="time" placeholder=" " />
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('time')}">
+                <input type="number" formControlName="time" />
                 <label>Time</label>
+                <div class="error" *ngIf="isInvalid('time')">Fill this field</div>
             </div>
 
             <div class="form-field textarea">
-                <textarea formControlName="remark" placeholder=" "></textarea>
+                <textarea formControlName="remark"></textarea>
                 <label>Remark</label>
             </div>
+
         </div>
 
         <hr>
@@ -182,7 +191,7 @@
         <!-- ACTIONS -->
         <div class="actions">
             <button type="submit" [disabled]="isSubmitting">
-                Save
+                {{ isEdit ? 'Update' : 'Submit' }}
             </button>
 
             <button type="button" class="cancel" (click)="cancel()">
@@ -191,5 +200,6 @@
         </div>
 
     </form>
+
 
 </div>

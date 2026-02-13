@@ -71,6 +71,7 @@
                             {{ r.batchNo }}
                         </td>
 
+
                         <td>{{ r.createdDate | date:'dd-MM-yyyy' }}</td>
                         <td>{{ r.size }}</td>
                         <td>{{ r.bedNo }}</td>
@@ -109,13 +110,14 @@
 
     <form *ngIf="showForm" [formGroup]="reportForm" (ngSubmit)="submit()" class="card">
 
-        <!-- HEADER ROW (EXACT SAME AS PRODUCTION) -->
+        <!-- HEADER -->
         <div class="row row-header">
             <h2 class="page-title1">Casting Hall Report</h2>
 
-            <div class="form-field date">
+            <div class="form-field date" [ngClass]="{'invalid': isInvalid('reportDate')}">
                 <input type="date" formControlName="reportDate">
                 <label>Date</label>
+                <div class="error" *ngIf="isInvalid('reportDate')">Fill this field</div>
             </div>
 
             <div></div>
@@ -125,37 +127,45 @@
 
         <!-- ROW 1 -->
         <div class="row row-3">
-            <div class="form-field">
+
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('batchNo')}">
                 <select formControlName="batchNo">
                     <option value="" disabled></option>
                     <option *ngFor="let p of productionList" [value]="p.batchNo">{{ p.batchNo }}</option>
                 </select>
                 <label>Batch No</label>
+                <div class="error" *ngIf="isInvalid('batchNo')">Fill this field</div>
             </div>
 
-            <div class="form-field">
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('size')}">
                 <input type="number" formControlName="size">
                 <label>Size</label>
+                <div class="error" *ngIf="isInvalid('size')">Fill this field</div>
             </div>
 
-            <div class="form-field">
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('bedNo')}">
                 <input type="number" formControlName="bedNo">
                 <label>Bed No</label>
+                <div class="error" *ngIf="isInvalid('bedNo')">Fill this field</div>
             </div>
 
-            <div class="form-field">
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('mouldNo')}">
                 <input type="number" formControlName="mouldNo">
                 <label>Mould No</label>
+                <div class="error" *ngIf="isInvalid('mouldNo')">Fill this field</div>
             </div>
+
         </div>
 
         <hr>
 
         <!-- ROW 2 -->
         <div class="row row-3">
-            <div class="form-field">
+
+            <div class="form-field" [ngClass]="{'invalid': isInvalid('castingTime')}">
                 <input formControlName="castingTime">
                 <label>Casting Time</label>
+                <div class="error" *ngIf="isInvalid('castingTime')">Fill this field</div>
             </div>
 
             <div class="form-field">
@@ -172,12 +182,14 @@
                 <input type="number" formControlName="castingTempC">
                 <label>Casting Temp °C</label>
             </div>
+
         </div>
 
         <hr>
 
         <!-- ROW 3 -->
         <div class="row row-3">
+
             <div class="form-field">
                 <input type="number" formControlName="vt">
                 <label>V.T.</label>
@@ -197,12 +209,14 @@
                 <input type="number" formControlName="testTime">
                 <label>Test Time</label>
             </div>
+
         </div>
 
         <hr>
 
         <!-- ROW 4 -->
         <div class="row row-4">
+
             <div class="form-field">
                 <input type="number" formControlName="hTime">
                 <label>H Time</label>
@@ -215,17 +229,19 @@
 
             <div></div>
             <div></div>
+
         </div>
 
         <hr>
 
         <!-- ACTIONS -->
         <div class="actions">
-            <button type="submit">{{ editId ? 'Update' : 'Save' }}</button>
+            <button type="submit">{{ editId ? 'Update' : 'Submit' }}</button>
             <button type="button" class="cancel" (click)="cancel()">Cancel</button>
         </div>
 
     </form>
+
     <!-- ================= CASTING IMPORT MODAL ================= -->
     <ng-container *ngIf="showImportModal">
 

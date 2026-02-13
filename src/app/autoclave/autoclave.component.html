@@ -97,70 +97,180 @@
     <div *ngIf="showForm">
 
         <!-- ================= AUTCLAVE FORM ================= -->
-        <form [formGroup]="form" class="card">
+        <!-- ================= FORM VIEW ================= -->
+        <div *ngIf="showForm">
 
-            <!-- HEADER -->
-            <div class="row row-header">
-                <h2 class="page-title1">Autoclave Cycle</h2>
+            <!-- ================= AUTCLAVE FORM ================= -->
+            <form [formGroup]="form" class="card">
 
-                <div class="form-field date">
-                    <input type="date" formControlName="startedDate">
-                    <label>Date</label>
+                <!-- HEADER -->
+                <div class="row row-header">
+                    <h2 class="page-title1">Autoclave Cycle</h2>
+
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid(form,'startedDate')}">
+                        <input type="date" formControlName="startedDate">
+                        <label>Date</label>
+                        <div class="error" *ngIf="isInvalid(form,'startedDate')">Fill this field</div>
+                    </div>
                 </div>
+
+                <hr>
+
+                <!-- ROW 1 -->
+                <div class="row row-3">
+
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid(form,'runNo')}">
+                        <input formControlName="runNo">
+                        <label>Run No</label>
+                        <div class="error" *ngIf="isInvalid(form,'runNo')">Fill this field</div>
+                    </div>
+
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid(form,'startedAt')}">
+                        <input formControlName="startedAt">
+                        <label>Cycle Started At</label>
+                        <div class="error" *ngIf="isInvalid(form,'startedAt')">Fill this field</div>
+                    </div>
+
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid(form,'completedAt')}">
+                        <input formControlName="completedAt">
+                        <label>Cycle Completed At</label>
+                        <div class="error" *ngIf="isInvalid(form,'completedAt')">Fill this field</div>
+                    </div>
+
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid(form,'completedDate')}">
+                        <input type="date" formControlName="completedDate">
+                        <label>Completed Date</label>
+                        <div class="error" *ngIf="isInvalid(form,'completedDate')">Fill this field</div>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- ROW 2 -->
+                <div class="row row-3">
+
+                    <div class="form-field textarea span-2">
+                        <textarea formControlName="remarks"></textarea>
+                        <label>Remarks</label>
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <!-- ================= ADD WAGON ================= -->
+            <form [formGroup]="wagonForm" class="card mt-3">
+
+                <div class="row row-30">
+
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid(wagonForm,'eBatch')}">
+                        <select formControlName="eBatch">
+                            <option value="" disabled></option>
+                            <option *ngFor="let b of availableBatches" [value]="b" [disabled]="isBatchUsed(b)">
+                                {{ b }}
+                            </option>
+                        </select>
+                        <label>E Side Batch</label>
+                        <div class="error" *ngIf="isInvalid(wagonForm,'eBatch')">Fill this field</div>
+                    </div>
+
+                    <div class="form-field">
+                        <input formControlName="eSize">
+                        <label>E Size</label>
+                    </div>
+
+                    <div class="form-field">
+                        <select formControlName="mBatch">
+                            <option value=""></option>
+                            <option *ngFor="let b of availableBatches" [value]="b" [disabled]="isBatchUsed(b)">
+                                {{ b }}
+                            </option>
+                        </select>
+                        <label>M Side Batch</label>
+                    </div>
+
+                    <div class="form-field">
+                        <input formControlName="mSize">
+                        <label>M Size</label>
+                    </div>
+
+                    <div class="form-field">
+                        <select formControlName="wBatch">
+                            <option value=""></option>
+                            <option *ngFor="let b of availableBatches" [value]="b" [disabled]="isBatchUsed(b)">
+                                {{ b }}
+                            </option>
+                        </select>
+                        <label>W Side Batch</label>
+                    </div>
+
+                    <div class="form-field">
+                        <input formControlName="wSize">
+                        <label>W Size</label>
+                    </div>
+
+                    <div class="actions1">
+                        <button type="button" (click)="addWagon()" [disabled]="wagons.length >= 14">
+                            Add Wagon
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <!-- ================= WAGON TABLE ================= -->
+            <table class="table custom-table mt-3" *ngIf="wagons.length">
+
+                <thead>
+                    <tr>
+                        <th>Wagon No</th>
+                        <th>E Batch</th>
+                        <th>E Size</th>
+                        <th>M Batch</th>
+                        <th>M Size</th>
+                        <th>W Batch</th>
+                        <th>W Size</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let w of wagons.controls; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ w.value.eBatch }}</td>
+                        <td>{{ w.value.eSize }}</td>
+                        <td>{{ w.value.mBatch }}</td>
+                        <td>{{ w.value.mSize }}</td>
+                        <td>{{ w.value.wBatch }}</td>
+                        <td>{{ w.value.wSize }}</td>
+                        <td>
+                            <button class="link-btn danger" (click)="removeWagon(i)">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+
+            <!-- ================= ACTIONS ================= -->
+            <div class="actions">
+                <button type="button" (click)="save()" [disabled]="wagons.length < 1">
+                    {{ editId ? 'Update' : 'Submit' }}
+                </button>
+
+                <button type="button" class="cancel" (click)="back()">
+                    Cancel
+                </button>
             </div>
 
-            <hr>
+        </div>
 
-            <!-- ROW 1 -->
-            <div class="row row-3">
-                <!-- <div class="form-field">
-                    <input formControlName="autoclaveNo">
-                    <label>Autoclave No</label>
-                </div> -->
-
-                <div class="form-field">
-                    <input formControlName="runNo">
-                    <label>Run No</label>
-                </div>
-
-                <div class="form-field">
-                    <input formControlName="startedAt">
-                    <label>Cycle Started At</label>
-                </div>
-
-                <div class="form-field">
-                    <input type="date" formControlName="startedDate">
-                    <label>Start Date</label>
-                </div>
-                <div class="form-field">
-                    <input formControlName="completedAt">
-                    <label>Cycle Completed At</label>
-                </div>
-            </div>
-
-
-            <hr>
-
-            <!-- ROW 2 -->
-            <!-- ROW 2 -->
-            <div class="row row-3">
-
-
-
-                <div class="form-field">
-                    <input type="date" formControlName="completedDate">
-                    <label>Completed Date</label>
-                </div>
-
-                <div class="form-field textarea span-2">
-                    <textarea formControlName="remarks"></textarea>
-                    <label>Remarks</label>
-                </div>
-
-            </div>
-
-
-        </form>
 
         <!-- ================= ADD WAGON ================= -->
         <form [formGroup]="wagonForm" class="card mt-3">
@@ -258,7 +368,7 @@
         <!-- ================= ACTIONS ================= -->
         <div class="actions">
             <button type="button" (click)="save()" [disabled]="wagons.length < 1">
-                {{ editId ? 'Update' : 'Save' }}
+                {{ editId ? 'Update' : 'Submit' }}
             </button>
 
             <button type="button" class="cancel" (click)="back()">

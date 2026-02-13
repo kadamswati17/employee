@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+// import { FormBuilder, FormGroup } from '@angular/forms't
 import { ProductionService } from '../services/ProductionService';
 import * as bootstrap from 'bootstrap';
 import { ProductionImportResponse } from '../models/ProductionImportResponse';
@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-production-entry',
@@ -71,34 +72,35 @@ export class ProductionEntryComponent implements OnInit {
     this.filterToDate = today;
 
     this.productionForm = this.fb.group({
-      shift: [''],
-      productionDate: [today],
+      shift: ['', Validators.required],
+      productionDate: ['', Validators.required],
 
-      siloNo1: [''],
-      literWeight1: [''],
-      faSolid1: [''],
+      siloNo1: ['', Validators.required],
+      literWeight1: ['', Validators.required],
+      faSolid1: ['', Validators.required],
 
       siloNo2: [''],
       literWeight2: [''],
       faSolid2: [''],
 
-      waterLiter: [''],
-      cementKg: [''],
-      limeKg: [''],
-      gypsumKg: [''],
-      solOilKg: [''],
-      aiPowerGm: [''],
-      tempC: [''],
+      waterLiter: ['', Validators.required],
+      cementKg: ['', Validators.required],
+      limeKg: ['', Validators.required],
+      gypsumKg: ['', Validators.required],
+      solOilKg: ['', Validators.required],
+      aiPowerGm: ['', Validators.required],
+      tempC: ['', Validators.required],
 
-      castingTime: [''],
-      productionTime: [''],
-      productionRemark: [''],
-      remark: [''],
+      castingTime: ['', Validators.required],
+      productionTime: ['', Validators.required],
+      productionRemark: ['', Validators.required],
+      remark: ['', Validators.required],
 
       userId: [1],
       branchId: [1],
       orgId: [1]
     });
+
 
     this.setShiftByTime();
     this.loadData();
@@ -417,6 +419,12 @@ export class ProductionEntryComponent implements OnInit {
   }
 
   submit() {
+
+
+    if (this.productionForm.invalid) {
+      this.productionForm.markAllAsTouched();
+      return;
+    }
     const userId = this.auth.getLoggedInUserId();
 
     if (!userId) {
@@ -438,6 +446,19 @@ export class ProductionEntryComponent implements OnInit {
       this.showForm = false;
       this.loadData();
     });
+
+    //     req$.subscribe(() => {
+    //   this.showForm = false;
+    //   this.loadData();
+
+    //   // 🔥 go to dashboard after save
+    //   this.router.navigate(['/production-dashboard']);
+    // });
+
+  }
+  isInvalid(controlName: string): boolean {
+    const control = this.productionForm.get(controlName);
+    return !!(control && control.touched && control.invalid);
   }
 
 

@@ -28,22 +28,15 @@ export class ProductionDashboardComponent implements OnInit {
 
   load() {
     this.service.getDashboard().subscribe(res => {
+      console.log(res);   // 🔥 keep for debug
 
-      // Hide fully approved rows
-      this.rows = res.filter((r: any) =>
-        !(r.approvalTimeL1 &&
-          r.approvalTimeL2 &&
-          r.approvalTimeL3 &&
-          r.approvalTimeL4 &&
-          r.approvalTimeL5 &&
-          r.approvalTimeL6 &&
-          r.approvalTimeL7)
-      );
+      this.rows = res;    // ❌ no filtering
 
       this.filteredRows = [...this.rows];
       this.setupPagination();
     });
   }
+
 
   // 🔥 Setup Pagination
   setupPagination() {
@@ -57,6 +50,11 @@ export class ProductionDashboardComponent implements OnInit {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
     this.paginatedRows = this.filteredRows.slice(start, end);
+  }
+  formatMinutes(min: number): string {
+    const h = Math.floor(min / 60);
+    const m = min % 60;
+    return h + 'h ' + m + 'm';
   }
 
   nextPage() {

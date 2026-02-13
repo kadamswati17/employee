@@ -1193,3 +1193,51 @@ hr {
         width: 100%;
     }
 }
+
+.diff {
+    font-weight: 600;
+    color: #0d6efd;
+    text-align: center;
+}
+
+/* ===== DASHBOARD TABLE FULL GRID BORDER ===== */
+
+.custom-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* HEADER */
+.custom-table thead th {
+    border: 2px solid #2563eb !important;
+    text-align: center;
+}
+
+/* BODY CELLS */
+.custom-table tbody td {
+    border: 1.5px solid #2563eb !important;
+    text-align: center;
+}
+
+/* REMOVE DOUBLE BORDER EFFECT */
+.custom-table thead th:first-child,
+.custom-table tbody td:first-child {
+    border-left: 2px solid #2563eb !important;
+}
+
+.custom-table thead th:last-child,
+.custom-table tbody td:last-child {
+    border-right: 2px solid #2563eb !important;
+}
+
+/* ROW HOVER KEEP BORDER */
+.custom-table tbody tr:hover td {
+    border: 1.5px solid #2563eb !important;
+}
+
+/* DIFF COLUMN ALIGN CENTER */
+.diff {
+    font-weight: 600;
+    color: #0d6efd;
+    text-align: center;
+}

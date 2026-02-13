@@ -32,13 +32,26 @@
 
                 <thead>
                     <tr>
-                        <th>Batch No</th>
+                        <th>Batch</th>
+
                         <th>Production</th>
+                        <th>↓</th>
+
                         <th>Casting</th>
+                        <th>↓</th>
+
                         <th>Cutting</th>
+                        <th>↓</th>
+
                         <th>Autoclave</th>
-                        <th>Block Seperating</th>
+                        <th>↓</th>
+
+                        <th>Block</th>
+                        <th>↓</th>
+
                         <th>Cube Test</th>
+                        <th>↓</th>
+
                         <th>Rejection</th>
                     </tr>
                 </thead>
@@ -46,22 +59,80 @@
                 <tbody>
                     <tr *ngFor="let row of paginatedRows">
 
-
+                        <!-- BATCH -->
                         <td>{{ row.batchNo }}</td>
 
-                        <td>{{ row.approvalTimeL1 || '-' }}</td>
-                        <td>{{ row.approvalTimeL2 || '-' }}</td>
-                        <td>{{ row.approvalTimeL3 || '-' }}</td>
-                        <td>{{ row.approvalTimeL4 || '-' }}</td>
-                        <td>{{ row.approvalTimeL5 || '-' }}</td>
-                        <td>{{ row.approvalTimeL6 || '-' }}</td>
-                        <td>{{ row.approvalTimeL7 || '-' }}</td>
+                        <!-- PRODUCTION -->
+                        <td>
+                            {{ row.productionTime ? (row.productionTime | date:'hh:mm a') : '-' }}
+                        </td>
+
+                        <!-- PROD → CAST DIFF -->
+                        <td class="diff">
+                            {{ row.prodToCastingDiff ? formatMinutes(row.prodToCastingDiff) : '-' }}
+                        </td>
+
+                        <!-- CASTING -->
+                        <td>
+                            {{ row.castingTime ? (row.castingTime | date:'hh:mm a') : '-' }}
+                        </td>
+
+                        <!-- CAST → CUT DIFF -->
+                        <td class="diff">
+                            {{ row.castingToCuttingDiff ? formatMinutes(row.castingToCuttingDiff) : '-' }}
+                        </td>
+
+                        <!-- CUTTING -->
+                        <td>
+                            {{ row.cuttingTime ? (row.cuttingTime | date:'hh:mm a') : '-' }}
+                        </td>
+
+                        <!-- CUT → AUTO DIFF -->
+                        <td class="diff">
+                            {{ row.cuttingToAutoclaveDiff ? formatMinutes(row.cuttingToAutoclaveDiff) : '-' }}
+                        </td>
+
+                        <!-- AUTOCLAVE -->
+                        <td>
+                            {{ row.autoclaveTime ? (row.autoclaveTime | date:'hh:mm a') : '-' }}
+                        </td>
+
+                        <!-- AUTO → BLOCK DIFF -->
+                        <td class="diff">
+                            {{ row.autoclaveToBlockDiff ? formatMinutes(row.autoclaveToBlockDiff) : '-' }}
+                        </td>
+
+                        <!-- BLOCK -->
+                        <td>
+                            {{ row.blockSeparatingTime ? (row.blockSeparatingTime | date:'hh:mm a') : '-' }}
+                        </td>
+
+                        <!-- BLOCK → CUBE DIFF -->
+                        <td class="diff">
+                            {{ row.blockToCubeDiff ? formatMinutes(row.blockToCubeDiff) : '-' }}
+                        </td>
+
+                        <!-- CUBE TEST -->
+                        <td>
+                            {{ row.cubeTestTime ? (row.cubeTestTime | date:'hh:mm a') : '-' }}
+                        </td>
+
+                        <!-- CUBE → REJECTION DIFF -->
+                        <td class="diff">
+                            {{ row.cubeToRejectionDiff ? formatMinutes(row.cubeToRejectionDiff) : '-' }}
+                        </td>
+
+                        <!-- REJECTION -->
+                        <td>
+                            {{ row.rejectionTime ? (row.rejectionTime | date:'hh:mm a') : '-' }}
+                        </td>
 
                     </tr>
                 </tbody>
 
             </table>
         </div>
+
         <div class="pagination">
 
 

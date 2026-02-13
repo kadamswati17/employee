@@ -76,7 +76,7 @@
                         <td>{{r.batchNo}}</td>
                         <td>{{r.blockSize}}</td>
                         <td>{{r.qty}}</td>
-                        <td>{{r.shift}}</td>
+                        <td>Shift {{ r.shift }}</td>
                         <td>{{r.topSideDamages}}</td>
                         <td>{{r.totalBreakages}}</td>
 
@@ -118,12 +118,15 @@
 
                 <div class="header-right">
 
-                    <div class="form-field date">
+                    <!-- DATE -->
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid('date')}">
                         <input type="date" formControlName="date">
                         <label>Date</label>
+                        <div class="error" *ngIf="isInvalid('date')">Fill this field</div>
                     </div>
 
-                    <div class="form-field shift">
+                    <!-- SHIFT -->
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid('shift')}">
                         <select formControlName="shift">
                             <option value="" disabled></option>
                             <option value="1">Shift 1</option>
@@ -132,27 +135,41 @@
                             <option value="G">General Shift</option>
                         </select>
                         <label>Shift</label>
+                        <div class="error" *ngIf="isInvalid('shift')">Fill this field</div>
                     </div>
 
                 </div>
-
             </div>
 
             <div class="grid">
 
-                <div class="form-field">
+                <!-- BATCH -->
+                <div class="form-field" [ngClass]="{'invalid': isInvalid('batchNo')}">
                     <select formControlName="batchNo" (change)="onBatchSelect($event)">
-                        <option value="">Select Batch</option>
+                        <option value="" disabled>Select Batch</option>
                         <option *ngFor="let b of cubeTests" [value]="b.batchNo">
                             {{ b.batchNo }}
                         </option>
                     </select>
                     <label>Batch No</label>
+                    <div class="error" *ngIf="isInvalid('batchNo')">Fill this field</div>
                 </div>
 
-                <div class="form-field"><input formControlName="blockSize"><label>Block Size</label></div>
-                <div class="form-field"><input formControlName="qty"><label>Qty</label></div>
+                <!-- BLOCK SIZE -->
+                <div class="form-field" [ngClass]="{'invalid': isInvalid('blockSize')}">
+                    <input formControlName="blockSize">
+                    <label>Block Size</label>
+                    <div class="error" *ngIf="isInvalid('blockSize')">Fill this field</div>
+                </div>
 
+                <!-- QTY -->
+                <div class="form-field" [ngClass]="{'invalid': isInvalid('qty')}">
+                    <input type="number" formControlName="qty">
+                    <label>Qty</label>
+                    <div class="error" *ngIf="isInvalid('qty')">Fill this field</div>
+                </div>
+
+                <!-- DAMAGES -->
                 <div class="form-field"><input type="number" formControlName="cornerDamage"><label>Corner</label></div>
                 <div class="form-field"><input type="number" formControlName="eruptionType"><label>Eruption</label>
                 </div>
@@ -166,29 +183,28 @@
                         Uncut</label></div>
 
                 <!-- TOTAL -->
-
                 <div class="form-field">
                     <input type="number" readonly [value]="
-(+form.value.cornerDamage || 0) +
-(+form.value.eruptionType || 0) +
-(+form.value.topSideDamages || 0) +
-(+form.value.sideCrackThermalCrack || 0) +
-(+form.value.risingCrack || 0) +
-(+form.value.centreCrack || 0) +
-(+form.value.bottomUncutBlocks || 0)
-">
+        (+form.value.cornerDamage || 0) +
+        (+form.value.eruptionType || 0) +
+        (+form.value.topSideDamages || 0) +
+        (+form.value.sideCrackThermalCrack || 0) +
+        (+form.value.risingCrack || 0) +
+        (+form.value.centreCrack || 0) +
+        (+form.value.bottomUncutBlocks || 0)
+      ">
                     <label>Total Breakages</label>
                 </div>
-
 
             </div>
 
             <div class="actions">
-                <button type="submit">Save</button>
+                <button type="submit">Submit</button>
                 <button type="button" (click)="backToList()">Back</button>
             </div>
 
         </form>
+
 
     </div>
 

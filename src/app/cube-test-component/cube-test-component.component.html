@@ -85,8 +85,7 @@
                         <td>{{r.compStrengthOverDry}}</td>
                         <td>{{r.cubeDimensionImmediate}}</td>
                         <td>{{r.densityKgM3}}</td>
-                        <td>{{ r.shift }}</td>
-
+                        <td>Shift {{ r.shift }}</td>
                         <td>
                             <span class="badge" [ngClass]="r.isActive ? 'active':'inactive'">
                                 {{ r.isActive ? 'Active':'Inactive' }}
@@ -127,13 +126,15 @@
 
                 <div class="header-right">
 
-                    <div class="form-field date">
+                    <!-- REPORT DATE -->
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid('reportDate')}">
                         <input type="date" formControlName="reportDate">
-
                         <label>Date</label>
+                        <div class="error" *ngIf="isInvalid('reportDate')">Fill this field</div>
                     </div>
 
-                    <div class="form-field shift">
+                    <!-- SHIFT -->
+                    <div class="form-field" [ngClass]="{'invalid': isInvalid('shift')}">
                         <select formControlName="shift">
                             <option value="" disabled></option>
                             <option value="1">Shift 1</option>
@@ -142,6 +143,7 @@
                             <option value="G">General Shift</option>
                         </select>
                         <label>Shift</label>
+                        <div class="error" *ngIf="isInvalid('shift')">Fill this field</div>
                     </div>
 
                 </div>
@@ -149,34 +151,34 @@
             </div>
 
             <hr>
+
             <div class="grid">
-                <!-- Batch Dropdown -->
-                <div class="form-field">
 
+                <!-- BATCH -->
+                <div class="form-field" [ngClass]="{'invalid': isInvalid('batchNo')}">
                     <select formControlName="batchNo" (change)="onBatchSelect($event)">
-                        <option value="">Select Batch</option>
-
+                        <option value="" disabled></option>
                         <option *ngFor="let b of batches" [value]="b.batchNumber">
                             {{ b.batchNumber }}_{{ b.castingDate | date:'dd-MM-yyyy' }}
                         </option>
-
                     </select>
-
                     <label>Batch No</label>
+                    <div class="error" *ngIf="isInvalid('batchNo')">Fill this field</div>
                 </div>
 
-                <!-- hidden castDate -->
                 <input type="hidden" formControlName="castDate">
 
-
-                <div class="form-field">
+                <!-- TESTING DATE -->
+                <div class="form-field" [ngClass]="{'invalid': isInvalid('testingDate')}">
                     <input type="date" formControlName="testingDate">
                     <label>Testing Date</label>
+                    <div class="error" *ngIf="isInvalid('testingDate')">Fill this field</div>
                 </div>
 
-                <div class="form-field">
+                <div class="form-field" [ngClass]="{'invalid': isInvalid('cubeDimensionImmediate')}">
                     <input formControlName="cubeDimensionImmediate">
                     <label>Cube Immediate</label>
+                    <div class="error" *ngIf="isInvalid('cubeDimensionImmediate')">Fill this field</div>
                 </div>
 
                 <div class="form-field">
@@ -209,9 +211,10 @@
                     <label>Load Moisture</label>
                 </div>
 
-                <div class="form-field">
+                <div class="form-field" [ngClass]="{'invalid': isInvalid('compStrengthOverDry')}">
                     <input formControlName="compStrengthOverDry">
                     <label>Strength Over Dry</label>
+                    <div class="error" *ngIf="isInvalid('compStrengthOverDry')">Fill this field</div>
                 </div>
 
                 <div class="form-field">
@@ -219,20 +222,21 @@
                     <label>Strength Moisture</label>
                 </div>
 
-                <div class="form-field">
+                <div class="form-field" [ngClass]="{'invalid': isInvalid('densityKgM3')}">
                     <input formControlName="densityKgM3">
                     <label>Density</label>
+                    <div class="error" *ngIf="isInvalid('densityKgM3')">Fill this field</div>
                 </div>
 
             </div>
 
-
             <div class="actions">
-                <button type="submit">Save</button>
+                <button type="submit">Submit</button>
                 <button type="button" (click)="backToList()">Back</button>
             </div>
 
         </form>
+
 
     </div>
 
