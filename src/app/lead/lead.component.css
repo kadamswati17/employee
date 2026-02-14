@@ -1,6 +1,6 @@
 .lead-wrapper {
     background-color: white;
-    padding: 20px;
+    padding: 15px;
     min-height: 100vh;
 }
 
@@ -563,9 +563,9 @@ button {
         margin-top: 15px;
     }
 
-    .filters>* {
+    /* .filters>* {
         width: 100%;
-    }
+    } */
 
     .filters input[type="date"],
     .filters select {
@@ -661,5 +661,46 @@ button {
 
     .pagination {
         font-size: 20px;
+    }
+}
+
+/* =========================================
+   LEAD FILTER — 2 COLUMN MOBILE LAYOUT
+========================================= */
+
+@media (max-width: 768px) {
+
+    .lead-card .filters {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 0px;
+        background: transparent;
+        border: none;
+    }
+
+    /* remove old full-width behaviour */
+    .lead-card .filters>* {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* date fields */
+    .lead-card .date-field.top-label {
+        min-width: 100% !important;
+    }
+
+    /* equal height for all controls */
+    .lead-card .date-field.top-label input,
+    .lead-card .filters select,
+    .lead-card .clear-btn {
+        height: 48px !important;
+        font-size: 18px;
+    }
+
+    /* clear button spacing fix */
+    .lead-card .clear-btn {
+        margin: 0;
+        padding: 0;
     }
 }

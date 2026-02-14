@@ -1095,3 +1095,43 @@ hr {
 .invalid textarea {
     border: 1px solid red !important;
 }
+
+/* =========================================
+   PRODUCTION FILTER — MOBILE 2 COLUMN
+========================================= */
+@media (max-width: 768px) {
+
+    .main .filters {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 10px 0;
+        background: transparent;
+        border: none;
+    }
+
+    /* make every control full inside grid cell */
+    .main .filters>* {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* date fields fix */
+    .main .date-field.top-label {
+        min-width: 100% !important;
+    }
+
+    /* equal height */
+    .main .date-field.top-label input,
+    .main .filters select,
+    .main .clear-btn {
+        height: 48px !important;
+        font-size: 16px;
+    }
+
+    /* CLEAR button full width */
+    .main .clear-btn {
+        grid-column: span 2;
+        margin: 0;
+    }
+}

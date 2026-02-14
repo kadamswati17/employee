@@ -608,7 +608,7 @@
         /* ✅ allow wrapping */
         justify-content: flex-start;
         gap: 12px;
-        padding: 14px;
+        padding: 0px;
     }
 
     .filters>* {
@@ -626,6 +626,7 @@
     .clear-btn {
         width: 100%;
         justify-content: center;
+        padding: 10px;
     }
 }
 
@@ -684,4 +685,40 @@
     margin-bottom: 10px;
     font-size: 18px;
     font-weight: 600;
+}
+
+@media (max-width: 768px) {
+
+    .filters {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .filter-row {
+        flex-direction: row;
+        /* ✅ 2 items in one line */
+    }
+
+    .filter-row>* {
+        flex: 1;
+    }
+
+    .date-field.top-label {
+        min-width: unset;
+    }
+
+    .clear-btn {
+        width: 100%;
+    }
+}
+
+.filter-row {
+    display: flex;
+    gap: 14px;
+    width: 100%;
+}
+
+.filter-row>* {
+    flex: 1;
+    min-width: 0;
 }

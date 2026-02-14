@@ -9,59 +9,43 @@
         <!-- FILTERS -->
         <div class="filters">
 
-            <div class="date-field top-label">
-                <label>From Date</label>
-                <input type="date" [(ngModel)]="fromDate" (change)="applyFilters()" />
-            </div>
-
-            <div class="date-field top-label">
-                <label>To Date</label>
-                <input type="date" [(ngModel)]="toDate" (change)="applyFilters()" />
-            </div>
-
-            <!-- <select [(ngModel)]="status" (change)="applyFilters()">
-                <option value="">All Status</option>
-                <option value="OPEN">Open</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="CLOSED">Closed</option>
-                <option value="SUCCESS">Success</option>
-                <option value="CANCELLED">Cancelled</option>
-            </select> -->
-
-            <!-- <select #exportSel (change)="exportData(exportSel.value)">
-                <option value="">Export</option>
-                <option value="pdf">PDF</option>
-                <option value="excel">Excel</option>
-            </select> -->
-
-            <div class="custom-select">
-                <div class="selected" (click)="toggleStatus()">
-                    {{ status || 'All Status' }}
+            <!-- ROW 1 -->
+            <div class="filter-row">
+                <div class="date-field top-label">
+                    <label>From Date</label>
+                    <input type="date" [(ngModel)]="fromDate" (change)="applyFilters()" />
                 </div>
 
-                <ul *ngIf="showStatus">
-                    <li (click)="selectStatus('')">All Status</li>
-                    <li (click)="selectStatus('OPEN')">Open</li>
-                    <li (click)="selectStatus('IN_PROGRESS')">In Progress</li>
-                    <li (click)="selectStatus('CLOSED')">Closed</li>
-                    <li (click)="selectStatus('SUCCESS')">Success</li>
-                    <li (click)="selectStatus('CANCELLED')">Cancelled</li>
-                </ul>
+                <div class="date-field top-label">
+                    <label>To Date</label>
+                    <input type="date" [(ngModel)]="toDate" (change)="applyFilters()" />
+                </div>
             </div>
-            <div class="custom-select">
-                <div class="selected" (click)="toggleExport()">
-                    Export
+
+            <!-- ROW 2 -->
+            <div class="filter-row">
+                <div class="custom-select">
+                    <div class="selected" (click)="toggleStatus()">
+                        {{ status || 'All Status' }}
+                    </div>
+                    <ul *ngIf="showStatus">
+                        ...
+                    </ul>
                 </div>
 
-                <ul *ngIf="showExport">
-                    <li (click)="exportData('pdf')">PDF</li>
-                    <li (click)="exportData('excel')">Excel</li>
-                </ul>
+                <div class="custom-select">
+                    <div class="selected" (click)="toggleExport()">Export</div>
+                    <ul *ngIf="showExport">
+                        ...
+                    </ul>
+                </div>
             </div>
 
-
+            <!-- CLEAR BUTTON -->
             <button class="clear-btn" (click)="clear()">Clear</button>
+
         </div>
+
 
         <!-- DASHBOARD CARDS -->
         <div class="dashboard-cards">
