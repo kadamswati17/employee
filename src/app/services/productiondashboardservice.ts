@@ -8,7 +8,8 @@ import { Production } from '../models/production.model';
     providedIn: 'root'
 })
 export class ProductionDashboardService {
-    private API = 'http://localhost:8080/api/production/dashboard';
+    // private API = 'http://localhost:8080/api/production/dashboard';
+    private API = 'https://school-app-backend-production.up.railway.app/api/production/dashboard';
 
 
 
