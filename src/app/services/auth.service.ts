@@ -16,14 +16,24 @@ export class AuthService {
   private AUTH_API = `${APP_CONFIG.BASE_URL}${APP_CONFIG.API.AUTH}`;
   private API_BASE = `${APP_CONFIG.BASE_URL}`;
 
-  private loginStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
+  // private loginStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
+  private loginStatus = new BehaviorSubject<boolean>(false);
+
   loginStatus$ = this.loginStatus.asObservable();
 
+  // constructor(
+  //   private http: HttpClient,
+  //   private tokenStorage: TokenStorageService,
+  //   private userService: UserService
+  // ) { }
   constructor(
     private http: HttpClient,
     private tokenStorage: TokenStorageService,
     private userService: UserService
-  ) { }
+  ) {
+    this.restoreLoginState();
+  }
+
 
   // =======================================
   // 🔐 LOGIN
@@ -56,6 +66,11 @@ export class AuthService {
     );
   }
 
+  private restoreLoginState() {
+    if (this.tokenStorage.isLoggedIn()) {
+      this.loginStatus.next(true);
+    }
+  }
 
   // =======================================
   // 🆕 REGISTER USER (ADMIN ONLY)

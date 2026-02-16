@@ -95,7 +95,9 @@ const routes: Routes = [
   { path: 'city-master', component: CityMasterComponent },
 
   { path: 'inquiry-schedule', component: InquiryScheduleComponent },
-  { path: 'home', component: HomeDashboardComponent },   // home dashboard
+  // { path: 'home', component: HomeDashboardComponent },   // home dashboard
+  { path: 'home', component: HomeDashboardComponent, canActivate: [AuthGuard] },
+
   { path: 'production-entry', component: ProductionEntryComponent },
   { path: 'casting-hall-report', component: CastingHallReportComponent },
   { path: 'wire-cutting-report', component: WireCuttingReportComponent },

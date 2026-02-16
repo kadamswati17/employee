@@ -24,7 +24,7 @@
   <div class="desktop-nav">
 
     <!-- MASTER -->
-    <select class="nav-select" (change)="navigate($event)" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+    <select class="nav-select" (change)="navigate($event)" *ngIf="isLoggedIn">
       <option value="" disabled selected hidden>Master</option>
       <option value="/employees">Employees</option>
       <option value="/users">Users</option>
@@ -37,7 +37,7 @@
       <option value="/leads">Lead</option>
     </select>
 
-    <select class="nav-select" (change)="navigate($event)">
+    <select class="nav-select" (change)="navigate($event)" *ngIf="isLoggedIn">
       <option value="" disabled selected hidden>Production</option>
       <option value="/production-entry">Production</option>
       <option value="casting-hall-report">Casting</option>
@@ -53,7 +53,7 @@
 
 
     <!-- TRANSACTION -->
-    <select class="nav-select" (change)="navigate($event)">
+    <select class="nav-select" (change)="navigate($event)" *ngIf="isLoggedIn">
       <option value="" disabled selected hidden>Transaction details</option>
       <option value="/km-list">Travel Details</option>
       <option value="/customers">Batch</option>
@@ -65,7 +65,7 @@
     </select>
 
     <!-- SETTINGS -->
-    <select class="nav-select" (change)="navigate($event)" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+    <select class="nav-select" (change)="navigate($event)" *ngIf="isLoggedIn">
       <option value="" disabled selected hidden>Settings</option>
       <option value="/state-master">State</option>
       <option value="/district-master">Dist</option>
@@ -93,7 +93,7 @@
 <div class="mobile-menu" [class.open]="isMenuOpen">
 
   <!-- MASTER -->
-  <select class="nav-select" (change)="navigate($event); isMenuOpen = false" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+  <select class="nav-select" (change)="navigate($event); isMenuOpen = false" *ngIf="isLoggedIn">
     <option value="" disabled selected hidden>Master</option>
     <option value="/employees">Employees</option>
     <option value="/users">Users</option>
@@ -106,7 +106,7 @@
     <option value="/leads">Lead</option>
   </select>
 
-  <select class="nav-select" (change)="navigate($event)">
+  <select class="nav-select" (change)="navigate($event)" *ngIf="isLoggedIn">
     <option value="" disabled selected hidden>Production</option>
     <option value="/production-entry">Production</option>
     <option value="casting-hall-report">Casting</option>
@@ -121,7 +121,7 @@
   </select>
 
   <!-- TRANSACTION -->
-  <select class="nav-select" (change)="navigate($event); isMenuOpen = false">
+  <select class="nav-select" (change)="navigate($event); isMenuOpen = false" *ngIf="isLoggedIn">
     <option value="" disabled selected hidden>Transaction details</option>
     <option value="/km-list">Travel Details</option>
     <option value="/customers">Batch</option>
@@ -132,7 +132,7 @@
   </select>
 
   <!-- SETTINGS -->
-  <select class="nav-select" (change)="navigate($event); isMenuOpen = false" *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+  <select class="nav-select" (change)="navigate($event); isMenuOpen = false" *ngIf="isLoggedIn">
     <option value="" disabled selected hidden>Settings</option>
     <option value="/state-master">State</option>
     <option value="/district-master">Dist</option>
