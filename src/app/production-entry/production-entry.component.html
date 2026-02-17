@@ -69,7 +69,7 @@
             <tbody>
                 <ng-container *ngFor="let p of pagedProductionList">
 
-                    <tr *ngIf="canViewProduction(p)">
+                    <tr>
                         <td class="clickable underline-text" (click)="openProductionModal(p)">
                             {{ p.batchNo }}
                         </td>
@@ -463,13 +463,11 @@
                         Download
                     </button>
 
-                    <button class="btn btn-success btn-sm" *ngIf="canApprove(selectedProduction)"
-                        (click)="approveProduction()">
+                    <button class="btn btn-success btn-sm" *ngIf="canApprove()" (click)="approveProduction()">
                         Approve
                     </button>
 
-                    <button class="btn btn-warning btn-sm" *ngIf="canReject(selectedProduction)"
-                        (click)="rejectProduction()">
+                    <button class="btn btn-warning btn-sm" *ngIf="canReject()" (click)="rejectProduction()">
                         Reject
                     </button>
 

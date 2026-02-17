@@ -66,21 +66,21 @@ export class ProductionService {
 
 
 
-    approve(id: number, userId: number, role: string) {
+    approve(id: number, userId: number) {
         return this.http.put(
-            `${this.baseUrl}/${id}/approve?userId=${userId}&role=${role}`,
-            {},
-            this.getAuthHeaders()
+            `${this.baseUrl}/${id}/approve?userId=${userId}`,
+            {}
         );
     }
 
-    reject(id: number, reason: string, userId: number, role: string) {
+
+    reject(id: number, reason: string, userId: number) {
         return this.http.post(
-            `${this.baseUrl}/${id}/reject?userId=${userId}&role=${role}&reason=${encodeURIComponent(reason)}`,
-            {},
-            this.getAuthHeaders()
+            `${this.baseUrl}/${id}/reject?userId=${userId}&reason=${encodeURIComponent(reason)}`,
+            {}
         );
     }
+
 
 
 

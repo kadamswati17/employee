@@ -62,7 +62,7 @@ export class KmListComponent implements OnInit {
 
   ngOnInit(): void {
     const current = this.authService.getCurrentUser();
-    this.currentUserRole = current ? current.role : '';
+    // this.currentUserRole = current ? current.role : '';
     this.load();
   }
 

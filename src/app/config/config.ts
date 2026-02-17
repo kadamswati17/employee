@@ -1,8 +1,8 @@
 // src/app/core/config/config.ts
 
 export const APP_CONFIG = {
-    //  BASE_URL: 'http://localhost:8080',
-    BASE_URL: 'https://school-app-backend-production.up.railway.app',
+    BASE_URL: 'http://localhost:8080',
+    // BASE_URL: 'https://school-app-backend-production.up.railway.app',
     //   apiUrl: 'https://school-app-backend-production.up.railway.app'
 
 

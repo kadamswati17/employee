@@ -17,7 +17,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ProductionEntryComponent implements OnInit {
 
-  currentUserRole = '';
+  // currentUserRole = '';
 
   selectedProduction: any = null;
 
@@ -58,9 +58,9 @@ export class ProductionEntryComponent implements OnInit {
   ngOnInit(): void {
 
 
-    console.log('ROLE IN COMPONENT:', this.currentUserRole);
+    // console.log('ROLE IN COMPONENT:', this.currentUserRole);
 
-    this.loadCurrentUserRole();
+    // this.loadCurrentUserRole();
 
 
 
@@ -109,15 +109,8 @@ export class ProductionEntryComponent implements OnInit {
   }
 
 
-  loadCurrentUserRole() {
-    const role = localStorage.getItem('role') || '';
 
-    this.currentUserRole = role.startsWith('ROLE_')
-      ? role
-      : `ROLE_${role}`;
 
-    console.log('ROLE IN COMPONENT:', this.currentUserRole);
-  }
 
   loadUsers() {
     this.auth.getAllUsers().subscribe(users => {
@@ -132,7 +125,7 @@ export class ProductionEntryComponent implements OnInit {
 
   openProductionModal(p: any) {
     this.selectedProduction = p;
-    this.loadCurrentUserRole();
+    // this.loadCurrentUserRole();
     const modalEl = document.getElementById('productionModal');
     if (!modalEl) return;
 
@@ -142,21 +135,14 @@ export class ProductionEntryComponent implements OnInit {
 
   loadData() {
     this.service.getAll().subscribe(res => {
+      console.log('API DATA:', res);   // 👈 ADD
       this.productionList = res || [];
       this.applyFilters();
-      this.updatePagination();
     });
   }
 
+
   applyFilters() {
-    if (
-      this.filterFromDate &&
-      this.filterToDate &&
-      new Date(this.filterToDate) < new Date(this.filterFromDate)
-    ) {
-      alert('To Date cannot be earlier than From Date');
-      return;
-    }
 
     const from = this.filterFromDate
       ? new Date(this.filterFromDate).getTime()
@@ -168,38 +154,16 @@ export class ProductionEntryComponent implements OnInit {
 
     this.filteredProductionList = this.productionList.filter(p => {
 
-      // ✅ DATE FILTER
       const date = new Date(p.createdDate).getTime();
-      const dateOk =
-        (!from || date >= from) &&
+
+      return (!from || date >= from) &&
         (!to || date <= to);
-
-      if (!dateOk) return false;
-
-      // ✅ ROLE FILTER
-      const stage = p.approvalStage || 'NONE';
-
-      switch (this.currentUserRole) {
-        case 'ROLE_L1':
-          return true; // sees all
-
-        case 'ROLE_L2':
-          return stage === 'L1';
-
-        case 'ROLE_L3':
-          return stage === 'L2';
-
-        case 'ROLE_ADMIN':
-          return true;
-
-        default:
-          return false;
-      }
     });
 
     this.currentPage = 1;
     this.updatePagination();
   }
+
 
   updatePagination() {
     this.totalPages = Math.ceil(
@@ -493,6 +457,51 @@ export class ProductionEntryComponent implements OnInit {
     };
   }
 
+  canEditDelete(): boolean {
+    return true;
+  }
+
+  canApprove(): boolean {
+    return true;
+  }
+
+  canReject(): boolean {
+    return true;
+  }
+
+  approveProduction() {
+
+    if (!this.selectedProduction) return;
+
+    const userId = this.auth.getLoggedInUserId();
+    if (!userId) return;
+
+    this.service.approve(this.selectedProduction.id, userId)
+      .subscribe(() => {
+        alert('Approved successfully');
+        this.closeModal();
+        this.loadData();
+      });
+  }
+
+  rejectProduction() {
+
+    if (!this.selectedProduction) return;
+
+    const reason = prompt('Enter rejection reason');
+    if (!reason) return;
+
+    const userId = this.auth.getLoggedInUserId();
+    if (!userId) return;
+
+    this.service.reject(this.selectedProduction.id, reason, userId)
+      .subscribe(() => {
+        alert('Rejected successfully');
+        this.closeModal();
+        this.loadData();
+      });
+  }
+
 
 
   private buildExportRows(p: any): any[] {
@@ -575,79 +584,79 @@ export class ProductionEntryComponent implements OnInit {
   }
 
 
-  canApprove(p: any): boolean {
-    if (!p) return false;
+  // canApprove(p: any): boolean {
+  //   if (!p) return false;
 
-    const stage = p.approvalStage || 'NONE';
+  //   const stage = p.approvalStage || 'NONE';
 
-    return (
-      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
-      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
-      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
-    );
-  }
-
-
-  canReject(p: any): boolean {
-    if (!p) return false;
-
-    const stage = p.approvalStage;
-
-    if (stage === 'L3') return false; // final approved cannot reject
-
-    return (
-      (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
-      (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
-      (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
-    );
-  }
+  //   return (
+  //     (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+  //     (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+  //     (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+  //   );
+  // }
 
 
-  canEditDelete(): boolean {
-    return (
-      this.currentUserRole === 'ROLE_ADMIN' ||
-      this.currentUserRole === 'ROLE_L1'
-    );
-  }
+  // canReject(p: any): boolean {
+  //   if (!p) return false;
 
-  approveProduction() {
-    if (!this.selectedProduction) return;
+  //   const stage = p.approvalStage;
 
-    const userId = this.auth.getLoggedInUserId();
-    if (!userId) return;
+  //   if (stage === 'L3') return false; // final approved cannot reject
 
-    this.service.approve(
-      this.selectedProduction.id,
-      userId,
-      this.currentUserRole
-    ).subscribe(() => {
-      alert('Approved successfully');
-      this.closeModal();
-      this.loadData();
-    });
-  }
+  //   return (
+  //     (this.currentUserRole === 'ROLE_L1' && stage === 'NONE') ||
+  //     (this.currentUserRole === 'ROLE_L2' && stage === 'L1') ||
+  //     (this.currentUserRole === 'ROLE_L3' && stage === 'L2')
+  //   );
+  // }
 
 
-  rejectProduction() {
-    if (!this.selectedProduction) return;
+  // canEditDelete(): boolean {
+  //   return (
+  //     this.currentUserRole === '' ||
+  //     this.currentUserRole === 'ROLE_L1'
+  //   );
+  // }
 
-    const reason = prompt('Enter rejection reason');
-    if (!reason) return;
+  // approveProduction() {
+  //   if (!this.selectedProduction) return;
 
-    const userId = this.auth.getLoggedInUserId();
-    if (!userId) return;
+  //   const userId = this.auth.getLoggedInUserId();
+  //   if (!userId) return;
 
-    this.service.reject(
-      this.selectedProduction.id,
-      reason,
-      userId,
-      this.currentUserRole
-    ).subscribe(() => {
-      alert('Rejected successfully');
-      this.closeModal();
-      this.loadData();
-    });
-  }
+  //   this.service.approve(
+  //     this.selectedProduction.id,
+  //     userId,
+  //     // this.currentUserRole
+  //   ).subscribe(() => {
+  //     alert('Approved successfully');
+  //     this.closeModal();
+  //     this.loadData();
+  //   });
+  // }
+
+
+  // rejectProduction() {
+  //   if (!this.selectedProduction) return;
+
+  //   const reason = prompt('Enter rejection reason');
+  //   if (!reason) return;
+
+  //   const userId = this.auth.getLoggedInUserId();
+  //   if (!userId) return;
+
+  //   this.service.reject(
+  //     this.selectedProduction.id,
+  //     reason,
+  //     userId,
+  //     this.currentUserRole
+  //   ).subscribe(() => {
+  //     alert('Rejected successfully');
+  //     this.closeModal();
+  //     this.loadData();
+  //   });
+  // }
 
 
   // saveModalEdit() {
@@ -675,32 +684,32 @@ export class ProductionEntryComponent implements OnInit {
 
 
 
-  canViewProduction(p: any): boolean {
-    if (!p) return false;
+  // canViewProduction(p: any): boolean {
+  //   if (!p) return false;
 
-    const stage = p.approvalStage || 'NONE';
+  //   const stage = p.approvalStage || 'NONE';
 
-    switch (this.currentUserRole) {
+  //   switch (this.currentUserRole) {
 
-      case 'ROLE_L1':
-        // ✅ pending + rejected
-        return stage === 'NONE';
+  //     case 'ROLE_L1':
+  //       // ✅ pending + rejected
+  //       return stage === 'NONE';
 
-      case 'ROLE_L2':
-        // ✅ only L1 approved
-        return stage === 'L1';
+  //     case 'ROLE_L2':
+  //       // ✅ only L1 approved
+  //       return stage === 'L1';
 
-      case 'ROLE_L3':
-        // ✅ L2 approved + final approved
-        return stage === 'L2' || stage === 'L3';
+  //     case 'ROLE_L3':
+  //       // ✅ L2 approved + final approved
+  //       return stage === 'L2' || stage === 'L3';
 
-      case 'ROLE_ADMIN':
-        return true;
+  //     case 'ROLE_ADMIN':
+  //       return true;
 
-      default:
-        return false;
-    }
-  }
+  //     default:
+  //       return false;
+  //   }
+  // }
 
   importExcel(event: any) {
     const file = event.target.files[0];
